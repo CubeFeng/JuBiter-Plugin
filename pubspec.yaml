@@ -1,7 +1,7 @@
 name: jubiter_plugin
-description: JuBiter wallet plugin.
+description: JuBiter wallet plugin for Android and iOS.
 version: 0.0.1
-author:
+author: fengshuo
 homepage:
 
 environment:
@@ -10,10 +10,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  protobuf: "^0.13.12"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+executables:
+  protoc-gen-dart: protoc_plugin
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -26,7 +30,7 @@ flutter:
   # adding or updating assets for this project.
   plugin:
     androidPackage: com.jubiter.plugin
-    pluginClass: JubiterPlugin
+    pluginClass: JuBiterPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

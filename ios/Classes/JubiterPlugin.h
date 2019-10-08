@@ -1,4 +1,4 @@
 #import <Flutter/Flutter.h>
 
-@interface JubiterPlugin : NSObject<FlutterPlugin>
+@interface JuBiterPlugin : NSObject<FlutterPlugin>
 @end

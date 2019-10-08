@@ -16,6 +16,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await JubiterPlugin.platformVersion, '42');
+    expect(await JuBiterPlugin.platformVersion, '42');
   });
 }

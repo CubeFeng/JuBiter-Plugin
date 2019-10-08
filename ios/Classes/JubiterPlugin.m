@@ -1,8 +1,8 @@
-#import "JubiterPlugin.h"
+#import "JuBiterPlugin.h"
 #import <jubiter_plugin/jubiter_plugin-Swift.h>
 
-@implementation JubiterPlugin
+@implementation JuBiterPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  [SwiftJubiterPlugin registerWithRegistrar:registrar];
+  [SwiftJuBiterPlugin registerWithRegistrar:registrar];
 }
 @end
