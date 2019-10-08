@@ -16,6 +16,12 @@ rootProject.allprojects {
     repositories {
         google()
         jcenter()
+
+        // 加载jubiter_plugin的libs文件夹
+        // todo: 在 android {} 中的 repositories {} 添加以下语句无效
+        flatDir {
+            dirs project(':jubiter_plugin').file('libs')
+        }
     }
 }
 
@@ -26,17 +32,17 @@ android {
 
     defaultConfig {
         minSdkVersion 19
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {
+            ndk {
+                abiFilters "armabi-v7a"
+
+            }
+        }
     }
     lintOptions {
         disable 'InvalidPackage'
-    }
-
-    repositories {
-        flatDir {
-            dirs 'libs'   // aar directory
-        }
-
     }
 }
 
