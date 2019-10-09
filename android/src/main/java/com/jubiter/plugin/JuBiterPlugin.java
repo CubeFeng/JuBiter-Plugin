@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.jubiter.sdk.JuBiterWallet;
 import com.jubiter.sdk.proto.CommonProtos;
 
+import io.flutter.Log;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -18,6 +19,8 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
  * @date 2019/10/08
  */
 public class JuBiterPlugin implements MethodCallHandler {
+
+    private static final String TAG = "JuBiterPlugin";
 
     private static final String METHOD_CHANNEL_NAME = "plugin";
 
@@ -46,21 +49,36 @@ public class JuBiterPlugin implements MethodCallHandler {
                 result.success("Android " + android.os.Build.VERSION.RELEASE);
                 break;
 
-            case "generateMnemonic":
-                generateMnemonic(CommonProtos.ENUM_MNEMONIC_STRENGTH.STRENGTH128);
+            case "generateMnemonic": {
+                Log.d(TAG, ">>> generateMnemonic");
+                generateMnemonic(call);
                 break;
+            }
 
-            case "checkMnemonic":
-
+            case "checkMnemonic": {
+                checkMnemonic(call);
                 break;
+            }
 
-            case "generateSeed":
-
+            case "generateSeed": {
+                generateSeed(call);
                 break;
+            }
 
-            case "seedToMasterPrivateKey":
-
+            case "seedToMasterPrivateKey": {
+                seedToMasterPrivateKey(call);
                 break;
+            }
+
+            case "getDeviceInfo": {
+                getDeviceInfo(call);
+                break;
+            }
+
+            case "getDeviceCert": {
+                getDeviceCert(call);
+                break;
+            }
 
             default:
                 result.notImplemented();
@@ -69,34 +87,108 @@ public class JuBiterPlugin implements MethodCallHandler {
     }
 
 
-    private byte[] generateMnemonic(CommonProtos.ENUM_MNEMONIC_STRENGTH strength) {
+
+    private byte[] generateMnemonic(MethodCall call) {
+        CommonProtos.ENUM_MNEMONIC_STRENGTH strength = (CommonProtos.ENUM_MNEMONIC_STRENGTH) call.arguments;
         return JuBiterWallet.generateMnemonic(strength).toByteArray();
     }
 
-    private int checkMnemonic(String mnemonic) {
+    private int checkMnemonic(MethodCall call) {
+        String mnemonic = (String) call.arguments;
         return JuBiterWallet.checkMnemonic(mnemonic);
     }
 
-    private byte[] generateSeed(String mnemonic, String passphrase) {
+    private byte[] generateSeed(MethodCall call) {
+        String mnemonic = call.argument("mnemonic");
+        String passphrase = call.argument("passphrase");
         return JuBiterWallet.generateSeed(mnemonic, passphrase).toByteArray();
     }
 
-    private byte[] seedToMasterPrivateKey(String seed, CommonProtos.CURVES curve) {
+    private byte[] seedToMasterPrivateKey(MethodCall call) {
+        String seed = call.argument("seed");
+        CommonProtos.CURVES curve = call.argument("curve");
         return JuBiterWallet.seedToMasterPrivateKey(seed, curve).toByteArray();
     }
 
     // todo： check
-    private byte[] getDeviceInfo(int deviceID) {
+    private byte[] getDeviceInfo(MethodCall call) {
+        int deviceID = (int) call.arguments;
         return JuBiterWallet.getDeviceInfo(deviceID).toByteArray();
     }
 
-    private byte[] getDeviceCert(int deviceID) {
+    private byte[] getDeviceCert(MethodCall call) {
+        int deviceID = (int) call.arguments;
         return JuBiterWallet.getDeviceCert(deviceID).toByteArray();
     }
 
-    private byte[] sendApdu(int deviceID, String apdu) {
+    private byte[] sendApdu(MethodCall call) {
+        int deviceID = call.argument("deviceID");
+        String apdu = call.argument("apdu");
         return JuBiterWallet.sendApdu(deviceID, apdu).toByteArray();
     }
 
+    private boolean  isInitialize(MethodCall call) {
+        int deviceID = (int) call.arguments;
+        return JuBiterWallet.isInitialize(deviceID);
+    }
+
+    private boolean  isBootLoader(MethodCall call) {
+        int deviceID = (int) call.arguments;
+        return JuBiterWallet.isBootLoader(deviceID);
+    }
+
+    private byte[] setTimeout(MethodCall call) {
+        int contextID = call.argument("contextID");
+        int timeout = call.argument("timeout");
+        return JuBiterWallet.setTimeout(contextID, timeout).toByteArray();
+    }
+
+    private byte[] enumApplets(MethodCall call) {
+        int deviceID = (int) call.arguments;
+        return JuBiterWallet.enumApplets(deviceID).toByteArray();
+    }
+
+    private byte[] enumSupportCoins(MethodCall call) {
+        int deviceID = (int) call.arguments;
+        return JuBiterWallet.enumSupportCoins(deviceID).toByteArray();
+    }
+
+    private byte[] getAppletVersion(MethodCall call) {
+        int deviceID = call.argument("deviceID");
+        String appletID = call.argument("appletID");
+        return JuBiterWallet.getAppletVersion(deviceID, appletID).toByteArray();
+    }
+
+    private byte[] queryBattery(MethodCall call) {
+        int deviceID = (int) call.arguments;
+        return JuBiterWallet.queryBattery(deviceID).toByteArray();
+    }
+
+    private int clearContext(MethodCall call) {
+        int contextID = (int) call.arguments;
+        return JuBiterWallet.clearContext(contextID);
+    }
+
+    private int showVirtualPWD(MethodCall call) {
+        int contextID = (int) call.arguments;
+        return JuBiterWallet.showVirtualPWD(contextID);
+    }
+
+    private int cancelVirtualPWD(MethodCall call) {
+        int contextID = (int) call.arguments;
+        return JuBiterWallet.cancelVirtualPWD(contextID);
+    }
+
+    private byte[] verifyPIN(MethodCall call) {
+        int contextID = call.argument("contextID");
+        String PIN = call.argument("PIN");
+        return JuBiterWallet.verifyPIN(contextID, PIN).toByteArray();
+    }
+
+    //************************************ 蓝牙接口 **************************************
+
+    private int initDevice() {
+        return JuBiterWallet.initDevice();
+    }
 
 }

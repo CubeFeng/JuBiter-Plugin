@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:core';
 
 import 'package:flutter/services.dart';
 
@@ -14,8 +15,10 @@ class JuBiterPlugin {
   }
 
   static Future<String> generateMnemonic() async {
-    final String mnemonic = await _channel.invokeMethod("invokeMethod");
-    return mnemonic;
-}
+    List<int> result = await _channel.invokeMethod("generateMnemonic");
+    return String.fromCharCodes(result);
+  }
+
+
 
 }
