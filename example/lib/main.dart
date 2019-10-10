@@ -4,6 +4,19 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:jubiter_plugin/jubiter_plugin.dart';
 
+import 'package:jubiter_plugin/gen/Jub_Bitcoin.pb.dart';
+import 'package:jubiter_plugin/gen/Jub_Bitcoin.pbenum.dart';
+import 'package:jubiter_plugin/gen/Jub_Bitcoin.pbjson.dart';
+import 'package:jubiter_plugin/gen/Jub_Ethereum.pb.dart';
+import 'package:jubiter_plugin/gen/Jub_Ethereum.pbenum.dart';
+import 'package:jubiter_plugin/gen/Jub_Ethereum.pbjson.dart';
+import 'package:jubiter_plugin/gen/Jub_Ethereum.pbserver.dart';
+
+import 'package:jubiter_plugin/gen/Jub_Common.pb.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pbenum.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pbjson.dart';
+import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -25,7 +38,8 @@ class _MyAppState extends State<MyApp> {
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await JuBiterPlugin.generateMnemonic();
+//      platformVersion = await PluginTest.platformVersion;
+      platformVersion = await JuBiterWallet.generateMnemonic(ENUM_MNEMONIC_STRENGTH.STRENGTH128);
 //      platformVersion = await JuBiterPlugin.platformVersion;
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';

@@ -10,14 +10,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  protobuf: "^0.13.12"
+  protobuf: "^1.0.0"
+  logger: ^0.7.0+2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-executables:
-  protoc-gen-dart: protoc_plugin
+#executables:
+#  protoc-gen-dart: protoc_plugin
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
