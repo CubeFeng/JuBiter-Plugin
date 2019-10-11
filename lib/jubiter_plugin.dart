@@ -19,6 +19,8 @@ import 'package:jubiter_plugin/gen/Jub_Common.pbjson.dart';
 import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
 
 part 'package:jubiter_plugin/jubiter_wallet.dart';
+part 'package:jubiter_plugin/jubiter_bitcoin.dart';
+part 'package:jubiter_plugin/jubiter_ethereum.dart';
 part 'package:jubiter_plugin/src/jubiter_plugin.dart';
 part 'package:jubiter_plugin/src/utils/log_utils.dart';
 

@@ -335,7 +335,7 @@ public class JuBiterPlugin implements MethodCallHandler {
     private void setTimeout(MethodCall call, Result result) {
         int contextID = call.argument("contextID");
         int timeout = call.argument("timeout");
-        result.success(JuBiterWallet.setTimeout(contextID, timeout).toByteArray());
+        result.success(JuBiterWallet.setTimeout(contextID, timeout));
     }
 
     private void enumApplets(MethodCall call, Result result) {
@@ -474,16 +474,16 @@ public class JuBiterPlugin implements MethodCallHandler {
     }
 
     private void BTCGetMainHDNode(MethodCall call, Result result) {
-        int deviceID = (int) call.arguments;
-        result.success(JuBiterBitcoin.getMainHDNode(deviceID).toByteArray());
+        int contextID = (int) call.arguments;
+        result.success(JuBiterBitcoin.getMainHDNode(contextID).toByteArray());
     }
 
     private void BTCGetHDNode(MethodCall call, Result result) {
         try {
-            int deviceID = call.argument("deviceID");
+            int contextID = call.argument("contextID");
             byte[] path = call.argument("bip32Path");
             CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(path);
-            result.success(JuBiterBitcoin.getHDNode(deviceID, bip32Path).toByteArray());
+            result.success(JuBiterBitcoin.getHDNode(contextID, bip32Path).toByteArray());
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             result.error(null, null, null);
