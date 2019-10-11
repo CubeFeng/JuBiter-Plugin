@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
 //      platformVersion = await PluginTest.platformVersion;
-      platformVersion = await JuBiterWallet.generateMnemonic(ENUM_MNEMONIC_STRENGTH.STRENGTH128);
+      platformVersion = await getResult();
 //      platformVersion = await JuBiterPlugin.platformVersion;
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
@@ -67,5 +67,21 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  Future<String> getResult() async {
+
+    ResultString mnemonicResult = await JuBiterWallet.generateMnemonic(ENUM_MNEMONIC_STRENGTH.STRENGTH128);
+    LogUtils.d(">>> generateMnemonic - rv:${mnemonicResult.stateCode} value:${mnemonicResult.value}");
+
+    int checkResult = await JuBiterWallet.checkMnemonic(mnemonicResult.value);
+    LogUtils.d(">>> checkMnemonic - checkResult: $checkResult");
+
+    ResultString mnemonicSeed = await JuBiterWallet.generateSeed(mnemonicResult.value, "123");
+    LogUtils.d(">>> generateSeed - rv:${mnemonicSeed.stateCode} value:${mnemonicSeed.value}");
+
+    ResultString xPrikeyResult = await JuBiterWallet.seedToMasterPrivateKey(mnemonicSeed.value, CURVES.secp256k1);
+    LogUtils.d(">>> seedToMasterPrivateKey - rv:${xPrikeyResult.stateCode} value:${xPrikeyResult.value}");
+    return "";
   }
 }

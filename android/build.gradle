@@ -37,12 +37,15 @@ android {
         externalNativeBuild {
             ndk {
                 abiFilters "armabi-v7a"
-
             }
         }
     }
     lintOptions {
         disable 'InvalidPackage'
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 }
 
