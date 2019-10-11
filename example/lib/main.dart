@@ -75,7 +75,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   void BTC_Software() async {
-
     ResultString mnemonicResult = await JuBiterWallet.generateMnemonic(
         ENUM_MNEMONIC_STRENGTH.STRENGTH128);
     LogUtils.d(
@@ -109,7 +108,8 @@ class _MyAppState extends State<MyApp> {
         ">>> BTCCreateContext_Software - rv:${contextResult.stateCode} value:${contextResult.value}");
     assert(contextResult.stateCode == 0);
 
-    ResultString mainHDNodeResult = await JuBiterPlugin.BTCGetMainHDNode(contextResult.value);
+    ResultString mainHDNodeResult =
+        await JuBiterPlugin.BTCGetMainHDNode(contextResult.value);
     LogUtils.d(
         ">>> BTCGetMainHDNode - rv:${mainHDNodeResult.stateCode} value:${mainHDNodeResult.value}");
     assert(mainHDNodeResult.stateCode == 0);
@@ -118,11 +118,10 @@ class _MyAppState extends State<MyApp> {
       Bip32Path bip32path = Bip32Path.create();
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
-      ResultString hdNodeResult = await JuBiterPlugin.BTCGetHDNode(
-          contextResult.value, bip32path);
+      ResultString hdNodeResult =
+          await JuBiterPlugin.BTCGetHDNode(contextResult.value, bip32path);
       LogUtils.d(
-          ">>> BTCGetHDNode - rv:${hdNodeResult.stateCode} value:${hdNodeResult
-              .value}");
+          ">>> BTCGetHDNode - rv:${hdNodeResult.stateCode} value:${hdNodeResult.value}");
       assert(hdNodeResult.stateCode == 0);
     }
 
@@ -137,13 +136,67 @@ class _MyAppState extends State<MyApp> {
       assert(addressResult.stateCode == 0);
     }
 
-    {
-
-    }
-
+    {}
   }
 
-  void ETH_Software() {
+  void ETH_Software() async {
+    ResultString mnemonicResult = await JuBiterWallet.generateMnemonic(
+        ENUM_MNEMONIC_STRENGTH.STRENGTH128);
+    LogUtils.d(
+        ">>> generateMnemonic - rv:${mnemonicResult.stateCode} value:${mnemonicResult.value}");
+    assert(mnemonicResult.stateCode == 0);
 
+    int checkResult = await JuBiterWallet.checkMnemonic(mnemonicResult.value);
+    LogUtils.d(">>> checkMnemonic - checkResult: $checkResult");
+    assert(checkResult == 0);
+
+    ResultString mnemonicSeed =
+        await JuBiterWallet.generateSeed(mnemonicResult.value, "456");
+    LogUtils.d(
+        ">>> generateSeed - rv:${mnemonicSeed.stateCode} value:${mnemonicSeed.value}");
+    assert(mnemonicSeed.stateCode == 0);
+
+    ResultString xPrikeyResult = await JuBiterWallet.seedToMasterPrivateKey(
+        mnemonicSeed.value, CURVES.secp256k1);
+    LogUtils.d(
+        ">>> seedToMasterPrivateKey - rv:${xPrikeyResult.stateCode} value:${xPrikeyResult.value}");
+    assert(xPrikeyResult.stateCode == 0);
+
+    ContextCfgETH config = ContextCfgETH.create();
+    config.mainPath = "m/44\'/60\'/0\'";
+    ResultInt contextResult = await JuBiterPlugin.ETHCreateContext_Software(
+        config,
+        'xpub6CAxrkiSbwkn4LayKD6qBcZg4tQvhHBH7TofQjNV9Lb3cB5u8owxdLGfc2bKoz2McoviAMXzWHwSaqc5Sm8C9SWMsnvuBw1bjEwtWsMZZFX');
+    LogUtils.d(
+        ">>> ETHCreateContext_Software - rv:${contextResult.stateCode} value:${contextResult.value}");
+    assert(contextResult.stateCode == 0);
+
+    ResultString mainHDNodeResult = await JuBiterPlugin.ETHGetMainHDNode(
+        contextResult.value, ENUM_PUB_FORMAT.HEX);
+    LogUtils.d(
+        ">>> ETHGetMainHDNode - rv:${mainHDNodeResult.stateCode} value:${mainHDNodeResult.value}");
+    assert(mainHDNodeResult.stateCode == 0);
+
+    {
+      Bip32Path bip32path = Bip32Path.create();
+      bip32path.addressIndex = Int64(0);
+      bip32path.change = false;
+      ResultString hdNodeResult = await JuBiterPlugin.ETHGetHDNode(
+          contextResult.value, ENUM_PUB_FORMAT.HEX, bip32path);
+      LogUtils.d(
+          ">>> ETHGetHDNode - rv:${hdNodeResult.stateCode} value:${hdNodeResult.value}");
+      assert(hdNodeResult.stateCode == 0);
+    }
+
+    {
+      Bip32Path bip32path = Bip32Path.create();
+      bip32path.addressIndex = Int64(0);
+      bip32path.change = false;
+      ResultString addressResult = await JuBiterPlugin.ETHGetAddress(
+          contextResult.value, bip32path, false);
+      LogUtils.d(
+          ">>> ETHGetAddress - rv:${addressResult.stateCode} value:${addressResult.value}");
+      assert(addressResult.stateCode == 0);
+    }
   }
 }

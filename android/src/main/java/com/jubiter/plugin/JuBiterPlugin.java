@@ -577,7 +577,7 @@ public class JuBiterPlugin implements MethodCallHandler {
         try {
             int contextID = call.argument("contextID");
             int format = call.argument("format");
-            byte[] bip32 = call.argument("bip32");
+            byte[] bip32 = call.argument("bip32Path");
             CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(bip32);
             result.success(JuBiterEthereum.getHDNode(contextID, EthereumProtos.ENUM_PUB_FORMAT.forNumber(format),
                     bip32Path).toByteArray());
