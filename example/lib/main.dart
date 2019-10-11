@@ -101,7 +101,7 @@ class _MyAppState extends State<MyApp> {
     config.coinType = ENUM_COIN_TYPE_BTC.COINBTC;
     config.mainPath = "m/44\'/0\'/0\'";
     config.transType = ENUM_TRAN_STYPE_BTC.p2pkh;
-    ResultInt contextResult = await JuBiterPlugin.BTCCreateContext_Software(
+    ResultInt contextResult = await JuBiterBitcoin.createContext_Software(
         config,
         'xpub6CAxrkiSbwkn4LayKD6qBcZg4tQvhHBH7TofQjNV9Lb3cB5u8owxdLGfc2bKoz2McoviAMXzWHwSaqc5Sm8C9SWMsnvuBw1bjEwtWsMZZFX');
     LogUtils.d(
@@ -109,7 +109,7 @@ class _MyAppState extends State<MyApp> {
     assert(contextResult.stateCode == 0);
 
     ResultString mainHDNodeResult =
-        await JuBiterPlugin.BTCGetMainHDNode(contextResult.value);
+        await JuBiterBitcoin.getMainHDNode(contextResult.value);
     LogUtils.d(
         ">>> BTCGetMainHDNode - rv:${mainHDNodeResult.stateCode} value:${mainHDNodeResult.value}");
     assert(mainHDNodeResult.stateCode == 0);
@@ -119,7 +119,7 @@ class _MyAppState extends State<MyApp> {
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
       ResultString hdNodeResult =
-          await JuBiterPlugin.BTCGetHDNode(contextResult.value, bip32path);
+          await JuBiterBitcoin.getHDNode(contextResult.value, bip32path);
       LogUtils.d(
           ">>> BTCGetHDNode - rv:${hdNodeResult.stateCode} value:${hdNodeResult.value}");
       assert(hdNodeResult.stateCode == 0);
@@ -129,7 +129,7 @@ class _MyAppState extends State<MyApp> {
       Bip32Path bip32path = Bip32Path.create();
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
-      ResultString addressResult = await JuBiterPlugin.BTCGetAddress(
+      ResultString addressResult = await JuBiterBitcoin.getAddress(
           contextResult.value, bip32path, false);
       LogUtils.d(
           ">>> BTCGetAddress - rv:${addressResult.stateCode} value:${addressResult.value}");
@@ -164,14 +164,14 @@ class _MyAppState extends State<MyApp> {
 
     ContextCfgETH config = ContextCfgETH.create();
     config.mainPath = "m/44\'/60\'/0\'";
-    ResultInt contextResult = await JuBiterPlugin.ETHCreateContext_Software(
+    ResultInt contextResult = await JuBiterEthereum.createContext_Software(
         config,
         'xpub6CAxrkiSbwkn4LayKD6qBcZg4tQvhHBH7TofQjNV9Lb3cB5u8owxdLGfc2bKoz2McoviAMXzWHwSaqc5Sm8C9SWMsnvuBw1bjEwtWsMZZFX');
     LogUtils.d(
         ">>> ETHCreateContext_Software - rv:${contextResult.stateCode} value:${contextResult.value}");
     assert(contextResult.stateCode == 0);
 
-    ResultString mainHDNodeResult = await JuBiterPlugin.ETHGetMainHDNode(
+    ResultString mainHDNodeResult = await JuBiterEthereum.getMainHDNode(
         contextResult.value, ENUM_PUB_FORMAT.HEX);
     LogUtils.d(
         ">>> ETHGetMainHDNode - rv:${mainHDNodeResult.stateCode} value:${mainHDNodeResult.value}");
@@ -181,7 +181,7 @@ class _MyAppState extends State<MyApp> {
       Bip32Path bip32path = Bip32Path.create();
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
-      ResultString hdNodeResult = await JuBiterPlugin.ETHGetHDNode(
+      ResultString hdNodeResult = await JuBiterEthereum.getHDNode(
           contextResult.value, ENUM_PUB_FORMAT.HEX, bip32path);
       LogUtils.d(
           ">>> ETHGetHDNode - rv:${hdNodeResult.stateCode} value:${hdNodeResult.value}");
@@ -192,7 +192,7 @@ class _MyAppState extends State<MyApp> {
       Bip32Path bip32path = Bip32Path.create();
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
-      ResultString addressResult = await JuBiterPlugin.ETHGetAddress(
+      ResultString addressResult = await JuBiterEthereum.getAddress(
           contextResult.value, bip32path, false);
       LogUtils.d(
           ">>> ETHGetAddress - rv:${addressResult.stateCode} value:${addressResult.value}");
