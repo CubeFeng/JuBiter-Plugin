@@ -34,11 +34,20 @@ android {
         minSdkVersion 19
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        externalNativeBuild {
-            ndk {
-                abiFilters "armabi-v7a"
+        buildTypes {
+            debug {
+                ndk {
+                    abiFilters "armeabi-v7a"
+                }
+            }
+
+            release {
+                ndk {
+                    abiFilters "armeabi-v7a"
+                }
             }
         }
+
     }
     lintOptions {
         disable 'InvalidPackage'
@@ -50,6 +59,6 @@ android {
 }
 
 dependencies {
-    implementation(name: 'jubiter-debug', ext: 'aar')
+    api(name: 'jubiter-debug', ext: 'aar')
     implementation 'com.google.protobuf:protobuf-java:3.9.1'
 }

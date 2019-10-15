@@ -84,6 +84,7 @@ class JuBiterWallet {
 
   // todo
   static Future<int> startScan() async {
+
     return null;
   }
 

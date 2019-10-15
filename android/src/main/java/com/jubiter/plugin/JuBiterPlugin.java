@@ -280,11 +280,6 @@ public class JuBiterPlugin implements MethodCallHandler {
 
     private void generateMnemonic(MethodCall call, Result result) {
         CommonProtos.ENUM_MNEMONIC_STRENGTH strength = CommonProtos.ENUM_MNEMONIC_STRENGTH.forNumber((int) call.arguments);
-//        CommonProtos.ResultString resultString = JuBiterWallet.generateMnemonic(strength);
-//        Log.d(TAG, ">>> mnemonic :" + resultString.getValue());
-//        byte[] array = resultString.toByteArray();
-//        Log.d(TAG, ">>> length :" + array.length);
-//        result.success(array);
         result.success(JuBiterWallet.generateMnemonic(strength).toByteArray());
     }
 
@@ -416,7 +411,7 @@ public class JuBiterPlugin implements MethodCallHandler {
         final ConnectionStateCallback connectionStateCallback = new ConnectionStateCallback() {
             @Override
             public void onConnected(String mac, int deviceID) {
-
+                result.
             }
 
             @Override
