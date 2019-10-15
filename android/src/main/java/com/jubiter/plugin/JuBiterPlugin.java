@@ -411,7 +411,7 @@ public class JuBiterPlugin implements MethodCallHandler {
         final ConnectionStateCallback connectionStateCallback = new ConnectionStateCallback() {
             @Override
             public void onConnected(String mac, int deviceID) {
-                result.
+
             }
 
             @Override
