@@ -82,10 +82,15 @@ class JuBiterWallet {
     return JuBiterPlugin.initDevice();
   }
 
-  // todo
-  static Future<int> startScan() async {
+  ///
+  /// [scanCallback] : 返回蓝牙的扫描结果
+  /// [stopScanCallback] : 蓝牙停止扫描状态返回
+  static Future<int> startScan(void scanCallback(ScanResult scanResult), void stopScanCallback()) async {
+     return JuBiterPlugin.startScan(scanCallback, stopScanCallback);
+  }
 
-    return null;
+  static Stream<ScanResult> startScanStream(Duration timeout) async* {
+    yield* JuBiterPlugin.startScanStream();
   }
 
   static Future<int> stopScan() async {
@@ -93,9 +98,8 @@ class JuBiterWallet {
   }
 
   // todo
-  static Future<int> connectDeviceAsync() async {
-
-    return null;
+  static Future<int> connectDeviceAsync(BluetoothDevice device) async {
+    return JuBiterPlugin.connectDeviceAsync(device);
   }
 
   static Future<int> cancelConnect(String macAddress) async {

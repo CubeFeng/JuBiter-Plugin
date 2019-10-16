@@ -62,4 +62,5 @@ android {
 dependencies {
     debugImplementation(name: 'jubiter-debug', ext: 'aar')
     implementation 'com.google.protobuf:protobuf-java:3.9.1'
+    implementation 'androidx.core:core:1.1.0'
 }

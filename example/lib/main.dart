@@ -11,6 +11,7 @@ import 'package:jubiter_plugin/jubiter_plugin.dart';
 import 'package:jubiter_plugin/gen/Jub_Bitcoin.pbserver.dart';
 import 'package:jubiter_plugin/gen/Jub_Ethereum.pbserver.dart';
 import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
+import 'package:jubiter_plugin/gen/jubiterblue.pbserver.dart';
 
 void main() => runApp(MyApp());
 
@@ -64,8 +65,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<String> runTest() async {
-    BTC_Software();
+//    BTC_Software();
 //    ETH_Software();
+    bleTest();
   }
 
   void BTC_Software() async {
@@ -283,5 +285,38 @@ class _MyAppState extends State<MyApp> {
           ">>> ETHSignTransaction - rv:${signResult.stateCode} value:${signResult.value}");
       assert(signResult.stateCode == 0);
     }
+  }
+
+  Future<String> bleTest() {
+    JuBiterWallet.initDevice();
+//    JuBiterWallet.startScan(scanCallback, stopScanCallback);
+
+    JuBiterWallet.startScanStream(new Duration(seconds: 10)).listen(
+      (scanResult) {
+        LogUtils.d('main >>> ${scanResult.device.remoteId} ${scanResult.device.name}');
+
+      },
+      onDone: () {
+        LogUtils.d('main >>> onDone');
+      },
+//      onError: () {
+//        LogUtils.d('main >>> onError');
+//      }
+    );
+
+    Timer(new Duration(seconds: 5), () {
+      scheduleMicrotask(() {
+        JuBiterWallet.stopScan();
+//        JuBiterWallet.connectDeviceAsync('DD:A6:FE:7D:9C:27');
+      });
+    });
+  }
+
+  void scanCallback(ScanResult scanResult) {
+    LogUtils.d('>>> main: ${scanResult.device.remoteId} ${scanResult.device.name}');
+  }
+
+  void stopScanCallback() {
+    LogUtils.d('>>> main: stopScanCallback');
   }
 }

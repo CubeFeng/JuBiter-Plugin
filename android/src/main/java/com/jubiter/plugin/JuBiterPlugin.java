@@ -1,8 +1,12 @@
 package com.jubiter.plugin;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.util.Log;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.jubiter.plugin.protos.JuBiterProtos;
 import com.jubiter.sdk.ConnectionStateCallback;
 import com.jubiter.sdk.JuBiterBLEDevice;
 import com.jubiter.sdk.JuBiterBitcoin;
@@ -13,7 +17,9 @@ import com.jubiter.sdk.proto.BitcoinProtos;
 import com.jubiter.sdk.proto.CommonProtos;
 import com.jubiter.sdk.proto.EthereumProtos;
 
-import io.flutter.Log;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -29,12 +35,21 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 public class JuBiterPlugin implements MethodCallHandler {
 
     private static final String TAG = "JuBiterPlugin";
+    private static final String NAMESPACE = "com.jubiter.plugin";
+    private static final int REQUEST_COARSE_LOCATION_PERMISSIONS = 1452;
 
-    private static final String METHOD_CHANNEL_NAME = "plugin";
+    private static final String METHOD_CHANNEL_NAME = NAMESPACE + "/methods";
+    private static final String EVENT_SCAN_RESULT_CHANNEL = NAMESPACE + "/scanResult";
+    private static final String EVENT_CONNECT_STATE_CHANNEL = NAMESPACE + "/state";
 
     private final Registrar register;
     private final Activity activity;
-    private final MethodChannel channel;
+    private final MethodChannel methodChannel;
+    private final EventChannel _scanResultChannel;
+    private final EventChannel _connectStateChannel;
+
+    private MethodCall pendingCall;
+    private Result pendingResult;
 
     /**
      * Plugin registration.
@@ -46,8 +61,12 @@ public class JuBiterPlugin implements MethodCallHandler {
     public JuBiterPlugin(Registrar registrar) {
         this.register = registrar;
         this.activity = registrar.activity();
-        this.channel = new MethodChannel(registrar.messenger(), METHOD_CHANNEL_NAME);
-        channel.setMethodCallHandler(this);
+        this.methodChannel = new MethodChannel(registrar.messenger(), METHOD_CHANNEL_NAME);
+        this.methodChannel.setMethodCallHandler(this);
+        this._scanResultChannel = new EventChannel(registrar.messenger(), EVENT_SCAN_RESULT_CHANNEL);
+        this._scanResultChannel.setStreamHandler(scanResultHandler);
+        this._connectStateChannel = new EventChannel(registrar.messenger(), EVENT_CONNECT_STATE_CHANNEL);
+        this._connectStateChannel.setStreamHandler(null);  // todo
     }
 
     @Override
@@ -155,6 +174,21 @@ public class JuBiterPlugin implements MethodCallHandler {
             }
 
             case "startScan": {
+                if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(
+                            activity,
+                            new String[] {
+                                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                                    Manifest.permission.ACCESS_FINE_LOCATION
+                            },
+                            REQUEST_COARSE_LOCATION_PERMISSIONS);
+                    pendingCall = call;
+                    pendingResult = result;
+                    break;
+                }
                 startScan(call, result);
                 break;
             }
@@ -377,6 +411,40 @@ public class JuBiterPlugin implements MethodCallHandler {
 
     //************************************ 蓝牙接口 **************************************
 
+    private EventChannel.EventSink scanResultSink;
+    private final EventChannel.StreamHandler scanResultHandler = new EventChannel.StreamHandler() {
+
+        @Override
+        public void onListen(Object arguments, EventChannel.EventSink sink) {
+            Log.d(TAG, ">>> scan onListen");
+            scanResultSink = sink;
+        }
+
+        @Override
+        public void onCancel(Object o) {
+            Log.d(TAG, ">>> scan onCancel");
+//            scanResultSink = null;
+        }
+    };
+
+    private EventChannel.EventSink connectStateSink;
+    private final EventChannel.StreamHandler connectStateHandler = new EventChannel.StreamHandler() {
+        @Override
+        public void onListen(Object o, EventChannel.EventSink sink) {
+            Log.d(TAG, ">>> connect onListen");
+
+        }
+
+        @Override
+        public void onCancel(Object o) {
+            Log.d(TAG, ">>> connect onCancel");
+
+        }
+    };
+
+
+
+
     private void initDevice(MethodCall call, Result result) {
         result.success(JuBiterWallet.initDevice());
     }
@@ -385,20 +453,37 @@ public class JuBiterPlugin implements MethodCallHandler {
         final ScanResultCallback scanResultCallback = new ScanResultCallback() {
             @Override
             public void onScanResult(JuBiterBLEDevice device) {
-                result.success(null);
+                Log.d(TAG, ">>> " + device.toString());
+                JuBiterProtos.BluetoothDevice jubiterDevice = JuBiterProtos.BluetoothDevice.newBuilder()
+                        .setRemoteId(device.getMac())
+                        .setName(device.getName())
+                        .setType(JuBiterProtos.BluetoothDevice.Type.LE)
+                        .build();
+                // unused
+                JuBiterProtos.AdvertisementData advertisementData = JuBiterProtos.AdvertisementData.newBuilder()
+                        .build();
+                JuBiterProtos.ScanResult scanResult = JuBiterProtos.ScanResult.newBuilder()
+                        .setAdvertisementData(advertisementData)
+                        .setDevice(jubiterDevice)
+                        .build();
+                // 实时通知 flutter 端扫描结果
+                scanResultSink.success(scanResult.toByteArray());
             }
 
             @Override
             public void onStop() {
-
+                Log.d(TAG, ">>> onStop");
+//                scanResultSink.endOfStream();
             }
 
             @Override
             public void onError(int error) {
-
+                Log.d(TAG, ">>> onError");
+//                result.error(String.valueOf(error), null, null);
             }
         };
         JuBiterWallet.startScan(scanResultCallback);
+        result.success(null);
     }
 
     private void stopScan(MethodCall call, Result result) {
@@ -411,17 +496,28 @@ public class JuBiterPlugin implements MethodCallHandler {
         final ConnectionStateCallback connectionStateCallback = new ConnectionStateCallback() {
             @Override
             public void onConnected(String mac, int deviceID) {
-
+                Log.d(TAG, ">>> onConnected: " + mac + " deviceID:" + deviceID);
+//                JuBiterProtos.DeviceStateResponse deviceStateResponse = JuBiterProtos.DeviceStateResponse.newBuilder()
+//                        .setRemoteId(mac)
+//                        .setState(JuBiterProtos.DeviceStateResponse.BluetoothDeviceState.CONNECTED)
+//                        .build();
+//                result.success(deviceStateResponse.toByteArray());
             }
 
             @Override
             public void onDisconnected(String mac) {
-
+                Log.d(TAG, ">>> onDisconnected: " + mac);
+//                JuBiterProtos.DeviceStateResponse deviceStateResponse = JuBiterProtos.DeviceStateResponse.newBuilder()
+//                        .setRemoteId(mac)
+//                        .setState(JuBiterProtos.DeviceStateResponse.BluetoothDeviceState.DISCONNECTED)
+//                        .build();
+//                result.success(deviceStateResponse.toByteArray());
             }
 
             @Override
             public void onError(int error) {
-
+                Log.d(TAG, ">>> onError: " + error);
+//                result.error(String.valueOf(error), null, null);
             }
         };
         JuBiterWallet.connectDeviceAsync(address, timeout, connectionStateCallback);
