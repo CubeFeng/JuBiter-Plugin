@@ -41,8 +41,8 @@ message ScanSettings {
 
 message ScanResult {
     BluetoothDevice device = 1;  // The received peer's ID.
-    AdvertisementData advertisement_data = 2;
-    int32 rssi = 3;
+    AdvertisementData advertisement_data = 2;  // unused
+    int32 rssi = 3;  // unused
 }
 
 message ConnectRequest {

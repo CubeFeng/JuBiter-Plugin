@@ -189,7 +189,7 @@ class _MyAppState extends State<MyApp> {
       txInfo.outputs.add(output_1);
       txInfo.outputs.add(output_2);
       LogUtils.d('>>> txInfo:' + hex.encode(txInfo.writeToBuffer()));
-      
+
       ResultString signResult =
           await JuBiterBitcoin.signTransaction(contextResult.value, txInfo);
       LogUtils.d(
@@ -289,34 +289,40 @@ class _MyAppState extends State<MyApp> {
 
   Future<String> bleTest() {
     JuBiterWallet.initDevice();
-//    JuBiterWallet.startScan(scanCallback, stopScanCallback);
 
-    JuBiterWallet.startScanStream(new Duration(seconds: 10)).listen(
-      (scanResult) {
-        LogUtils.d('main >>> ${scanResult.device.remoteId} ${scanResult.device.name}');
+    JuBiterWallet.startScan(new Duration(seconds: 10)).listen((scanResult) {
+      LogUtils.d(
+          'main >>> ${scanResult.device.remoteId} ${scanResult.device.name}');
+    }, onDone: () {
+      LogUtils.d('main >>> onDone');
+    }, onError: (Object event) {
+      LogUtils.d('main >>> onError');
+    });
 
-      },
-      onDone: () {
-        LogUtils.d('main >>> onDone');
-      },
-//      onError: () {
-//        LogUtils.d('main >>> onError');
-//      }
-    );
-
+    // 模拟扫描连接过程
     Timer(new Duration(seconds: 5), () {
       scheduleMicrotask(() {
         JuBiterWallet.stopScan();
-//        JuBiterWallet.connectDeviceAsync('DD:A6:FE:7D:9C:27');
+
+        BluetoothDevice device = new BluetoothDevice()
+          ..remoteId = 'DD:A6:FE:7D:9C:27'
+          ..name = 'JuBiter-bhqi'
+          ..type = BluetoothDevice_Type.LE;
+
+        JuBiterWallet.connectDeviceAsync(device, Duration(seconds: 10)).listen(
+          (bluetoothDeviceState) {
+            LogUtils.d('main >>> connect state: ${bluetoothDeviceState.toString()}');
+          },
+          onDone: () {
+            LogUtils.d('main >>> connect onDone');
+          },
+          onError: (Object event) {
+            LogUtils.d('main >>> connect onError');
+          },
+        );
+
       });
     });
   }
 
-  void scanCallback(ScanResult scanResult) {
-    LogUtils.d('>>> main: ${scanResult.device.remoteId} ${scanResult.device.name}');
-  }
-
-  void stopScanCallback() {
-    LogUtils.d('>>> main: stopScanCallback');
-  }
 }

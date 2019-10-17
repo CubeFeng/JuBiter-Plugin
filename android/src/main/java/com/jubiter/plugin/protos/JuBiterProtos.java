@@ -3599,19 +3599,35 @@ public final class JuBiterProtos {
     BluetoothDeviceOrBuilder getDeviceOrBuilder();
 
     /**
+     * <pre>
+     * unused
+     * </pre>
+     *
      * <code>.AdvertisementData advertisement_data = 2;</code>
      */
     boolean hasAdvertisementData();
     /**
+     * <pre>
+     * unused
+     * </pre>
+     *
      * <code>.AdvertisementData advertisement_data = 2;</code>
      */
     AdvertisementData getAdvertisementData();
     /**
+     * <pre>
+     * unused
+     * </pre>
+     *
      * <code>.AdvertisementData advertisement_data = 2;</code>
      */
     AdvertisementDataOrBuilder getAdvertisementDataOrBuilder();
 
     /**
+     * <pre>
+     * unused
+     * </pre>
+     *
      * <code>int32 rssi = 3;</code>
      */
     int getRssi();
@@ -3760,18 +3776,30 @@ public final class JuBiterProtos {
     public static final int ADVERTISEMENT_DATA_FIELD_NUMBER = 2;
     private AdvertisementData advertisementData_;
     /**
+     * <pre>
+     * unused
+     * </pre>
+     *
      * <code>.AdvertisementData advertisement_data = 2;</code>
      */
     public boolean hasAdvertisementData() {
       return advertisementData_ != null;
     }
     /**
+     * <pre>
+     * unused
+     * </pre>
+     *
      * <code>.AdvertisementData advertisement_data = 2;</code>
      */
     public AdvertisementData getAdvertisementData() {
       return advertisementData_ == null ? AdvertisementData.getDefaultInstance() : advertisementData_;
     }
     /**
+     * <pre>
+     * unused
+     * </pre>
+     *
      * <code>.AdvertisementData advertisement_data = 2;</code>
      */
     public AdvertisementDataOrBuilder getAdvertisementDataOrBuilder() {
@@ -3781,6 +3809,10 @@ public final class JuBiterProtos {
     public static final int RSSI_FIELD_NUMBER = 3;
     private int rssi_;
     /**
+     * <pre>
+     * unused
+     * </pre>
+     *
      * <code>int32 rssi = 3;</code>
      */
     public int getRssi() {
@@ -4306,12 +4338,20 @@ public final class JuBiterProtos {
       private com.google.protobuf.SingleFieldBuilderV3<
           AdvertisementData, AdvertisementData.Builder, AdvertisementDataOrBuilder> advertisementDataBuilder_;
       /**
+       * <pre>
+       * unused
+       * </pre>
+       *
        * <code>.AdvertisementData advertisement_data = 2;</code>
        */
       public boolean hasAdvertisementData() {
         return advertisementDataBuilder_ != null || advertisementData_ != null;
       }
       /**
+       * <pre>
+       * unused
+       * </pre>
+       *
        * <code>.AdvertisementData advertisement_data = 2;</code>
        */
       public AdvertisementData getAdvertisementData() {
@@ -4322,6 +4362,10 @@ public final class JuBiterProtos {
         }
       }
       /**
+       * <pre>
+       * unused
+       * </pre>
+       *
        * <code>.AdvertisementData advertisement_data = 2;</code>
        */
       public Builder setAdvertisementData(AdvertisementData value) {
@@ -4338,6 +4382,10 @@ public final class JuBiterProtos {
         return this;
       }
       /**
+       * <pre>
+       * unused
+       * </pre>
+       *
        * <code>.AdvertisementData advertisement_data = 2;</code>
        */
       public Builder setAdvertisementData(
@@ -4352,6 +4400,10 @@ public final class JuBiterProtos {
         return this;
       }
       /**
+       * <pre>
+       * unused
+       * </pre>
+       *
        * <code>.AdvertisementData advertisement_data = 2;</code>
        */
       public Builder mergeAdvertisementData(AdvertisementData value) {
@@ -4370,6 +4422,10 @@ public final class JuBiterProtos {
         return this;
       }
       /**
+       * <pre>
+       * unused
+       * </pre>
+       *
        * <code>.AdvertisementData advertisement_data = 2;</code>
        */
       public Builder clearAdvertisementData() {
@@ -4384,6 +4440,10 @@ public final class JuBiterProtos {
         return this;
       }
       /**
+       * <pre>
+       * unused
+       * </pre>
+       *
        * <code>.AdvertisementData advertisement_data = 2;</code>
        */
       public AdvertisementData.Builder getAdvertisementDataBuilder() {
@@ -4392,6 +4452,10 @@ public final class JuBiterProtos {
         return getAdvertisementDataFieldBuilder().getBuilder();
       }
       /**
+       * <pre>
+       * unused
+       * </pre>
+       *
        * <code>.AdvertisementData advertisement_data = 2;</code>
        */
       public AdvertisementDataOrBuilder getAdvertisementDataOrBuilder() {
@@ -4403,6 +4467,10 @@ public final class JuBiterProtos {
         }
       }
       /**
+       * <pre>
+       * unused
+       * </pre>
+       *
        * <code>.AdvertisementData advertisement_data = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
@@ -4421,12 +4489,20 @@ public final class JuBiterProtos {
 
       private int rssi_ ;
       /**
+       * <pre>
+       * unused
+       * </pre>
+       *
        * <code>int32 rssi = 3;</code>
        */
       public int getRssi() {
         return rssi_;
       }
       /**
+       * <pre>
+       * unused
+       * </pre>
+       *
        * <code>int32 rssi = 3;</code>
        */
       public Builder setRssi(int value) {
@@ -4436,6 +4512,10 @@ public final class JuBiterProtos {
         return this;
       }
       /**
+       * <pre>
+       * unused
+       * </pre>
+       *
        * <code>int32 rssi = 3;</code>
        */
       public Builder clearRssi() {
@@ -4502,17 +4582,34 @@ public final class JuBiterProtos {
       com.google.protobuf.MessageOrBuilder {
 
     /**
+     * <pre>
+     * mac or uuid
+     * </pre>
+     *
      * <code>string remote_id = 1;</code>
      */
     String getRemoteId();
     /**
+     * <pre>
+     * mac or uuid
+     * </pre>
+     *
      * <code>string remote_id = 1;</code>
      */
     com.google.protobuf.ByteString
         getRemoteIdBytes();
 
     /**
-     * <code>bool android_auto_connect = 2;</code>
+     * <code>int32 timeout = 2;</code>
+     */
+    int getTimeout();
+
+    /**
+     * <pre>
+     * unused
+     * </pre>
+     *
+     * <code>bool android_auto_connect = 3;</code>
      */
     boolean getAndroidAutoConnect();
   }
@@ -4570,6 +4667,11 @@ public final class JuBiterProtos {
             }
             case 16: {
 
+              timeout_ = input.readInt32();
+              break;
+            }
+            case 24: {
+
               androidAutoConnect_ = input.readBool();
               break;
             }
@@ -4608,6 +4710,10 @@ public final class JuBiterProtos {
     public static final int REMOTE_ID_FIELD_NUMBER = 1;
     private volatile Object remoteId_;
     /**
+     * <pre>
+     * mac or uuid
+     * </pre>
+     *
      * <code>string remote_id = 1;</code>
      */
     public String getRemoteId() {
@@ -4623,6 +4729,10 @@ public final class JuBiterProtos {
       }
     }
     /**
+     * <pre>
+     * mac or uuid
+     * </pre>
+     *
      * <code>string remote_id = 1;</code>
      */
     public com.google.protobuf.ByteString
@@ -4639,10 +4749,23 @@ public final class JuBiterProtos {
       }
     }
 
-    public static final int ANDROID_AUTO_CONNECT_FIELD_NUMBER = 2;
+    public static final int TIMEOUT_FIELD_NUMBER = 2;
+    private int timeout_;
+    /**
+     * <code>int32 timeout = 2;</code>
+     */
+    public int getTimeout() {
+      return timeout_;
+    }
+
+    public static final int ANDROID_AUTO_CONNECT_FIELD_NUMBER = 3;
     private boolean androidAutoConnect_;
     /**
-     * <code>bool android_auto_connect = 2;</code>
+     * <pre>
+     * unused
+     * </pre>
+     *
+     * <code>bool android_auto_connect = 3;</code>
      */
     public boolean getAndroidAutoConnect() {
       return androidAutoConnect_;
@@ -4665,8 +4788,11 @@ public final class JuBiterProtos {
       if (!getRemoteIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, remoteId_);
       }
+      if (timeout_ != 0) {
+        output.writeInt32(2, timeout_);
+      }
       if (androidAutoConnect_ != false) {
-        output.writeBool(2, androidAutoConnect_);
+        output.writeBool(3, androidAutoConnect_);
       }
       unknownFields.writeTo(output);
     }
@@ -4680,9 +4806,13 @@ public final class JuBiterProtos {
       if (!getRemoteIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, remoteId_);
       }
+      if (timeout_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, timeout_);
+      }
       if (androidAutoConnect_ != false) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(2, androidAutoConnect_);
+          .computeBoolSize(3, androidAutoConnect_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -4701,6 +4831,8 @@ public final class JuBiterProtos {
 
       if (!getRemoteId()
           .equals(other.getRemoteId())) return false;
+      if (getTimeout()
+          != other.getTimeout()) return false;
       if (getAndroidAutoConnect()
           != other.getAndroidAutoConnect()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -4716,6 +4848,8 @@ public final class JuBiterProtos {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + REMOTE_ID_FIELD_NUMBER;
       hash = (53 * hash) + getRemoteId().hashCode();
+      hash = (37 * hash) + TIMEOUT_FIELD_NUMBER;
+      hash = (53 * hash) + getTimeout();
       hash = (37 * hash) + ANDROID_AUTO_CONNECT_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getAndroidAutoConnect());
@@ -4854,6 +4988,8 @@ public final class JuBiterProtos {
         super.clear();
         remoteId_ = "";
 
+        timeout_ = 0;
+
         androidAutoConnect_ = false;
 
         return this;
@@ -4883,6 +5019,7 @@ public final class JuBiterProtos {
       public ConnectRequest buildPartial() {
         ConnectRequest result = new ConnectRequest(this);
         result.remoteId_ = remoteId_;
+        result.timeout_ = timeout_;
         result.androidAutoConnect_ = androidAutoConnect_;
         onBuilt();
         return result;
@@ -4936,6 +5073,9 @@ public final class JuBiterProtos {
           remoteId_ = other.remoteId_;
           onChanged();
         }
+        if (other.getTimeout() != 0) {
+          setTimeout(other.getTimeout());
+        }
         if (other.getAndroidAutoConnect() != false) {
           setAndroidAutoConnect(other.getAndroidAutoConnect());
         }
@@ -4970,6 +5110,10 @@ public final class JuBiterProtos {
 
       private Object remoteId_ = "";
       /**
+       * <pre>
+       * mac or uuid
+       * </pre>
+       *
        * <code>string remote_id = 1;</code>
        */
       public String getRemoteId() {
@@ -4985,6 +5129,10 @@ public final class JuBiterProtos {
         }
       }
       /**
+       * <pre>
+       * mac or uuid
+       * </pre>
+       *
        * <code>string remote_id = 1;</code>
        */
       public com.google.protobuf.ByteString
@@ -5001,6 +5149,10 @@ public final class JuBiterProtos {
         }
       }
       /**
+       * <pre>
+       * mac or uuid
+       * </pre>
+       *
        * <code>string remote_id = 1;</code>
        */
       public Builder setRemoteId(
@@ -5014,6 +5166,10 @@ public final class JuBiterProtos {
         return this;
       }
       /**
+       * <pre>
+       * mac or uuid
+       * </pre>
+       *
        * <code>string remote_id = 1;</code>
        */
       public Builder clearRemoteId() {
@@ -5023,6 +5179,10 @@ public final class JuBiterProtos {
         return this;
       }
       /**
+       * <pre>
+       * mac or uuid
+       * </pre>
+       *
        * <code>string remote_id = 1;</code>
        */
       public Builder setRemoteIdBytes(
@@ -5037,15 +5197,49 @@ public final class JuBiterProtos {
         return this;
       }
 
+      private int timeout_ ;
+      /**
+       * <code>int32 timeout = 2;</code>
+       */
+      public int getTimeout() {
+        return timeout_;
+      }
+      /**
+       * <code>int32 timeout = 2;</code>
+       */
+      public Builder setTimeout(int value) {
+        
+        timeout_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 timeout = 2;</code>
+       */
+      public Builder clearTimeout() {
+        
+        timeout_ = 0;
+        onChanged();
+        return this;
+      }
+
       private boolean androidAutoConnect_ ;
       /**
-       * <code>bool android_auto_connect = 2;</code>
+       * <pre>
+       * unused
+       * </pre>
+       *
+       * <code>bool android_auto_connect = 3;</code>
        */
       public boolean getAndroidAutoConnect() {
         return androidAutoConnect_;
       }
       /**
-       * <code>bool android_auto_connect = 2;</code>
+       * <pre>
+       * unused
+       * </pre>
+       *
+       * <code>bool android_auto_connect = 3;</code>
        */
       public Builder setAndroidAutoConnect(boolean value) {
         
@@ -5054,7 +5248,11 @@ public final class JuBiterProtos {
         return this;
       }
       /**
-       * <code>bool android_auto_connect = 2;</code>
+       * <pre>
+       * unused
+       * </pre>
+       *
+       * <code>bool android_auto_connect = 3;</code>
        */
       public Builder clearAndroidAutoConnect() {
         
@@ -5120,10 +5318,18 @@ public final class JuBiterProtos {
       com.google.protobuf.MessageOrBuilder {
 
     /**
+     * <pre>
+     * mac or uuid
+     * </pre>
+     *
      * <code>string remote_id = 1;</code>
      */
     String getRemoteId();
     /**
+     * <pre>
+     * mac or uuid
+     * </pre>
+     *
      * <code>string remote_id = 1;</code>
      */
     com.google.protobuf.ByteString
@@ -5365,6 +5571,10 @@ public final class JuBiterProtos {
     public static final int REMOTE_ID_FIELD_NUMBER = 1;
     private volatile Object remoteId_;
     /**
+     * <pre>
+     * mac or uuid
+     * </pre>
+     *
      * <code>string remote_id = 1;</code>
      */
     public String getRemoteId() {
@@ -5380,6 +5590,10 @@ public final class JuBiterProtos {
       }
     }
     /**
+     * <pre>
+     * mac or uuid
+     * </pre>
+     *
      * <code>string remote_id = 1;</code>
      */
     public com.google.protobuf.ByteString
@@ -5784,6 +5998,10 @@ public final class JuBiterProtos {
 
       private Object remoteId_ = "";
       /**
+       * <pre>
+       * mac or uuid
+       * </pre>
+       *
        * <code>string remote_id = 1;</code>
        */
       public String getRemoteId() {
@@ -5799,6 +6017,10 @@ public final class JuBiterProtos {
         }
       }
       /**
+       * <pre>
+       * mac or uuid
+       * </pre>
+       *
        * <code>string remote_id = 1;</code>
        */
       public com.google.protobuf.ByteString
@@ -5815,6 +6037,10 @@ public final class JuBiterProtos {
         }
       }
       /**
+       * <pre>
+       * mac or uuid
+       * </pre>
+       *
        * <code>string remote_id = 1;</code>
        */
       public Builder setRemoteId(
@@ -5828,6 +6054,10 @@ public final class JuBiterProtos {
         return this;
       }
       /**
+       * <pre>
+       * mac or uuid
+       * </pre>
+       *
        * <code>string remote_id = 1;</code>
        */
       public Builder clearRemoteId() {
@@ -5837,6 +6067,10 @@ public final class JuBiterProtos {
         return this;
       }
       /**
+       * <pre>
+       * mac or uuid
+       * </pre>
+       *
        * <code>string remote_id = 1;</code>
        */
       public Builder setRemoteIdBytes(
@@ -7652,21 +7886,21 @@ public final class JuBiterProtos {
       "scan_mode\030\001 \001(\005\022\025\n\rservice_uuids\030\002 \003(\t\"l" +
       "\n\nScanResult\022 \n\006device\030\001 \001(\0132\020.Bluetooth" +
       "Device\022.\n\022advertisement_data\030\002 \001(\0132\022.Adv" +
-      "ertisementData\022\014\n\004rssi\030\003 \001(\005\"A\n\016ConnectR" +
-      "equest\022\021\n\tremote_id\030\001 \001(\t\022\034\n\024android_aut" +
-      "o_connect\030\002 \001(\010\"\213\001\n\017BluetoothDevice\022\021\n\tr" +
-      "emote_id\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022#\n\004type\030\003 \001" +
-      "(\0162\025.BluetoothDevice.Type\"2\n\004Type\022\013\n\007UNK" +
-      "NOWN\020\000\022\013\n\007CLASSIC\020\001\022\006\n\002LE\020\002\022\010\n\004DUAL\020\003\"\276\001" +
-      "\n\023DeviceStateResponse\022\021\n\tremote_id\030\001 \001(\t" +
-      "\0228\n\005state\030\002 \001(\0162).DeviceStateResponse.Bl" +
-      "uetoothDeviceState\"Z\n\024BluetoothDeviceSta" +
-      "te\022\020\n\014DISCONNECTED\020\000\022\016\n\nCONNECTING\020\001\022\r\n\t" +
-      "CONNECTED\020\002\022\021\n\rDISCONNECTING\020\003\"=\n\030Connec" +
-      "tedDevicesResponse\022!\n\007devices\030\001 \003(\0132\020.Bl" +
-      "uetoothDeviceB:\n\031com.jubiter.plugin.prot" +
-      "osB\rJuBiterProtos\242\002\rJuBiterProtosb\006proto" +
-      "3"
+      "ertisementData\022\014\n\004rssi\030\003 \001(\005\"R\n\016ConnectR" +
+      "equest\022\021\n\tremote_id\030\001 \001(\t\022\017\n\007timeout\030\002 \001" +
+      "(\005\022\034\n\024android_auto_connect\030\003 \001(\010\"\213\001\n\017Blu" +
+      "etoothDevice\022\021\n\tremote_id\030\001 \001(\t\022\014\n\004name\030" +
+      "\002 \001(\t\022#\n\004type\030\003 \001(\0162\025.BluetoothDevice.Ty" +
+      "pe\"2\n\004Type\022\013\n\007UNKNOWN\020\000\022\013\n\007CLASSIC\020\001\022\006\n\002" +
+      "LE\020\002\022\010\n\004DUAL\020\003\"\276\001\n\023DeviceStateResponse\022\021" +
+      "\n\tremote_id\030\001 \001(\t\0228\n\005state\030\002 \001(\0162).Devic" +
+      "eStateResponse.BluetoothDeviceState\"Z\n\024B" +
+      "luetoothDeviceState\022\020\n\014DISCONNECTED\020\000\022\016\n" +
+      "\nCONNECTING\020\001\022\r\n\tCONNECTED\020\002\022\021\n\rDISCONNE" +
+      "CTING\020\003\"=\n\030ConnectedDevicesResponse\022!\n\007d" +
+      "evices\030\001 \003(\0132\020.BluetoothDeviceB:\n\031com.ju" +
+      "biter.plugin.protosB\rJuBiterProtos\242\002\rJuB" +
+      "iterProtosb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7719,7 +7953,7 @@ public final class JuBiterProtos {
     internal_static_ConnectRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ConnectRequest_descriptor,
-        new String[] { "RemoteId", "AndroidAutoConnect", });
+        new String[] { "RemoteId", "Timeout", "AndroidAutoConnect", });
     internal_static_BluetoothDevice_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_BluetoothDevice_fieldAccessorTable = new

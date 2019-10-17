@@ -1,24 +1,29 @@
 part of jubiter_plugin;
 
 class JuBiterPlugin {
-
   static const String TAG = 'JuBiterPlugin';
 
   static const String NAMESPACE = 'com.jubiter.plugin';
-  static const String METHOD_CHANNEL_NAME = NAMESPACE + '/methods';
+  static const String METHOD_CHANNEL = NAMESPACE + '/methods';
   static const String SCAN_RESULT_CHANNEL = NAMESPACE + '/scanResult';
-  static const String STATE_CHANNEL_NAME = NAMESPACE + '/state';
+  static const String BLE_STATE_CHANNEL = NAMESPACE + '/state';
+  static const String CONNECT_STATE_CHANNEL = NAMESPACE + '/connectState';
 
-  static const MethodChannel _methodChannel = const MethodChannel(METHOD_CHANNEL_NAME);
-//  static const EventChannel _connectStateChannel = const EventChannel(STATE_CHANNEL_NAME);
+  static const MethodChannel _methodChannel = const MethodChannel(METHOD_CHANNEL);
+//  static const EventChannel _connectStateChannel = const EventChannel(BLE_STATE_CHANNEL);
   static const EventChannel _scanResultChannel = const EventChannel(SCAN_RESULT_CHANNEL);
+  static const EventChannel _connectStateChannel = const EventChannel(CONNECT_STATE_CHANNEL);
+
+  static final StreamController<MethodCall> _methodStreamController = new StreamController.broadcast();
+
+//  static Stream<MethodCall> get _methodStream => _methodStreamController.stream;
 
   static Function _scanCallback;
   static Function _stopScanCallback;
 
-
   static Future<String> get platformVersion async {
-    final String version = await _methodChannel.invokeMethod('getPlatformVersion');
+    final String version =
+        await _methodChannel.invokeMethod('getPlatformVersion');
     return version;
   }
 
@@ -42,7 +47,8 @@ class JuBiterPlugin {
 
   static Future<ResultString> seedToMasterPrivateKey(
       String seed, CURVES curves) async {
-    Uint8List result = await _methodChannel.invokeMethod('seedToMasterPrivateKey',
+    Uint8List result = await _methodChannel.invokeMethod(
+        'seedToMasterPrivateKey',
         <String, dynamic>{'seed': seed, 'curves': curves.value});
     return ResultString.fromBuffer(result);
   }
@@ -50,12 +56,14 @@ class JuBiterPlugin {
   // DEVICE
 
   static Future<ResultAny> getDeviceInfo(int deviceID) async {
-    Uint8List result = await _methodChannel.invokeMethod('getDeviceInfo', deviceID);
+    Uint8List result =
+        await _methodChannel.invokeMethod('getDeviceInfo', deviceID);
     return ResultAny.fromBuffer(result);
   }
 
   static Future<ResultString> getDeviceCert(int deviceID) async {
-    Uint8List result = await _methodChannel.invokeMethod('getDeviceCert', deviceID);
+    Uint8List result =
+        await _methodChannel.invokeMethod('getDeviceCert', deviceID);
     return ResultString.fromBuffer(result);
   }
 
@@ -79,7 +87,8 @@ class JuBiterPlugin {
   }
 
   static Future<ResultString> enumApplets(int deviceID) async {
-    Uint8List result = await _methodChannel.invokeMethod('enumApplets', deviceID);
+    Uint8List result =
+        await _methodChannel.invokeMethod('enumApplets', deviceID);
     return ResultString.fromBuffer(result);
   }
 
@@ -97,7 +106,8 @@ class JuBiterPlugin {
   }
 
   static Future<ResultInt> queryBattery(int deviceID) async {
-    Uint8List result = await _methodChannel.invokeMethod('queryBattery', deviceID);
+    Uint8List result =
+        await _methodChannel.invokeMethod('queryBattery', deviceID);
     return ResultInt.fromBuffer(result);
   }
 
@@ -128,7 +138,10 @@ class JuBiterPlugin {
   }
 
   static void initEventChannel() {
-    _scanResultChannel.receiveBroadcastStream().listen(_onData, onDone: _onDone, onError: _onError);
+    _methodChannel.setMethodCallHandler((MethodCall call) async {
+      LogUtils.d('${TAG} handler >>> ${call.method}');
+      _methodStreamController.add(call);
+    });
   }
 
   static void _onData(Object event) {
@@ -146,74 +159,113 @@ class JuBiterPlugin {
   /// 蓝牙扫描状态回调
   static void _scanResult(Object event) {
     ScanResult scanResult = ScanResult.fromBuffer(event);
-    LogUtils.d('$TAG >>> device: ${scanResult.device.name} ${scanResult.device.remoteId}');
+    LogUtils.d(
+        '$TAG >>> device: ${scanResult.device.name} ${scanResult.device.remoteId}');
 //    _scanCallback(scanResult);
   }
 
   static void _onStopScan() {
     LogUtils.d('$TAG >>> _onStopScan');
-
   }
 
   static void _onScanError(Object event) {
     LogUtils.d('$TAG >>> _onScanError');
   }
-  ///
-
-  // todo
-  static Future<int> startScan(void scanCallback(ScanResult scanResult), void stopScanCallback()) async {
-    _scanCallback = scanCallback;
-    _stopScanCallback = stopScanCallback;
-   return _methodChannel.invokeMethod('startScan');
-  }
 
   // scan BLE device, return result by stream
-  static Stream<ScanResult> startScanStream() async* {
+  static Stream<ScanResult> startScan(Duration timeout) async* {
     StreamSubscription subscription;
-//    subscription = _scanResultChannel.receiveBroadcastStream().listen(
-////      controller.add,
-//////      onError: controller.addError,
-//////      onDone: controller.close
-//        (scanResult) {
-//          LogUtils.d('$TAG >>> onListen 1');
-//
-//        },
-//        onDone : () {
-//
-//        },
-//        onError: () {
-//
-//        },
-//    );
-
     StreamController controller;
     controller = new StreamController(
-        onListen: () {
-          LogUtils.d('$TAG >>> onListen');
-
-        },
-        onCancel: () {
-          LogUtils.d('$TAG >>> onCancel');
-//          stopScan();
-//          subscription.cancel();
+      onListen: () {
+        LogUtils.d('$TAG >>> onListen');
+        if (null != timeout) {
+          Future.delayed(timeout, () => controller.close());
         }
+      },
+      onCancel: () {
+        LogUtils.d('$TAG >>> start onCancel');
+        stopScan();
+        subscription.cancel();
+      },
     );
+
+    Stream stream = _scanResultChannel.receiveBroadcastStream();
+    subscription = stream.listen(controller.add,
+        onError: controller.addError, onDone: controller.close);
 
     await _methodChannel.invokeMethod('startScan');
 
-    controller.stream.map((buffer) => new ScanResult.fromBuffer(buffer));
+    yield* controller.stream.map((buffer) => new ScanResult.fromBuffer(buffer));
   }
 
   static Future<int> stopScan() async {
     return await _methodChannel.invokeMethod('stopScan');
   }
 
-  // todo
-  static Future<int> connectDeviceAsync(BluetoothDevice device) async {
-    return await _methodChannel.invokeMethod('connectDeviceAsync', <String, dynamic> {
-      'address' : device.remoteId,
-      'timeout' : 1000 * 5
-    });
+  // 连接 ble 设备
+  static Stream<BluetoothDeviceState> connectDeviceAsync(
+      BluetoothDevice device, Duration timeout) async* {
+    var request = ConnectRequest.create();
+    request.remoteId = device.remoteId;
+    request.timeout = timeout.inSeconds;
+
+    var connected = false;
+    StreamSubscription subscription;
+    StreamController controller;
+    controller = new StreamController(
+      onListen: () {
+        LogUtils.d('$TAG >>> connect onListen');
+        if (null != timeout) {
+          Future.delayed(
+              timeout, () => (!connected) ? controller.close() : null);
+        }
+      },
+      onCancel: () {
+        LogUtils.d('$TAG >>> connect onCancel');
+        subscription.cancel();
+      },
+    );
+
+    await _methodChannel.invokeMethod('connectDeviceAsync', request.writeToBuffer());
+
+    Stream<BluetoothDeviceState> stream = onStateChanged();
+    subscription = stream.listen((data) {
+      LogUtils.d('$TAG >>> connect stream listen');
+      if (data == BluetoothDeviceState.connected) {
+        LogUtils.d('$TAG >>> connected');
+        connected = true;
+      }
+      controller.add(data);
+    }, onError: controller.addError, onDone: controller.close);
+
+//    _connectStateChannel.receiveBroadcastStream().listen(
+//        (data) {
+//          LogUtils.d('$TAG >>> connect state');
+//        },
+//        onError: (Object event) {
+//          LogUtils.d('$TAG >>> onError');
+//        },
+//        onDone: () {
+//          LogUtils.d('$TAG >>> onDone');
+//        }
+//    );
+
+    yield* controller.stream;
+  }
+
+  /// Notifies when the device connection state has changed
+  static Stream<BluetoothDeviceState> onStateChanged() {
+    return _methodStreamController.stream.where((m) {
+      print('>>> ${m.method}');
+          return m.method == "DeviceState";
+        })
+        .map((m) {
+          print('>>> ${m.arguments}');
+          return m.arguments;
+        })
+        .map((buffer) => new DeviceStateResponse.fromBuffer(buffer))
+        .map((p) => BluetoothDeviceState.values[p.state.value]);
   }
 
   static Future<int> cancelConnect(String macAddress) async {
@@ -288,8 +340,8 @@ class JuBiterPlugin {
 
   static Future<ResultString> BTCSignTransaction(
       int contextID, TransactionBTC txInfo) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('BTCSignTransaction', <String, dynamic>{
+    Uint8List result = await _methodChannel
+        .invokeMethod('BTCSignTransaction', <String, dynamic>{
       'contextID': contextID,
       'txInfo': txInfo.writeToBuffer(),
     });
@@ -380,8 +432,8 @@ class JuBiterPlugin {
 
   static Future<ResultString> ETHSignTransaction(
       int contextID, TransactionETH txInfo) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('ETHSignTransaction', <String, dynamic>{
+    Uint8List result = await _methodChannel
+        .invokeMethod('ETHSignTransaction', <String, dynamic>{
       'contextID': contextID,
       'txInfo': txInfo.writeToBuffer(),
     });

@@ -4,8 +4,8 @@ part of jubiter_plugin;
 /// Common Operation and Bluetooth Operation
 ///
 class JuBiterWallet {
-
-  static Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strength) {
+  static Future<ResultString> generateMnemonic(
+      ENUM_MNEMONIC_STRENGTH strength) {
     return JuBiterPlugin.generateMnemonic(strength);
   }
 
@@ -17,10 +17,10 @@ class JuBiterWallet {
     return JuBiterPlugin.generateSeed(mnemonic, passphrase);
   }
 
-  static Future<ResultString> seedToMasterPrivateKey(String seed, CURVES curves) {
+  static Future<ResultString> seedToMasterPrivateKey(
+      String seed, CURVES curves) {
     return JuBiterPlugin.seedToMasterPrivateKey(seed, curves);
   }
-
 
   static Future<ResultAny> getDeviceInfo(int deviceID) async {
     return JuBiterPlugin.getDeviceInfo(deviceID);
@@ -54,7 +54,8 @@ class JuBiterWallet {
     return JuBiterPlugin.enumSupportCoins(deviceID);
   }
 
-  static Future<ResultString> getAppletVersion(int deviceID, String appletID) async {
+  static Future<ResultString> getAppletVersion(
+      int deviceID, String appletID) async {
     return JuBiterPlugin.getAppletVersion(deviceID, appletID);
   }
 
@@ -82,24 +83,17 @@ class JuBiterWallet {
     return JuBiterPlugin.initDevice();
   }
 
-  ///
-  /// [scanCallback] : 返回蓝牙的扫描结果
-  /// [stopScanCallback] : 蓝牙停止扫描状态返回
-  static Future<int> startScan(void scanCallback(ScanResult scanResult), void stopScanCallback()) async {
-     return JuBiterPlugin.startScan(scanCallback, stopScanCallback);
-  }
-
-  static Stream<ScanResult> startScanStream(Duration timeout) async* {
-    yield* JuBiterPlugin.startScanStream();
+  static Stream<ScanResult> startScan(Duration timeout) async* {
+    yield* JuBiterPlugin.startScan(timeout);
   }
 
   static Future<int> stopScan() async {
     return JuBiterPlugin.stopScan();
   }
 
-  // todo
-  static Future<int> connectDeviceAsync(BluetoothDevice device) async {
-    return JuBiterPlugin.connectDeviceAsync(device);
+  static Stream<BluetoothDeviceState> connectDeviceAsync(
+      BluetoothDevice device, Duration timeout) async* {
+    yield* JuBiterPlugin.connectDeviceAsync(device, timeout);
   }
 
   static Future<int> cancelConnect(String macAddress) async {
@@ -114,3 +108,5 @@ class JuBiterWallet {
     return JuBiterPlugin.isConnected(deviceID);
   }
 }
+
+enum BluetoothDeviceState { disconnected, connecting, connected, disconnecting }
