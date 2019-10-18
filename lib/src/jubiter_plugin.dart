@@ -16,7 +16,7 @@ class JuBiterPlugin {
 
   static final StreamController<MethodCall> _methodStreamController = new StreamController.broadcast();
 
-//  static Stream<MethodCall> get _methodStream => _methodStreamController.stream;
+  static Stream<MethodCall> get _methodStream => _methodStreamController.stream;
 
   static Function _scanCallback;
   static Function _stopScanCallback;
@@ -139,7 +139,6 @@ class JuBiterPlugin {
 
   static void initEventChannel() {
     _methodChannel.setMethodCallHandler((MethodCall call) async {
-      LogUtils.d('${TAG} handler >>> ${call.method}');
       _methodStreamController.add(call);
     });
   }
@@ -212,25 +211,22 @@ class JuBiterPlugin {
 
     var connected = false;
     StreamSubscription subscription;
-    StreamController controller;
-    controller = new StreamController(
+    StreamController controller = new StreamController<BluetoothDeviceState>(
       onListen: () {
         LogUtils.d('$TAG >>> connect onListen');
-        if (null != timeout) {
-          Future.delayed(
-              timeout, () => (!connected) ? controller.close() : null);
-        }
       },
       onCancel: () {
         LogUtils.d('$TAG >>> connect onCancel');
-        subscription.cancel();
       },
+      onResume: () {
+        LogUtils.d('$TAG >>> connect onResume');
+      },
+      onPause: () {
+        LogUtils.d('$TAG >>> connect onPause');
+      }
     );
 
-    await _methodChannel.invokeMethod('connectDeviceAsync', request.writeToBuffer());
-
-    Stream<BluetoothDeviceState> stream = onStateChanged();
-    subscription = stream.listen((data) {
+    subscription = onStateChanged().listen((data) {
       LogUtils.d('$TAG >>> connect stream listen');
       if (data == BluetoothDeviceState.connected) {
         LogUtils.d('$TAG >>> connected');
@@ -239,31 +235,40 @@ class JuBiterPlugin {
       controller.add(data);
     }, onError: controller.addError, onDone: controller.close);
 
-//    _connectStateChannel.receiveBroadcastStream().listen(
-//        (data) {
-//          LogUtils.d('$TAG >>> connect state');
-//        },
-//        onError: (Object event) {
-//          LogUtils.d('$TAG >>> onError');
-//        },
-//        onDone: () {
-//          LogUtils.d('$TAG >>> onDone');
-//        }
-//    );
+    await _methodChannel.invokeMethod('connectDeviceAsync', request.writeToBuffer());
 
     yield* controller.stream;
   }
 
+  static Future<int> connect(BluetoothDevice device, Duration timeout, Function onConnectCallback) async {
+    var request = ConnectRequest.create();
+    request.remoteId = device.remoteId;
+    request.timeout = timeout.inSeconds;
+
+    onStateChanged().listen((data) {
+      LogUtils.d('$TAG >>> connect stream listen');
+//      if (data == BluetoothDeviceState.connected) {
+//        LogUtils.d('$TAG >>> connected');
+//        onConnectCallback();
+//      }
+      onConnectCallback(data);
+    },
+        onError: (Object event) {
+
+        },
+        onDone: () {
+
+        }
+    );
+
+    return await _methodChannel.invokeMethod('connectDeviceAsync', request.writeToBuffer());
+  }
+
   /// Notifies when the device connection state has changed
   static Stream<BluetoothDeviceState> onStateChanged() {
-    return _methodStreamController.stream.where((m) {
-      print('>>> ${m.method}');
-          return m.method == "DeviceState";
-        })
-        .map((m) {
-          print('>>> ${m.arguments}');
-          return m.arguments;
-        })
+    return _methodStream
+        .where((m) =>m.method == "DeviceState")
+        .map((m) => m.arguments)
         .map((buffer) => new DeviceStateResponse.fromBuffer(buffer))
         .map((p) => BluetoothDeviceState.values[p.state.value]);
   }

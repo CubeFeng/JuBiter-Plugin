@@ -509,7 +509,6 @@ public class JuBiterPlugin implements MethodCallHandler {
                         .setRemoteId(mac)
                         .setState(JuBiterProtos.DeviceStateResponse.BluetoothDeviceState.CONNECTED)
                         .build();
-//                connectStateSink.success(deviceStateResponse.toByteArray());
                 uiHandler.post(new Runnable() {
                     @Override
                     public void run() {

@@ -294,35 +294,32 @@ class _MyAppState extends State<MyApp> {
       LogUtils.d(
           'main >>> ${scanResult.device.remoteId} ${scanResult.device.name}');
     }, onDone: () {
-      LogUtils.d('main >>> onDone');
+      LogUtils.d('main >>> scan onDone');
     }, onError: (Object event) {
-      LogUtils.d('main >>> onError');
+      LogUtils.d('main >>> scan onError');
     });
 
     // 模拟扫描连接过程
     Timer(new Duration(seconds: 5), () {
-      scheduleMicrotask(() {
-        JuBiterWallet.stopScan();
+      JuBiterWallet.stopScan();
 
-        BluetoothDevice device = new BluetoothDevice()
-          ..remoteId = 'DD:A6:FE:7D:9C:27'
-          ..name = 'JuBiter-bhqi'
-          ..type = BluetoothDevice_Type.LE;
+      BluetoothDevice device = new BluetoothDevice()
+        ..remoteId = 'DD:A6:FE:7D:9C:27'
+        ..name = 'JuBiter-bhqi'
+        ..type = BluetoothDevice_Type.LE;
 
-        JuBiterWallet.connectDeviceAsync(device, Duration(seconds: 10)).listen(
-          (bluetoothDeviceState) {
-            LogUtils.d('main >>> connect state: ${bluetoothDeviceState.toString()}');
-          },
-          onDone: () {
-            LogUtils.d('main >>> connect onDone');
-          },
-          onError: (Object event) {
-            LogUtils.d('main >>> connect onError');
-          },
-        );
+//      JuBiterWallet.connectDeviceAsync(device, Duration(seconds: 10)).listen(
+//          (bluetoothDeviceState) {
+//        LogUtils.d('main >>> connectDeviceAsync listen : ${bluetoothDeviceState.toString()}');
+//      }, onError: (Object event) {
+//        LogUtils.d('main >>> connectDeviceAsync onError');
+//      }, onDone: () {
+//        LogUtils.d('main >>> connectDeviceAsync onDone');
+//      });
 
+      JuBiterWallet.connect(device, Duration(seconds: 10), (bluetoothDeviceState) {
+        LogUtils.d('>>> connect callback: ${bluetoothDeviceState.toString()}');
       });
     });
   }
-
 }
