@@ -240,7 +240,9 @@ class JuBiterPlugin {
     yield* controller.stream;
   }
 
-  static Future<int> connect(BluetoothDevice device, Duration timeout, Function onConnectCallback) async {
+  static Future<int> connect(BluetoothDevice device, Duration timeout,
+      void onConnectStateChange(BluetoothDeviceState state),
+      void onError(Object error)) async {
     var request = ConnectRequest.create();
     request.remoteId = device.remoteId;
     request.timeout = timeout.inSeconds;
@@ -251,17 +253,21 @@ class JuBiterPlugin {
 //        LogUtils.d('$TAG >>> connected');
 //        onConnectCallback();
 //      }
-      onConnectCallback(data);
+      onConnectStateChange(data);
     },
         onError: (Object event) {
-
+          LogUtils.d('$TAG >>> connect onError');
         },
         onDone: () {
-
+          LogUtils.d('$TAG >>> connect onDone');
         }
     );
 
-    return await _methodChannel.invokeMethod('connectDeviceAsync', request.writeToBuffer());
+    try {
+      return await _methodChannel.invokeMethod('connectDeviceAsync', request.writeToBuffer());
+    } catch (e) {
+      LogUtils.d('$TAG >>> connect onError: ${e}');
+    }
   }
 
   /// Notifies when the device connection state has changed

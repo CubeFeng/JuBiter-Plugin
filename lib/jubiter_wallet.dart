@@ -96,8 +96,9 @@ class JuBiterWallet {
     yield* JuBiterPlugin.connectDeviceAsync(device, timeout);
   }
 
-  static Future<int> connect(BluetoothDevice device, Duration timeout, Function onConnectCallback) async {
-    return JuBiterPlugin.connect(device, timeout, onConnectCallback);
+  static Future<int> connect(BluetoothDevice device, Duration timeout,
+      void onConnectStateChange(BluetoothDeviceState state), void onError(Object error)) async {
+    return JuBiterPlugin.connect(device, timeout, onConnectStateChange, onError);
   }
 
   static Future<int> cancelConnect(String macAddress) async {

@@ -288,25 +288,24 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<String> bleTest() {
-    JuBiterWallet.initDevice();
+    JuBiterWallet.initDevice().then((value) {
+      JuBiterWallet.startScan(new Duration(seconds: 10)).listen((scanResult) {
+        LogUtils.d(
+            'main >>> ${scanResult.device.remoteId} ${scanResult.device.name}');
+      }, onDone: () {
+        LogUtils.d('main >>> scan onDone');
+      }, onError: (Object event) {
+        LogUtils.d('main >>> scan onError');
+      });
 
-    JuBiterWallet.startScan(new Duration(seconds: 10)).listen((scanResult) {
-      LogUtils.d(
-          'main >>> ${scanResult.device.remoteId} ${scanResult.device.name}');
-    }, onDone: () {
-      LogUtils.d('main >>> scan onDone');
-    }, onError: (Object event) {
-      LogUtils.d('main >>> scan onError');
-    });
+      // 模拟扫描连接过程
+      Timer(new Duration(seconds: 5), () {
+        JuBiterWallet.stopScan();
 
-    // 模拟扫描连接过程
-    Timer(new Duration(seconds: 5), () {
-      JuBiterWallet.stopScan();
-
-      BluetoothDevice device = new BluetoothDevice()
-        ..remoteId = 'DD:A6:FE:7D:9C:27'
-        ..name = 'JuBiter-bhqi'
-        ..type = BluetoothDevice_Type.LE;
+        BluetoothDevice device = new BluetoothDevice()
+          ..remoteId = 'DD:A6:FE:7D:9C:27'
+          ..name = 'JuBiter-bhqi'
+          ..type = BluetoothDevice_Type.LE;
 
 //      JuBiterWallet.connectDeviceAsync(device, Duration(seconds: 10)).listen(
 //          (bluetoothDeviceState) {
@@ -317,9 +316,16 @@ class _MyAppState extends State<MyApp> {
 //        LogUtils.d('main >>> connectDeviceAsync onDone');
 //      });
 
-      JuBiterWallet.connect(device, Duration(seconds: 10), (bluetoothDeviceState) {
-        LogUtils.d('>>> connect callback: ${bluetoothDeviceState.toString()}');
+        JuBiterWallet.connect(device, Duration(seconds: 10), (bluetoothDeviceState) {
+          LogUtils.d('>>> connect callback: ${bluetoothDeviceState.toString()}');
+        }, (error) {
+          LogUtils.d('>>> connect callback error: ${error}');
+        });
       });
+    },
+    onError: (error) {
+      LogUtils.d('>>> init error: ${error}');
     });
+
   }
 }

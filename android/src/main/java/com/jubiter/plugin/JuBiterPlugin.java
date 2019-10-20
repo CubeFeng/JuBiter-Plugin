@@ -26,6 +26,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /**
@@ -34,7 +35,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
  * @author fengshuo
  * @date 2019/10/08
  */
-public class JuBiterPlugin implements MethodCallHandler {
+public class JuBiterPlugin implements MethodCallHandler, PluginRegistry.RequestPermissionsResultListener {
 
     private static final String TAG = "JuBiterPlugin";
     private static final String NAMESPACE = "com.jubiter.plugin";
@@ -52,6 +53,7 @@ public class JuBiterPlugin implements MethodCallHandler {
 
     private MethodCall pendingCall;
     private Result pendingResult;
+    private Object mLock = new Object();
 
     private Handler uiHandler = new Handler(Looper.getMainLooper());
 
@@ -173,11 +175,6 @@ public class JuBiterPlugin implements MethodCallHandler {
 
             // 蓝牙
             case "initDevice": {
-                initDevice(call, result);
-                break;
-            }
-
-            case "startScan": {
                 if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED
                         && ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -193,6 +190,26 @@ public class JuBiterPlugin implements MethodCallHandler {
                     pendingResult = result;
                     break;
                 }
+                initDevice(call, result);
+                break;
+            }
+
+            case "startScan": {
+//                if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
+//                        != PackageManager.PERMISSION_GRANTED
+//                        && ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+//                        != PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(
+//                            activity,
+//                            new String[]{
+//                                    Manifest.permission.ACCESS_COARSE_LOCATION,
+//                                    Manifest.permission.ACCESS_FINE_LOCATION
+//                            },
+//                            REQUEST_COARSE_LOCATION_PERMISSIONS);
+//                    pendingCall = call;
+//                    pendingResult = result;
+//                    break;
+//                }
                 startScan(call, result);
                 break;
             }
@@ -762,4 +779,20 @@ public class JuBiterPlugin implements MethodCallHandler {
         result.success(JuBiterEthereum.buildERC20Abi(contextID, address, amountInWei).toByteArray());
     }
 
+    @Override
+    public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == REQUEST_COARSE_LOCATION_PERMISSIONS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                startScan(pendingCall, pendingResult);
+                initDevice(pendingCall, pendingResult);
+            } else {
+                pendingResult.error(
+                        "no_permissions", "bluetooth plugin requires location permissions for scanning", null);
+                pendingResult = null;
+                pendingCall = null;
+            }
+            return true;
+        }
+        return false;
+    }
 }
