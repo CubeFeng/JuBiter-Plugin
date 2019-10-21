@@ -27,7 +27,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
-
 import io.flutter.plugin.common.PluginRegistry.RequestPermissionsResultListener;
 
 /**
@@ -50,7 +49,6 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
     private final Activity activity;
     private final MethodChannel methodChannel;
     private final EventChannel scanResultChannel;
-//    private final EventChannel connectStateChannel;
 
     private MethodCall pendingCall;
     private Result pendingResult;
@@ -63,6 +61,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
      */
     public static void registerWith(Registrar registrar) {
         final JuBiterPlugin instance = new JuBiterPlugin(registrar);
+        // 添加权限请求监听
+        registrar.addRequestPermissionsResultListener(instance);
     }
 
     public JuBiterPlugin(Registrar registrar) {
@@ -463,7 +463,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
                         .setName(device.getName())
                         .setType(JuBiterProtos.BluetoothDevice.Type.LE)
                         .build();
-                // unused
+
                 JuBiterProtos.AdvertisementData advertisementData = JuBiterProtos.AdvertisementData.newBuilder()
                         .build();
                 JuBiterProtos.ScanResult scanResult = JuBiterProtos.ScanResult.newBuilder()
@@ -493,21 +493,6 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
     private void stopScan(MethodCall call, Result result) {
         result.success(JuBiterWallet.stopScan());
     }
-
-//    private EventChannel.EventSink connectStateSink;
-//    private final EventChannel.StreamHandler connectStateHandler = new EventChannel.StreamHandler() {
-//        @Override
-//        public void onListen(Object o, EventChannel.EventSink sink) {
-//            Log.d(TAG, ">>> connect onListen");
-//            connectStateSink = sink;
-//        }
-//
-//        @Override
-//        public void onCancel(Object o) {
-//            Log.d(TAG, ">>> connect onCancel");
-////            connectStateSink = null;
-//        }
-//    };
 
     private void connectDeviceAsync(MethodCall call, Result result) {
         byte[] data = call.arguments();
@@ -783,15 +768,14 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
     // todo 权限申请不进回调
     @Override
     public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        Log.d(TAG, ">>> onRequestPermissionsResult");
         if (requestCode == REQUEST_COARSE_LOCATION_PERMISSIONS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //                startScan(pendingCall, pendingResult);
                 initDevice(pendingCall, pendingResult);
             } else {
-                Log.d(TAG, ">>> request permission fail");
+                Log.e(TAG, ">>> request permission fail");
                 pendingResult.error(
-                        "234", "bluetooth plugin requires location permissions for scanning", null);
+                        "-1", "bluetooth plugin requires location permissions for scanning", null);
                 pendingResult = null;
                 pendingCall = null;
             }

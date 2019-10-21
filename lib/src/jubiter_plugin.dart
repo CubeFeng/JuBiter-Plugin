@@ -130,7 +130,6 @@ class JuBiterPlugin {
   }
 
   // BLE
-  // todo ：权限申请拒绝后的错误信息处理
   static Future<int> initDevice() async {
     // 初始化蓝牙相关的回调
     initEventChannel();
