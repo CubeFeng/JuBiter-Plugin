@@ -101,6 +101,7 @@ class JuBiterWallet {
     return JuBiterPlugin.connect(device, timeout, onConnectStateChange, onError);
   }
 
+  @deprecated
   static Future<int> cancelConnect(String macAddress) async {
     return JuBiterPlugin.cancelConnect(macAddress);
   }

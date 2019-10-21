@@ -289,6 +289,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<String> bleTest() {
     JuBiterWallet.initDevice().then((value) {
+      LogUtils.d('>>> init callback: $value');
       JuBiterWallet.startScan(new Duration(seconds: 10)).listen((scanResult) {
         LogUtils.d(
             'main >>> ${scanResult.device.remoteId} ${scanResult.device.name}');

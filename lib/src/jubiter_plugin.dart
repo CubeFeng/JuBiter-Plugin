@@ -130,11 +130,17 @@ class JuBiterPlugin {
   }
 
   // BLE
-
+  // todo ：权限申请拒绝后的错误信息处理
   static Future<int> initDevice() async {
     // 初始化蓝牙相关的回调
     initEventChannel();
-    return _methodChannel.invokeMethod('initDevice');
+    try {
+      return _methodChannel.invokeMethod('initDevice');
+    } on PlatformException catch(e) {
+      return int.parse(e.code);
+    }catch (e) {
+      return e;
+    }
   }
 
   static void initEventChannel() {
@@ -203,6 +209,7 @@ class JuBiterPlugin {
   }
 
   // 连接 ble 设备
+  @deprecated
   static Stream<BluetoothDeviceState> connectDeviceAsync(
       BluetoothDevice device, Duration timeout) async* {
     var request = ConnectRequest.create();
@@ -267,6 +274,7 @@ class JuBiterPlugin {
       return await _methodChannel.invokeMethod('connectDeviceAsync', request.writeToBuffer());
     } catch (e) {
       LogUtils.d('$TAG >>> connect onError: ${e}');
+      return 123;
     }
   }
 
