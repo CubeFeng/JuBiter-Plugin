@@ -304,8 +304,8 @@ class _MyAppState extends State<MyApp> {
         JuBiterWallet.stopScan();
 
         BluetoothDevice device = new BluetoothDevice()
-          ..remoteId = 'DD:A6:FE:7D:9C:27'
-          ..name = 'JuBiter-bhqi'
+          ..remoteId = 'D2:3C:63:84:60:37'
+          ..name = 'JuBiter-kbvp'
           ..type = BluetoothDevice_Type.LE;
 
 //      JuBiterWallet.connectDeviceAsync(device, Duration(seconds: 10)).listen(
