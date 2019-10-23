@@ -6273,6 +6273,11 @@ public final class JuBiterProtos {
      * <code>.DeviceStateResponse.BluetoothDeviceState state = 2;</code>
      */
     DeviceStateResponse.BluetoothDeviceState getState();
+
+    /**
+     * <code>int32 deviceID = 3;</code>
+     */
+    int getDeviceID();
   }
   /**
    * Protobuf type {@code DeviceStateResponse}
@@ -6331,6 +6336,11 @@ public final class JuBiterProtos {
               int rawValue = input.readEnum();
 
               state_ = rawValue;
+              break;
+            }
+            case 24: {
+
+              deviceID_ = input.readInt32();
               break;
             }
             default: {
@@ -6532,6 +6542,15 @@ public final class JuBiterProtos {
       return result == null ? BluetoothDeviceState.UNRECOGNIZED : result;
     }
 
+    public static final int DEVICEID_FIELD_NUMBER = 3;
+    private int deviceID_;
+    /**
+     * <code>int32 deviceID = 3;</code>
+     */
+    public int getDeviceID() {
+      return deviceID_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @Override
     public final boolean isInitialized() {
@@ -6552,6 +6571,9 @@ public final class JuBiterProtos {
       if (state_ != BluetoothDeviceState.DISCONNECTED.getNumber()) {
         output.writeEnum(2, state_);
       }
+      if (deviceID_ != 0) {
+        output.writeInt32(3, deviceID_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -6567,6 +6589,10 @@ public final class JuBiterProtos {
       if (state_ != BluetoothDeviceState.DISCONNECTED.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(2, state_);
+      }
+      if (deviceID_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, deviceID_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -6586,6 +6612,8 @@ public final class JuBiterProtos {
       if (!getRemoteId()
           .equals(other.getRemoteId())) return false;
       if (state_ != other.state_) return false;
+      if (getDeviceID()
+          != other.getDeviceID()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -6601,6 +6629,8 @@ public final class JuBiterProtos {
       hash = (53 * hash) + getRemoteId().hashCode();
       hash = (37 * hash) + STATE_FIELD_NUMBER;
       hash = (53 * hash) + state_;
+      hash = (37 * hash) + DEVICEID_FIELD_NUMBER;
+      hash = (53 * hash) + getDeviceID();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -6738,6 +6768,8 @@ public final class JuBiterProtos {
 
         state_ = 0;
 
+        deviceID_ = 0;
+
         return this;
       }
 
@@ -6766,6 +6798,7 @@ public final class JuBiterProtos {
         DeviceStateResponse result = new DeviceStateResponse(this);
         result.remoteId_ = remoteId_;
         result.state_ = state_;
+        result.deviceID_ = deviceID_;
         onBuilt();
         return result;
       }
@@ -6820,6 +6853,9 @@ public final class JuBiterProtos {
         }
         if (other.state_ != 0) {
           setStateValue(other.getStateValue());
+        }
+        if (other.getDeviceID() != 0) {
+          setDeviceID(other.getDeviceID());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -6960,6 +6996,32 @@ public final class JuBiterProtos {
       public Builder clearState() {
         
         state_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int deviceID_ ;
+      /**
+       * <code>int32 deviceID = 3;</code>
+       */
+      public int getDeviceID() {
+        return deviceID_;
+      }
+      /**
+       * <code>int32 deviceID = 3;</code>
+       */
+      public Builder setDeviceID(int value) {
+        
+        deviceID_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 deviceID = 3;</code>
+       */
+      public Builder clearDeviceID() {
+        
+        deviceID_ = 0;
         onChanged();
         return this;
       }
@@ -7892,15 +7954,15 @@ public final class JuBiterProtos {
       "etoothDevice\022\021\n\tremote_id\030\001 \001(\t\022\014\n\004name\030" +
       "\002 \001(\t\022#\n\004type\030\003 \001(\0162\025.BluetoothDevice.Ty" +
       "pe\"2\n\004Type\022\013\n\007UNKNOWN\020\000\022\013\n\007CLASSIC\020\001\022\006\n\002" +
-      "LE\020\002\022\010\n\004DUAL\020\003\"\276\001\n\023DeviceStateResponse\022\021" +
+      "LE\020\002\022\010\n\004DUAL\020\003\"\320\001\n\023DeviceStateResponse\022\021" +
       "\n\tremote_id\030\001 \001(\t\0228\n\005state\030\002 \001(\0162).Devic" +
-      "eStateResponse.BluetoothDeviceState\"Z\n\024B" +
-      "luetoothDeviceState\022\020\n\014DISCONNECTED\020\000\022\016\n" +
-      "\nCONNECTING\020\001\022\r\n\tCONNECTED\020\002\022\021\n\rDISCONNE" +
-      "CTING\020\003\"=\n\030ConnectedDevicesResponse\022!\n\007d" +
-      "evices\030\001 \003(\0132\020.BluetoothDeviceB:\n\031com.ju" +
-      "biter.plugin.protosB\rJuBiterProtos\242\002\rJuB" +
-      "iterProtosb\006proto3"
+      "eStateResponse.BluetoothDeviceState\022\020\n\010d" +
+      "eviceID\030\003 \001(\005\"Z\n\024BluetoothDeviceState\022\020\n" +
+      "\014DISCONNECTED\020\000\022\016\n\nCONNECTING\020\001\022\r\n\tCONNE" +
+      "CTED\020\002\022\021\n\rDISCONNECTING\020\003\"=\n\030ConnectedDe" +
+      "vicesResponse\022!\n\007devices\030\001 \003(\0132\020.Bluetoo" +
+      "thDeviceB:\n\031com.jubiter.plugin.protosB\rJ" +
+      "uBiterProtos\242\002\rJuBiterProtosb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7965,7 +8027,7 @@ public final class JuBiterProtos {
     internal_static_DeviceStateResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DeviceStateResponse_descriptor,
-        new String[] { "RemoteId", "State", });
+        new String[] { "RemoteId", "State", "DeviceID", });
     internal_static_ConnectedDevicesResponse_descriptor =
       getDescriptor().getMessageTypes().get(8);
     internal_static_ConnectedDevicesResponse_fieldAccessorTable = new

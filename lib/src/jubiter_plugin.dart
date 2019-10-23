@@ -10,11 +10,13 @@ class JuBiterPlugin {
   static const String CONNECT_STATE_CHANNEL = NAMESPACE + '/connectState';
 
   static const MethodChannel _methodChannel = const MethodChannel(METHOD_CHANNEL);
+
 //  static const EventChannel _connectStateChannel = const EventChannel(BLE_STATE_CHANNEL);
   static const EventChannel _scanResultChannel = const EventChannel(SCAN_RESULT_CHANNEL);
   static const EventChannel _connectStateChannel = const EventChannel(CONNECT_STATE_CHANNEL);
 
-  static final StreamController<MethodCall> _methodStreamController = new StreamController.broadcast();
+  static final StreamController<MethodCall> _methodStreamController =
+      new StreamController.broadcast();
 
   static Stream<MethodCall> get _methodStream => _methodStreamController.stream;
 
@@ -22,15 +24,12 @@ class JuBiterPlugin {
   static Function _stopScanCallback;
 
   static Future<String> get platformVersion async {
-    final String version =
-        await _methodChannel.invokeMethod('getPlatformVersion');
+    final String version = await _methodChannel.invokeMethod('getPlatformVersion');
     return version;
   }
 
-  static Future<ResultString> generateMnemonic(
-      ENUM_MNEMONIC_STRENGTH strength) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('generateMnemonic', strength.value);
+  static Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strength) async {
+    Uint8List result = await _methodChannel.invokeMethod('generateMnemonic', strength.value);
     return ResultString.fromBuffer(result);
   }
 
@@ -38,38 +37,33 @@ class JuBiterPlugin {
     return await _methodChannel.invokeMethod('checkMnemonic', mnemonic);
   }
 
-  static Future<ResultString> generateSeed(
-      String mnemonic, String passphrase) async {
-    Uint8List result = await _methodChannel.invokeMethod('generateSeed',
-        <String, String>{'mnemonic': mnemonic, 'passphrase': passphrase});
+  static Future<ResultString> generateSeed(String mnemonic, String passphrase) async {
+    Uint8List result = await _methodChannel.invokeMethod(
+        'generateSeed', <String, String>{'mnemonic': mnemonic, 'passphrase': passphrase});
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> seedToMasterPrivateKey(
-      String seed, CURVES curves) async {
+  static Future<ResultString> seedToMasterPrivateKey(String seed, CURVES curves) async {
     Uint8List result = await _methodChannel.invokeMethod(
-        'seedToMasterPrivateKey',
-        <String, dynamic>{'seed': seed, 'curves': curves.value});
+        'seedToMasterPrivateKey', <String, dynamic>{'seed': seed, 'curves': curves.value});
     return ResultString.fromBuffer(result);
   }
 
   // DEVICE
 
   static Future<ResultAny> getDeviceInfo(int deviceID) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('getDeviceInfo', deviceID);
+    Uint8List result = await _methodChannel.invokeMethod('getDeviceInfo', deviceID);
     return ResultAny.fromBuffer(result);
   }
 
   static Future<ResultString> getDeviceCert(int deviceID) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('getDeviceCert', deviceID);
+    Uint8List result = await _methodChannel.invokeMethod('getDeviceCert', deviceID);
     return ResultString.fromBuffer(result);
   }
 
   static Future<ResultString> sendApdu(int deviceID, String apdu) async {
-    Uint8List result = await _methodChannel.invokeMethod(
-        'sendApdu', <String, dynamic>{'deviceID': deviceID, 'apdu': apdu});
+    Uint8List result = await _methodChannel
+        .invokeMethod('sendApdu', <String, dynamic>{'deviceID': deviceID, 'apdu': apdu});
     return ResultString.fromBuffer(result);
   }
 
@@ -82,32 +76,28 @@ class JuBiterPlugin {
   }
 
   static Future<ResultInt> setTimeout(int contextID, int timeout) async {
-    return await _methodChannel.invokeMethod('setTimeout',
-        <String, dynamic>{'contextID': contextID, 'timeout': timeout});
+    return await _methodChannel
+        .invokeMethod('setTimeout', <String, dynamic>{'contextID': contextID, 'timeout': timeout});
   }
 
   static Future<ResultString> enumApplets(int deviceID) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('enumApplets', deviceID);
+    Uint8List result = await _methodChannel.invokeMethod('enumApplets', deviceID);
     return ResultString.fromBuffer(result);
   }
 
   static Future<ResultString> enumSupportCoins(int deviceID) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('enumSupportCoins', deviceID);
+    Uint8List result = await _methodChannel.invokeMethod('enumSupportCoins', deviceID);
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> getAppletVersion(
-      int deviceID, String appletID) async {
-    Uint8List result = await _methodChannel.invokeMethod('getAppletVersion',
-        <String, dynamic>{'deviceID': deviceID, 'appletID': appletID});
+  static Future<ResultString> getAppletVersion(int deviceID, String appletID) async {
+    Uint8List result = await _methodChannel.invokeMethod(
+        'getAppletVersion', <String, dynamic>{'deviceID': deviceID, 'appletID': appletID});
     return ResultString.fromBuffer(result);
   }
 
   static Future<ResultInt> queryBattery(int deviceID) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('queryBattery', deviceID);
+    Uint8List result = await _methodChannel.invokeMethod('queryBattery', deviceID);
     return ResultInt.fromBuffer(result);
   }
 
@@ -124,8 +114,8 @@ class JuBiterPlugin {
   }
 
   static Future<ResultInt> verifyPIN(int contextID, String PIN) async {
-    Uint8List result = await _methodChannel.invokeMethod(
-        'verifyPIN', <String, dynamic>{'contextID': contextID, 'PIN': PIN});
+    Uint8List result = await _methodChannel
+        .invokeMethod('verifyPIN', <String, dynamic>{'contextID': contextID, 'PIN': PIN});
     return ResultInt.fromBuffer(result);
   }
 
@@ -135,9 +125,9 @@ class JuBiterPlugin {
     initEventChannel();
     try {
       return _methodChannel.invokeMethod('initDevice');
-    } on PlatformException catch(e) {
+    } on PlatformException catch (e) {
       return int.parse(e.code);
-    }catch (e) {
+    } catch (e) {
       return e;
     }
   }
@@ -146,34 +136,6 @@ class JuBiterPlugin {
     _methodChannel.setMethodCallHandler((MethodCall call) async {
       _methodStreamController.add(call);
     });
-  }
-
-  static void _onData(Object event) {
-    _scanResult(event);
-  }
-
-  static void _onDone() {
-    _onStopScan();
-  }
-
-  static void _onError(Object event) {
-    _onScanError(event);
-  }
-
-  /// 蓝牙扫描状态回调
-  static void _scanResult(Object event) {
-    ScanResult scanResult = ScanResult.fromBuffer(event);
-    LogUtils.d(
-        '$TAG >>> device: ${scanResult.device.name} ${scanResult.device.remoteId}');
-//    _scanCallback(scanResult);
-  }
-
-  static void _onStopScan() {
-    LogUtils.d('$TAG >>> _onStopScan');
-  }
-
-  static void _onScanError(Object event) {
-    LogUtils.d('$TAG >>> _onScanError');
   }
 
   // scan BLE device, return result by stream
@@ -195,8 +157,8 @@ class JuBiterPlugin {
     );
 
     Stream stream = _scanResultChannel.receiveBroadcastStream();
-    subscription = stream.listen(controller.add,
-        onError: controller.addError, onDone: controller.close);
+    subscription =
+        stream.listen(controller.add, onError: controller.addError, onDone: controller.close);
 
     await _methodChannel.invokeMethod('startScan');
 
@@ -209,7 +171,7 @@ class JuBiterPlugin {
 
   // 连接 ble 设备
   @deprecated
-  static Stream<BluetoothDeviceState> connectDeviceAsync(
+  static Stream<DeviceStateResponse> connectDeviceAsync(
       BluetoothDevice device, Duration timeout) async* {
     var request = ConnectRequest.create();
     request.remoteId = device.remoteId;
@@ -217,28 +179,23 @@ class JuBiterPlugin {
 
     var connected = false;
     StreamSubscription subscription;
-    StreamController controller = new StreamController<BluetoothDeviceState>(
-      onListen: () {
-        LogUtils.d('$TAG >>> connect onListen');
-      },
-      onCancel: () {
-        LogUtils.d('$TAG >>> connect onCancel');
-      },
-      onResume: () {
-        LogUtils.d('$TAG >>> connect onResume');
-      },
-      onPause: () {
-        LogUtils.d('$TAG >>> connect onPause');
-      }
-    );
+    StreamController controller = new StreamController<DeviceStateResponse>(onListen: () {
+      LogUtils.d('$TAG >>> connect onListen');
+    }, onCancel: () {
+      LogUtils.d('$TAG >>> connect onCancel');
+    }, onResume: () {
+      LogUtils.d('$TAG >>> connect onResume');
+    }, onPause: () {
+      LogUtils.d('$TAG >>> connect onPause');
+    });
 
     subscription = onStateChanged().listen((data) {
-      LogUtils.d('$TAG >>> connect stream listen');
-      if (data == BluetoothDeviceState.connected) {
-        LogUtils.d('$TAG >>> connected');
-        connected = true;
-      }
-      controller.add(data);
+//      LogUtils.d('$TAG >>> connect stream listen');
+//      if (data == BluetoothDeviceState.connected) {
+//        LogUtils.d('$TAG >>> connected');
+//        connected = true;
+//      }
+//      controller.add(data);
     }, onError: controller.addError, onDone: controller.close);
 
     await _methodChannel.invokeMethod('connectDeviceAsync', request.writeToBuffer());
@@ -247,43 +204,36 @@ class JuBiterPlugin {
   }
 
   static Future<int> connect(BluetoothDevice device, Duration timeout,
-      void onConnectStateChange(BluetoothDeviceState state),
-      void onError(Object error)) async {
+      void onConnectStateChange(DeviceStateResponse state), void onError(Object
+    error)) async {
     var request = ConnectRequest.create();
     request.remoteId = device.remoteId;
     request.timeout = timeout.inSeconds;
 
     onStateChanged().listen((data) {
       LogUtils.d('$TAG >>> connect stream listen');
-//      if (data == BluetoothDeviceState.connected) {
-//        LogUtils.d('$TAG >>> connected');
-//        onConnectCallback();
-//      }
       onConnectStateChange(data);
-    },
-        onError: (Object event) {
-          LogUtils.d('$TAG >>> connect onError');
-        },
-        onDone: () {
-          LogUtils.d('$TAG >>> connect onDone');
-        }
-    );
+    }, onError: (Object event) {
+      LogUtils.d('$TAG >>> connect onError');
+    }, onDone: () {
+      LogUtils.d('$TAG >>> connect onDone');
+    });
 
     try {
       return await _methodChannel.invokeMethod('connectDeviceAsync', request.writeToBuffer());
     } catch (e) {
-      LogUtils.d('$TAG >>> connect onError: ${e}');
+      LogUtils.d('$TAG >>> connect onError: $e');
       return 123;
     }
   }
 
   /// Notifies when the device connection state has changed
-  static Stream<BluetoothDeviceState> onStateChanged() {
+  static Stream<DeviceStateResponse> onStateChanged() {
     return _methodStream
-        .where((m) =>m.method == "DeviceState")
+        .where((m) => m.method == "DeviceState")
         .map((m) => m.arguments)
-        .map((buffer) => new DeviceStateResponse.fromBuffer(buffer))
-        .map((p) => BluetoothDeviceState.values[p.state.value]);
+        .map((buffer) => new DeviceStateResponse.fromBuffer(buffer));
+//        .map((p) => BluetoothDeviceState.values[p.state.value]);
   }
 
   static Future<int> cancelConnect(String macAddress) async {
@@ -299,46 +249,31 @@ class JuBiterPlugin {
   }
 
   /// BTC
-  static Future<ResultInt> BTCCreateContext_Software(
-      ContextCfgBTC config, String xPrikey) async {
-    Uint8List result = await _methodChannel.invokeMethod(
-        'BTCCreateContext_Software', <String, dynamic>{
-      'config': config.writeToBuffer(),
-      'xPrikey': xPrikey
-    });
+  static Future<ResultInt> BTCCreateContext_Software(ContextCfgBTC config, String xPrikey) async {
+    Uint8List result = await _methodChannel.invokeMethod('BTCCreateContext_Software',
+        <String, dynamic>{'config': config.writeToBuffer(), 'xPrikey': xPrikey});
     return ResultInt.fromBuffer(result);
   }
 
-  static Future<ResultInt> BTCCreateContext(
-      ContextCfgBTC config, int deviceID) async {
-    Uint8List result = await _methodChannel.invokeMethod(
-        'BTCCreateContext', <String, dynamic>{
-      'config': config.writeToBuffer(),
-      'deviceID': deviceID
-    });
+  static Future<ResultInt> BTCCreateContext(ContextCfgBTC config, int deviceID) async {
+    Uint8List result = await _methodChannel.invokeMethod('BTCCreateContext',
+        <String, dynamic>{'config': config.writeToBuffer(), 'deviceID': deviceID});
     return ResultInt.fromBuffer(result);
   }
 
   static Future<ResultString> BTCGetMainHDNode(int contextID) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('BTCGetMainHDNode', contextID);
+    Uint8List result = await _methodChannel.invokeMethod('BTCGetMainHDNode', contextID);
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> BTCGetHDNode(
-      int contextID, Bip32Path bip32Path) async {
-    Uint8List result = await _methodChannel.invokeMethod(
-        'BTCGetHDNode', <String, dynamic>{
-      'contextID': contextID,
-      'bip32Path': bip32Path.writeToBuffer()
-    });
+  static Future<ResultString> BTCGetHDNode(int contextID, Bip32Path bip32Path) async {
+    Uint8List result = await _methodChannel.invokeMethod('BTCGetHDNode',
+        <String, dynamic>{'contextID': contextID, 'bip32Path': bip32Path.writeToBuffer()});
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> BTCGetAddress(
-      int contextID, Bip32Path bip32Path, bool isShow) async {
-    Uint8List result = await _methodChannel.invokeMethod(
-        'BTCGetAddress', <String, dynamic>{
+  static Future<ResultString> BTCGetAddress(int contextID, Bip32Path bip32Path, bool isShow) async {
+    Uint8List result = await _methodChannel.invokeMethod('BTCGetAddress', <String, dynamic>{
       'contextID': contextID,
       'bip32Path': bip32Path.writeToBuffer(),
       'isShow': isShow
@@ -346,80 +281,59 @@ class JuBiterPlugin {
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> BTCSetAddress(
-      int contextID, Bip32Path bip32Path) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('BTCSetAddress', <String, dynamic>{
+  static Future<ResultString> BTCSetAddress(int contextID, Bip32Path bip32Path) async {
+    Uint8List result = await _methodChannel.invokeMethod('BTCSetAddress', <String, dynamic>{
       'contextID': contextID,
       'bip32Path': bip32Path.writeToBuffer(),
     });
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> BTCSignTransaction(
-      int contextID, TransactionBTC txInfo) async {
-    Uint8List result = await _methodChannel
-        .invokeMethod('BTCSignTransaction', <String, dynamic>{
+  static Future<ResultString> BTCSignTransaction(int contextID, TransactionBTC txInfo) async {
+    Uint8List result = await _methodChannel.invokeMethod('BTCSignTransaction', <String, dynamic>{
       'contextID': contextID,
       'txInfo': txInfo.writeToBuffer(),
     });
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> BTCSetUint(
-      int contextID, BTC_UNIT_TYPE uintType) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('BTCSetUint', <String, dynamic>{
+  static Future<ResultString> BTCSetUint(int contextID, BTC_UNIT_TYPE uintType) async {
+    Uint8List result = await _methodChannel.invokeMethod('BTCSetUint', <String, dynamic>{
       'contextID': contextID,
       'uintType': uintType.value,
     });
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> BTCBuildUSDTOutput(
-      int contextID, String usdtTo, int amount) async {
-    Uint8List result = await _methodChannel.invokeMethod(
-        'BTCBuildUSDTOutput', <String, dynamic>{
-      'contextID': contextID,
-      'usdtTo': usdtTo,
-      'amount': amount
-    });
+  static Future<ResultString> BTCBuildUSDTOutput(int contextID, String usdtTo, int amount) async {
+    Uint8List result = await _methodChannel.invokeMethod('BTCBuildUSDTOutput',
+        <String, dynamic>{'contextID': contextID, 'usdtTo': usdtTo, 'amount': amount});
     return ResultString.fromBuffer(result);
   }
 
   /// ETH
 
-  static Future<ResultInt> ETHCreateContext_Software(
-      ContextCfgETH config, String xPrikey) async {
-    Uint8List result = await _methodChannel.invokeMethod(
-        'ETHCreateContext_Software', <String, dynamic>{
-      'config': config.writeToBuffer(),
-      'xPrikey': xPrikey
-    });
+  static Future<ResultInt> ETHCreateContext_Software(ContextCfgETH config, String xPrikey) async {
+    Uint8List result = await _methodChannel.invokeMethod('ETHCreateContext_Software',
+        <String, dynamic>{'config': config.writeToBuffer(), 'xPrikey': xPrikey});
     return ResultInt.fromBuffer(result);
   }
 
-  static Future<ResultInt> ETHCreateContext(
-      ContextCfgETH config, int deviceID) async {
-    Uint8List result = await _methodChannel.invokeMethod(
-        'ETHCreateContext', <String, dynamic>{
-      'config': config.writeToBuffer(),
-      'deviceID': deviceID
-    });
+  static Future<ResultInt> ETHCreateContext(ContextCfgETH config, int deviceID) async {
+    Uint8List result = await _methodChannel.invokeMethod('ETHCreateContext',
+        <String, dynamic>{'config': config.writeToBuffer(), 'deviceID': deviceID});
     return ResultInt.fromBuffer(result);
   }
 
-  static Future<ResultString> ETHGetMainHDNode(
-      int contextID, ENUM_PUB_FORMAT format) async {
-    Uint8List result = await _methodChannel.invokeMethod('ETHGetMainHDNode',
-        <String, dynamic>{'contextID': contextID, 'format': format.value});
+  static Future<ResultString> ETHGetMainHDNode(int contextID, ENUM_PUB_FORMAT format) async {
+    Uint8List result = await _methodChannel.invokeMethod(
+        'ETHGetMainHDNode', <String, dynamic>{'contextID': contextID, 'format': format.value});
     return ResultString.fromBuffer(result);
   }
 
   static Future<ResultString> ETHGetHDNode(
       int contextID, ENUM_PUB_FORMAT format, Bip32Path bip32Path) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('ETHGetHDNode', <String, dynamic>{
+    Uint8List result = await _methodChannel.invokeMethod('ETHGetHDNode', <String, dynamic>{
       'contextID': contextID,
       'format': format.value,
       'bip32Path': bip32Path.writeToBuffer()
@@ -427,10 +341,8 @@ class JuBiterPlugin {
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> ETHGetAddress(
-      int contextID, Bip32Path bip32Path, bool isShow) async {
-    Uint8List result = await _methodChannel.invokeMethod(
-        'ETHGetAddress', <String, dynamic>{
+  static Future<ResultString> ETHGetAddress(int contextID, Bip32Path bip32Path, bool isShow) async {
+    Uint8List result = await _methodChannel.invokeMethod('ETHGetAddress', <String, dynamic>{
       'contextID': contextID,
       'bip32Path': bip32Path.writeToBuffer(),
       'isShow': isShow
@@ -438,20 +350,16 @@ class JuBiterPlugin {
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> ETHSetAddress(
-      int contextID, Bip32Path bip32Path) async {
-    Uint8List result =
-        await _methodChannel.invokeMethod('ETHSetAddress', <String, dynamic>{
+  static Future<ResultString> ETHSetAddress(int contextID, Bip32Path bip32Path) async {
+    Uint8List result = await _methodChannel.invokeMethod('ETHSetAddress', <String, dynamic>{
       'contextID': contextID,
       'bip32Path': bip32Path.writeToBuffer(),
     });
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> ETHSignTransaction(
-      int contextID, TransactionETH txInfo) async {
-    Uint8List result = await _methodChannel
-        .invokeMethod('ETHSignTransaction', <String, dynamic>{
+  static Future<ResultString> ETHSignTransaction(int contextID, TransactionETH txInfo) async {
+    Uint8List result = await _methodChannel.invokeMethod('ETHSignTransaction', <String, dynamic>{
       'contextID': contextID,
       'txInfo': txInfo.writeToBuffer(),
     });
@@ -460,12 +368,8 @@ class JuBiterPlugin {
 
   static Future<ResultString> ETHBuildERC20Abi(
       int contextID, String address, String amountInWei) async {
-    Uint8List result = await _methodChannel.invokeMethod(
-        'ETHBuildERC20Abi', <String, dynamic>{
-      'contextID': contextID,
-      'address': address,
-      'amountInWei': amountInWei
-    });
+    Uint8List result = await _methodChannel.invokeMethod('ETHBuildERC20Abi',
+        <String, dynamic>{'contextID': contextID, 'address': address, 'amountInWei': amountInWei});
     return ResultString.fromBuffer(result);
   }
 }

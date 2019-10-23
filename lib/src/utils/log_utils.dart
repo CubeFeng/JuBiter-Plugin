@@ -8,8 +8,8 @@ class LogUtils {
 
   static Logger _logger = new Logger(
     printer: PrettyPrinter(),
+    filter: JuBiterLogFilter(),
   );
-
 
   static void v(dynamic message, [dynamic error, StackTrace stackTrace]) {
     _logger.v(message, error, stackTrace);
@@ -38,5 +38,12 @@ class LogUtils {
   /// Log a message at level [Level.wtf].
   static void wtf(dynamic message, [dynamic error, StackTrace stackTrace]) {
     _logger.wtf(message, error, stackTrace);
+  }
+}
+
+class JuBiterLogFilter extends LogFilter {
+  @override
+  bool shouldLog(LogEvent event) {
+    return true;  // log flag
   }
 }

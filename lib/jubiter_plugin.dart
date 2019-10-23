@@ -3,7 +3,6 @@ library jubiter_plugin;
 import 'dart:async';
 import 'dart:core';
 import 'dart:typed_data';
-import 'package:convert/convert.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 

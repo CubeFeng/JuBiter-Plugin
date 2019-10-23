@@ -54,12 +54,19 @@ packages:
     source: sdk
     version: "0.0.0"
   logger:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: logger
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.7.0+2"
+  logger_flutter:
+    dependency: "direct main"
+    description:
+      name: logger_flutter
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.7.1"
   matcher:
     dependency: transitive
     description:
@@ -165,3 +172,4 @@ packages:
     version: "2.0.8"
 sdks:
   dart: ">=2.2.2 <3.0.0"
+  flutter: ">=1.6.7 <2.0.0"

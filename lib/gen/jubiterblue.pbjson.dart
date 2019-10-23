@@ -115,6 +115,7 @@ const DeviceStateResponse$json = const {
   '2': const [
     const {'1': 'remote_id', '3': 1, '4': 1, '5': 9, '10': 'remoteId'},
     const {'1': 'state', '3': 2, '4': 1, '5': 14, '6': '.DeviceStateResponse.BluetoothDeviceState', '10': 'state'},
+    const {'1': 'deviceID', '3': 3, '4': 1, '5': 5, '10': 'deviceID'},
   ],
   '4': const [DeviceStateResponse_BluetoothDeviceState$json],
 };

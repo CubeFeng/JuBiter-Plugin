@@ -4,8 +4,7 @@ part of jubiter_plugin;
 /// Common Operation and Bluetooth Operation
 ///
 class JuBiterWallet {
-  static Future<ResultString> generateMnemonic(
-      ENUM_MNEMONIC_STRENGTH strength) {
+  static Future<ResultString> generateMnemonic(ENUM_MNEMONIC_STRENGTH strength) {
     return JuBiterPlugin.generateMnemonic(strength);
   }
 
@@ -17,8 +16,7 @@ class JuBiterWallet {
     return JuBiterPlugin.generateSeed(mnemonic, passphrase);
   }
 
-  static Future<ResultString> seedToMasterPrivateKey(
-      String seed, CURVES curves) {
+  static Future<ResultString> seedToMasterPrivateKey(String seed, CURVES curves) {
     return JuBiterPlugin.seedToMasterPrivateKey(seed, curves);
   }
 
@@ -54,8 +52,7 @@ class JuBiterWallet {
     return JuBiterPlugin.enumSupportCoins(deviceID);
   }
 
-  static Future<ResultString> getAppletVersion(
-      int deviceID, String appletID) async {
+  static Future<ResultString> getAppletVersion(int deviceID, String appletID) async {
     return JuBiterPlugin.getAppletVersion(deviceID, appletID);
   }
 
@@ -91,17 +88,20 @@ class JuBiterWallet {
     return JuBiterPlugin.stopScan();
   }
 
-  static Stream<BluetoothDeviceState> connectDeviceAsync(
-      BluetoothDevice device, Duration timeout) async*  {
+  @deprecated
+  static Stream<DeviceStateResponse> connectDeviceAsync(
+      BluetoothDevice device, Duration timeout) async* {
     yield* JuBiterPlugin.connectDeviceAsync(device, timeout);
   }
 
-  static Future<int> connect(BluetoothDevice device, Duration timeout,
-      void onConnectStateChange(BluetoothDeviceState state), void onError(Object error)) async {
+  static Future<int> connect(
+      BluetoothDevice device,
+      Duration timeout,
+      void onConnectStateChange(DeviceStateResponse state),
+      void onError(Object error)) async {
     return JuBiterPlugin.connect(device, timeout, onConnectStateChange, onError);
   }
 
-  @deprecated
   static Future<int> cancelConnect(String macAddress) async {
     return JuBiterPlugin.cancelConnect(macAddress);
   }
@@ -114,5 +114,3 @@ class JuBiterWallet {
     return JuBiterPlugin.isConnected(deviceID);
   }
 }
-
-enum BluetoothDeviceState { disconnected, connecting, connected, disconnecting }

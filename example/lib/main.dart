@@ -1,4 +1,5 @@
 import 'dart:ffi' as prefix0;
+import 'dart:typed_data';
 
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ import 'package:jubiter_plugin/gen/Jub_Bitcoin.pbserver.dart';
 import 'package:jubiter_plugin/gen/Jub_Ethereum.pbserver.dart';
 import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
 import 'package:jubiter_plugin/gen/jubiterblue.pbserver.dart';
+import 'package:jubiter_plugin/gen/google/protobuf/any.pb.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -82,7 +85,7 @@ class _MyAppState extends State<MyApp> {
     assert(checkResult == 0);
 
     ResultString mnemonicSeed =
-        await JuBiterWallet.generateSeed(mnemonicResult.value, "123");
+    await JuBiterWallet.generateSeed(mnemonicResult.value, "123");
     LogUtils.d(
         ">>> generateSeed - rv:${mnemonicSeed.stateCode} value:${mnemonicSeed.value}");
     assert(mnemonicSeed.stateCode == 0);
@@ -101,11 +104,12 @@ class _MyAppState extends State<MyApp> {
         config,
         'xpub6CAxrkiSbwkn4LayKD6qBcZg4tQvhHBH7TofQjNV9Lb3cB5u8owxdLGfc2bKoz2McoviAMXzWHwSaqc5Sm8C9SWMsnvuBw1bjEwtWsMZZFX');
     LogUtils.d(
-        ">>> BTCCreateContext_Software - rv:${contextResult.stateCode} value:${contextResult.value}");
+        ">>> BTCCreateContext_Software - rv:${contextResult.stateCode} value:${contextResult
+            .value}");
     assert(contextResult.stateCode == 0);
 
     ResultString mainHDNodeResult =
-        await JuBiterBitcoin.getMainHDNode(contextResult.value);
+    await JuBiterBitcoin.getMainHDNode(contextResult.value);
     LogUtils.d(
         ">>> BTCGetMainHDNode - rv:${mainHDNodeResult.stateCode} value:${mainHDNodeResult.value}");
     assert(mainHDNodeResult.stateCode == 0);
@@ -115,7 +119,7 @@ class _MyAppState extends State<MyApp> {
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
       ResultString hdNodeResult =
-          await JuBiterBitcoin.getHDNode(contextResult.value, bip32path);
+      await JuBiterBitcoin.getHDNode(contextResult.value, bip32path);
       LogUtils.d(
           ">>> BTCGetHDNode - rv:${hdNodeResult.stateCode} value:${hdNodeResult.value}");
       assert(hdNodeResult.stateCode == 0);
@@ -141,7 +145,7 @@ class _MyAppState extends State<MyApp> {
       InputBTC input_1 = InputBTC.create();
       input_1.path = bip32path_input1;
       input_1.preHash =
-          '2a2e910f9fb2b04f7f1ddbfb4ab05785250c2b395f572ce591167c8451f0891e';
+      '2a2e910f9fb2b04f7f1ddbfb4ab05785250c2b395f572ce591167c8451f0891e';
       input_1.amount = Int64(1200);
       input_1.preIndex = 0;
 
@@ -152,7 +156,7 @@ class _MyAppState extends State<MyApp> {
       InputBTC input_2 = InputBTC.create();
       input_2.path = bip32path_input2;
       input_2.preHash =
-          '0fe4fafd846b18fe545bbc2dcb70ecb1290ec0de6219cd2299cd0a1561c8d583';
+      '0fe4fafd846b18fe545bbc2dcb70ecb1290ec0de6219cd2299cd0a1561c8d583';
       input_2.amount = Int64(1000);
       input_2.preIndex = 0;
 
@@ -191,7 +195,7 @@ class _MyAppState extends State<MyApp> {
       LogUtils.d('>>> txInfo:' + hex.encode(txInfo.writeToBuffer()));
 
       ResultString signResult =
-          await JuBiterBitcoin.signTransaction(contextResult.value, txInfo);
+      await JuBiterBitcoin.signTransaction(contextResult.value, txInfo);
       LogUtils.d(
           ">>> BTCSignTransaction - rv:${signResult.stateCode} value:${signResult.value}");
       assert(signResult.stateCode == 0);
@@ -210,7 +214,7 @@ class _MyAppState extends State<MyApp> {
     assert(checkResult == 0);
 
     ResultString mnemonicSeed =
-        await JuBiterWallet.generateSeed(mnemonicResult.value, "456");
+    await JuBiterWallet.generateSeed(mnemonicResult.value, "456");
     LogUtils.d(
         ">>> generateSeed - rv:${mnemonicSeed.stateCode} value:${mnemonicSeed.value}");
     assert(mnemonicSeed.stateCode == 0);
@@ -227,7 +231,8 @@ class _MyAppState extends State<MyApp> {
         config,
         'xpub6CAxrkiSbwkn4LayKD6qBcZg4tQvhHBH7TofQjNV9Lb3cB5u8owxdLGfc2bKoz2McoviAMXzWHwSaqc5Sm8C9SWMsnvuBw1bjEwtWsMZZFX');
     LogUtils.d(
-        ">>> ETHCreateContext_Software - rv:${contextResult.stateCode} value:${contextResult.value}");
+        ">>> ETHCreateContext_Software - rv:${contextResult.stateCode} value:${contextResult
+            .value}");
     assert(contextResult.stateCode == 0);
 
     ResultString mainHDNodeResult = await JuBiterEthereum.getMainHDNode(
@@ -265,7 +270,7 @@ class _MyAppState extends State<MyApp> {
 //      assert(verifyResult.stateCode == 0);
 //    }
 
-    {
+        {
       Bip32Path bip32path = Bip32Path.create();
       bip32path.change = false;
       bip32path.addressIndex = Int64(0);
@@ -280,7 +285,7 @@ class _MyAppState extends State<MyApp> {
       txInfo.input = '4A75626974657257616C6C6574';
 
       ResultString signResult =
-          await JuBiterEthereum.signTransaction(contextResult.value, txInfo);
+      await JuBiterEthereum.signTransaction(contextResult.value, txInfo);
       LogUtils.d(
           ">>> ETHSignTransaction - rv:${signResult.stateCode} value:${signResult.value}");
       assert(signResult.stateCode == 0);
@@ -317,16 +322,25 @@ class _MyAppState extends State<MyApp> {
 //        LogUtils.d('main >>> connectDeviceAsync onDone');
 //      });
 
-        JuBiterWallet.connect(device, Duration(seconds: 10), (bluetoothDeviceState) {
-          LogUtils.d('>>> connect callback: ${bluetoothDeviceState.toString()}');
+        JuBiterWallet.connect(device, Duration(seconds: 10), (deviceStateResponse) {
+          LogUtils.d('>>> connect callback: ${deviceStateResponse.state.toString()}');
+          LogUtils.d('>>> deviceID: ${deviceStateResponse.deviceID}');
+
+          JuBiterWallet.getDeviceInfo(deviceStateResponse.deviceID).then((resultAny) {
+            List<Any> detail = resultAny.value;
+            for(var data in detail) {
+              DeviceInfo info = DeviceInfo.create();
+              data.unpackInto(info);
+              LogUtils.d('main >>> deviceInfo: ${info.toString()}');
+            }
+          });
         }, (error) {
           LogUtils.d('>>> connect callback error: ${error}');
         });
       });
     },
-    onError: (error) {
-      LogUtils.d('>>> init error: ${error}');
-    });
-
+        onError: (error) {
+          LogUtils.d('>>> init error: ${error}');
+        });
   }
 }

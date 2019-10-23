@@ -336,6 +336,7 @@ class DeviceStateResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('DeviceStateResponse', createEmptyInstance: create)
     ..aOS(1, 'remoteId')
     ..e<DeviceStateResponse_BluetoothDeviceState>(2, 'state', $pb.PbFieldType.OE, defaultOrMaker: DeviceStateResponse_BluetoothDeviceState.DISCONNECTED, valueOf: DeviceStateResponse_BluetoothDeviceState.valueOf, enumValues: DeviceStateResponse_BluetoothDeviceState.values)
+    ..a<$core.int>(3, 'deviceID', $pb.PbFieldType.O3, protoName: 'deviceID')
     ..hasRequiredFields = false
   ;
 
@@ -371,6 +372,15 @@ class DeviceStateResponse extends $pb.GeneratedMessage {
   $core.bool hasState() => $_has(1);
   @$pb.TagNumber(2)
   void clearState() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get deviceID => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set deviceID($core.int v) { $_setSignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasDeviceID() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDeviceID() => clearField(3);
 }
 
 class ConnectedDevicesResponse extends $pb.GeneratedMessage {

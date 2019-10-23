@@ -72,8 +72,6 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         this.methodChannel.setMethodCallHandler(this);
         this.scanResultChannel = new EventChannel(registrar.messenger(), EVENT_SCAN_RESULT_CHANNEL);
         this.scanResultChannel.setStreamHandler(scanResultHandler);
-//        this.connectStateChannel = new EventChannel(registrar.messenger(), EVENT_CONNECT_STATE_CHANNEL);
-//        this.connectStateChannel.setStreamHandler(connectStateHandler);
     }
 
     @Override
@@ -510,6 +508,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
                 Log.d(TAG, ">>> onConnected: " + mac + " deviceID:" + deviceID);
                 JuBiterProtos.DeviceStateResponse deviceStateResponse = JuBiterProtos.DeviceStateResponse.newBuilder()
                         .setRemoteId(mac)
+                        .setDeviceID(deviceID)
                         .setState(JuBiterProtos.DeviceStateResponse.BluetoothDeviceState.CONNECTED)
                         .build();
                 uiHandler.post(new Runnable() {
