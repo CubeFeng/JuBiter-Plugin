@@ -15,7 +15,6 @@ import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
 import 'package:jubiter_plugin/gen/jubiterblue.pbserver.dart';
 import 'package:jubiter_plugin/gen/google/protobuf/any.pb.dart';
 
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -74,8 +73,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void BTC_Software() async {
-    ResultString mnemonicResult = await JuBiterWallet.generateMnemonic(
-        ENUM_MNEMONIC_STRENGTH.STRENGTH128);
+    ResultString mnemonicResult =
+        await JuBiterWallet.generateMnemonic(ENUM_MNEMONIC_STRENGTH.STRENGTH128);
     LogUtils.d(
         ">>> generateMnemonic - rv:${mnemonicResult.stateCode} value:${mnemonicResult.value}");
     assert(mnemonicResult.stateCode == 0);
@@ -84,14 +83,12 @@ class _MyAppState extends State<MyApp> {
     LogUtils.d(">>> checkMnemonic - checkResult: $checkResult");
     assert(checkResult == 0);
 
-    ResultString mnemonicSeed =
-    await JuBiterWallet.generateSeed(mnemonicResult.value, "123");
-    LogUtils.d(
-        ">>> generateSeed - rv:${mnemonicSeed.stateCode} value:${mnemonicSeed.value}");
+    ResultString mnemonicSeed = await JuBiterWallet.generateSeed(mnemonicResult.value, "123");
+    LogUtils.d(">>> generateSeed - rv:${mnemonicSeed.stateCode} value:${mnemonicSeed.value}");
     assert(mnemonicSeed.stateCode == 0);
 
-    ResultString xPrikeyResult = await JuBiterWallet.seedToMasterPrivateKey(
-        mnemonicSeed.value, CURVES.secp256k1);
+    ResultString xPrikeyResult =
+        await JuBiterWallet.seedToMasterPrivateKey(mnemonicSeed.value, CURVES.secp256k1);
     LogUtils.d(
         ">>> seedToMasterPrivateKey - rv:${xPrikeyResult.stateCode} value:${xPrikeyResult.value}");
     assert(xPrikeyResult.stateCode == 0);
@@ -100,16 +97,13 @@ class _MyAppState extends State<MyApp> {
     config.coinType = ENUM_COIN_TYPE_BTC.COINBTC;
     config.mainPath = "m/44\'/0\'/0\'";
     config.transType = ENUM_TRAN_STYPE_BTC.p2pkh;
-    ResultInt contextResult = await JuBiterBitcoin.createContext_Software(
-        config,
+    ResultInt contextResult = await JuBiterBitcoin.createContext_Software(config,
         'xpub6CAxrkiSbwkn4LayKD6qBcZg4tQvhHBH7TofQjNV9Lb3cB5u8owxdLGfc2bKoz2McoviAMXzWHwSaqc5Sm8C9SWMsnvuBw1bjEwtWsMZZFX');
     LogUtils.d(
-        ">>> BTCCreateContext_Software - rv:${contextResult.stateCode} value:${contextResult
-            .value}");
+        ">>> BTCCreateContext_Software - rv:${contextResult.stateCode} value:${contextResult.value}");
     assert(contextResult.stateCode == 0);
 
-    ResultString mainHDNodeResult =
-    await JuBiterBitcoin.getMainHDNode(contextResult.value);
+    ResultString mainHDNodeResult = await JuBiterBitcoin.getMainHDNode(contextResult.value);
     LogUtils.d(
         ">>> BTCGetMainHDNode - rv:${mainHDNodeResult.stateCode} value:${mainHDNodeResult.value}");
     assert(mainHDNodeResult.stateCode == 0);
@@ -118,10 +112,8 @@ class _MyAppState extends State<MyApp> {
       Bip32Path bip32path = Bip32Path.create();
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
-      ResultString hdNodeResult =
-      await JuBiterBitcoin.getHDNode(contextResult.value, bip32path);
-      LogUtils.d(
-          ">>> BTCGetHDNode - rv:${hdNodeResult.stateCode} value:${hdNodeResult.value}");
+      ResultString hdNodeResult = await JuBiterBitcoin.getHDNode(contextResult.value, bip32path);
+      LogUtils.d(">>> BTCGetHDNode - rv:${hdNodeResult.stateCode} value:${hdNodeResult.value}");
       assert(hdNodeResult.stateCode == 0);
     }
 
@@ -129,10 +121,9 @@ class _MyAppState extends State<MyApp> {
       Bip32Path bip32path = Bip32Path.create();
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
-      ResultString addressResult = await JuBiterBitcoin.getAddress(
-          contextResult.value, bip32path, false);
-      LogUtils.d(
-          ">>> BTCGetAddress - rv:${addressResult.stateCode} value:${addressResult.value}");
+      ResultString addressResult =
+          await JuBiterBitcoin.getAddress(contextResult.value, bip32path, false);
+      LogUtils.d(">>> BTCGetAddress - rv:${addressResult.stateCode} value:${addressResult.value}");
       assert(addressResult.stateCode == 0);
     }
 
@@ -144,8 +135,7 @@ class _MyAppState extends State<MyApp> {
 
       InputBTC input_1 = InputBTC.create();
       input_1.path = bip32path_input1;
-      input_1.preHash =
-      '2a2e910f9fb2b04f7f1ddbfb4ab05785250c2b395f572ce591167c8451f0891e';
+      input_1.preHash = '2a2e910f9fb2b04f7f1ddbfb4ab05785250c2b395f572ce591167c8451f0891e';
       input_1.amount = Int64(1200);
       input_1.preIndex = 0;
 
@@ -155,8 +145,7 @@ class _MyAppState extends State<MyApp> {
 
       InputBTC input_2 = InputBTC.create();
       input_2.path = bip32path_input2;
-      input_2.preHash =
-      '0fe4fafd846b18fe545bbc2dcb70ecb1290ec0de6219cd2299cd0a1561c8d583';
+      input_2.preHash = '0fe4fafd846b18fe545bbc2dcb70ecb1290ec0de6219cd2299cd0a1561c8d583';
       input_2.amount = Int64(1000);
       input_2.preIndex = 0;
 
@@ -194,17 +183,15 @@ class _MyAppState extends State<MyApp> {
       txInfo.outputs.add(output_2);
       LogUtils.d('>>> txInfo:' + hex.encode(txInfo.writeToBuffer()));
 
-      ResultString signResult =
-      await JuBiterBitcoin.signTransaction(contextResult.value, txInfo);
-      LogUtils.d(
-          ">>> BTCSignTransaction - rv:${signResult.stateCode} value:${signResult.value}");
+      ResultString signResult = await JuBiterBitcoin.signTransaction(contextResult.value, txInfo);
+      LogUtils.d(">>> BTCSignTransaction - rv:${signResult.stateCode} value:${signResult.value}");
       assert(signResult.stateCode == 0);
     }
   }
 
   void ETH_Software() async {
-    ResultString mnemonicResult = await JuBiterWallet.generateMnemonic(
-        ENUM_MNEMONIC_STRENGTH.STRENGTH128);
+    ResultString mnemonicResult =
+        await JuBiterWallet.generateMnemonic(ENUM_MNEMONIC_STRENGTH.STRENGTH128);
     LogUtils.d(
         ">>> generateMnemonic - rv:${mnemonicResult.stateCode} value:${mnemonicResult.value}");
     assert(mnemonicResult.stateCode == 0);
@@ -213,30 +200,26 @@ class _MyAppState extends State<MyApp> {
     LogUtils.d(">>> checkMnemonic - checkResult: $checkResult");
     assert(checkResult == 0);
 
-    ResultString mnemonicSeed =
-    await JuBiterWallet.generateSeed(mnemonicResult.value, "456");
-    LogUtils.d(
-        ">>> generateSeed - rv:${mnemonicSeed.stateCode} value:${mnemonicSeed.value}");
+    ResultString mnemonicSeed = await JuBiterWallet.generateSeed(mnemonicResult.value, "456");
+    LogUtils.d(">>> generateSeed - rv:${mnemonicSeed.stateCode} value:${mnemonicSeed.value}");
     assert(mnemonicSeed.stateCode == 0);
 
-    ResultString xPrikeyResult = await JuBiterWallet.seedToMasterPrivateKey(
-        mnemonicSeed.value, CURVES.secp256k1);
+    ResultString xPrikeyResult =
+        await JuBiterWallet.seedToMasterPrivateKey(mnemonicSeed.value, CURVES.secp256k1);
     LogUtils.d(
         ">>> seedToMasterPrivateKey - rv:${xPrikeyResult.stateCode} value:${xPrikeyResult.value}");
     assert(xPrikeyResult.stateCode == 0);
 
     ContextCfgETH config = ContextCfgETH.create();
     config.mainPath = "m/44\'/60\'/0\'";
-    ResultInt contextResult = await JuBiterEthereum.createContext_Software(
-        config,
+    ResultInt contextResult = await JuBiterEthereum.createContext_Software(config,
         'xpub6CAxrkiSbwkn4LayKD6qBcZg4tQvhHBH7TofQjNV9Lb3cB5u8owxdLGfc2bKoz2McoviAMXzWHwSaqc5Sm8C9SWMsnvuBw1bjEwtWsMZZFX');
     LogUtils.d(
-        ">>> ETHCreateContext_Software - rv:${contextResult.stateCode} value:${contextResult
-            .value}");
+        ">>> ETHCreateContext_Software - rv:${contextResult.stateCode} value:${contextResult.value}");
     assert(contextResult.stateCode == 0);
 
-    ResultString mainHDNodeResult = await JuBiterEthereum.getMainHDNode(
-        contextResult.value, ENUM_PUB_FORMAT.HEX);
+    ResultString mainHDNodeResult =
+        await JuBiterEthereum.getMainHDNode(contextResult.value, ENUM_PUB_FORMAT.HEX);
     LogUtils.d(
         ">>> ETHGetMainHDNode - rv:${mainHDNodeResult.stateCode} value:${mainHDNodeResult.value}");
     assert(mainHDNodeResult.stateCode == 0);
@@ -245,10 +228,9 @@ class _MyAppState extends State<MyApp> {
       Bip32Path bip32path = Bip32Path.create();
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
-      ResultString hdNodeResult = await JuBiterEthereum.getHDNode(
-          contextResult.value, ENUM_PUB_FORMAT.HEX, bip32path);
-      LogUtils.d(
-          ">>> ETHGetHDNode - rv:${hdNodeResult.stateCode} value:${hdNodeResult.value}");
+      ResultString hdNodeResult =
+          await JuBiterEthereum.getHDNode(contextResult.value, ENUM_PUB_FORMAT.HEX, bip32path);
+      LogUtils.d(">>> ETHGetHDNode - rv:${hdNodeResult.stateCode} value:${hdNodeResult.value}");
       assert(hdNodeResult.stateCode == 0);
     }
 
@@ -256,10 +238,9 @@ class _MyAppState extends State<MyApp> {
       Bip32Path bip32path = Bip32Path.create();
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
-      ResultString addressResult = await JuBiterEthereum.getAddress(
-          contextResult.value, bip32path, false);
-      LogUtils.d(
-          ">>> ETHGetAddress - rv:${addressResult.stateCode} value:${addressResult.value}");
+      ResultString addressResult =
+          await JuBiterEthereum.getAddress(contextResult.value, bip32path, false);
+      LogUtils.d(">>> ETHGetAddress - rv:${addressResult.stateCode} value:${addressResult.value}");
       assert(addressResult.stateCode == 0);
     }
 
@@ -270,7 +251,7 @@ class _MyAppState extends State<MyApp> {
 //      assert(verifyResult.stateCode == 0);
 //    }
 
-        {
+    {
       Bip32Path bip32path = Bip32Path.create();
       bip32path.change = false;
       bip32path.addressIndex = Int64(0);
@@ -284,10 +265,8 @@ class _MyAppState extends State<MyApp> {
       txInfo.valueInWei = '500000000000000';
       txInfo.input = '4A75626974657257616C6C6574';
 
-      ResultString signResult =
-      await JuBiterEthereum.signTransaction(contextResult.value, txInfo);
-      LogUtils.d(
-          ">>> ETHSignTransaction - rv:${signResult.stateCode} value:${signResult.value}");
+      ResultString signResult = await JuBiterEthereum.signTransaction(contextResult.value, txInfo);
+      LogUtils.d(">>> ETHSignTransaction - rv:${signResult.stateCode} value:${signResult.value}");
       assert(signResult.stateCode == 0);
     }
   }
@@ -296,8 +275,7 @@ class _MyAppState extends State<MyApp> {
     JuBiterWallet.initDevice().then((value) {
       LogUtils.d('>>> init callback: $value');
       JuBiterWallet.startScan(new Duration(seconds: 10)).listen((scanResult) {
-        LogUtils.d(
-            'main >>> ${scanResult.device.remoteId} ${scanResult.device.name}');
+        LogUtils.d('main >>> ${scanResult.device.remoteId} ${scanResult.device.name}');
       }, onDone: () {
         LogUtils.d('main >>> scan onDone');
       }, onError: (Object event) {
@@ -328,7 +306,7 @@ class _MyAppState extends State<MyApp> {
 
           JuBiterWallet.getDeviceInfo(deviceStateResponse.deviceID).then((resultAny) {
             List<Any> detail = resultAny.value;
-            for(var data in detail) {
+            for (var data in detail) {
               DeviceInfo info = DeviceInfo.create();
               data.unpackInto(info);
               LogUtils.d('main >>> deviceInfo: ${info.toString()}');
@@ -338,9 +316,8 @@ class _MyAppState extends State<MyApp> {
           LogUtils.d('>>> connect callback error: ${error}');
         });
       });
-    },
-        onError: (error) {
-          LogUtils.d('>>> init error: ${error}');
-        });
+    }, onError: (error) {
+      LogUtils.d('>>> init error: ${error}');
+    });
   }
 }
