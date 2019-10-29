@@ -69,9 +69,9 @@ class _MyAppState extends State<MyApp> {
   Future<String> runTest() async {
 //    BTC_Software();
 //    ETH_Software();
-//    bleTest();
+    bleTest();
 
-    bigNumber();
+//    bigNumber();
   }
 
   void BTC_Software() async {
@@ -293,8 +293,8 @@ class _MyAppState extends State<MyApp> {
         JuBiterWallet.stopScan();
 
         BluetoothDevice device = new BluetoothDevice()
-          ..remoteId = 'D2:3C:63:84:60:37'
-          ..name = 'JuBiter-kbvp'
+          ..remoteId = 'DD:5F:13:AA:38:39'
+          ..name = 'DD:5F:13:AA:38:39'
           ..type = BluetoothDevice_Type.LE;
 
 //      JuBiterWallet.connectDeviceAsync(device, Duration(seconds: 10)).listen(
@@ -317,7 +317,12 @@ class _MyAppState extends State<MyApp> {
               data.unpackInto(info);
               LogUtils.d('main >>> deviceInfo: ${info.toString()}');
             }
+
+            JuBiterWallet.getDeviceCert(deviceStateResponse.deviceID).then((value) {
+              LogUtils.d('main >>> deviceCert: ${value.value}');
+            });
           });
+
         }, (error) {
           LogUtils.d('>>> connect callback error: ${error}');
         });

@@ -3,8 +3,6 @@ package com.jubiter.plugin;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -56,7 +54,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
     private Result pendingResult;
     private Object mLock = new Object();
 
-    private Handler uiHandler = new Handler(Looper.getMainLooper());
+//    private Handler uiHandler = new Handler(Looper.getMainLooper());
 
     /**
      * Plugin registration.
@@ -85,92 +83,92 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
 
             case "generateMnemonic": {
                 Log.d(TAG, ">>> generateMnemonic");
-                generateMnemonic(call, result);
+                ThreadUtil.subThread(() -> generateMnemonic(call, result));
                 break;
             }
 
             case "checkMnemonic": {
-                checkMnemonic(call, result);
+                ThreadUtil.subThread(() -> checkMnemonic(call, result));
                 break;
             }
 
             case "generateSeed": {
-                generateSeed(call, result);
+                ThreadUtil.subThread(() -> generateSeed(call, result));
                 break;
             }
 
             case "seedToMasterPrivateKey": {
-                seedToMasterPrivateKey(call, result);
+                ThreadUtil.subThread(() -> seedToMasterPrivateKey(call, result));
                 break;
             }
 
             case "getDeviceInfo": {
-                getDeviceInfo(call, result);
+                ThreadUtil.subThread(() -> getDeviceInfo(call, result));
                 break;
             }
 
             case "getDeviceCert": {
-                getDeviceCert(call, result);
+                ThreadUtil.subThread(() -> getDeviceCert(call, result));
                 break;
             }
 
             case "sendApdu": {
-                sendApdu(call, result);
+                ThreadUtil.subThread(() -> sendApdu(call, result));
                 break;
             }
 
             case "isInitialize": {
-                isInitialize(call, result);
+                ThreadUtil.subThread(() -> isInitialize(call, result));
                 break;
             }
 
             case "isBootLoader": {
-                isBootLoader(call, result);
+                ThreadUtil.subThread(() -> isBootLoader(call, result));
                 break;
             }
 
             case "setTimeout": {
-                setTimeout(call, result);
+                ThreadUtil.subThread(() -> setTimeout(call, result));
                 break;
             }
 
             case "enumApplets": {
-                enumApplets(call, result);
+                ThreadUtil.subThread(() -> enumApplets(call, result));
                 break;
             }
 
             case "enumSupportCoins": {
-                enumSupportCoins(call, result);
+                ThreadUtil.subThread(() -> enumSupportCoins(call, result));
                 break;
             }
 
             case "getAppletVersion": {
-                getAppletVersion(call, result);
+                ThreadUtil.subThread(() -> getAppletVersion(call, result));
                 break;
             }
 
             case "queryBattery": {
-                queryBattery(call, result);
+                ThreadUtil.subThread(() -> queryBattery(call, result));
                 break;
             }
 
             case "clearContext": {
-                clearContext(call, result);
+                ThreadUtil.subThread(() -> clearContext(call, result));
                 break;
             }
 
             case "showVirtualPWD": {
-                showVirtualPWD(call, result);
+                ThreadUtil.subThread(() -> showVirtualPWD(call, result));
                 break;
             }
 
             case "cancelVirtualPWD": {
-                cancelVirtualPWD(call, result);
+                ThreadUtil.subThread(() -> cancelVirtualPWD(call, result));
                 break;
             }
 
             case "verifyPIN": {
-                verifyPIN(call, result);
+                ThreadUtil.subThread(() -> verifyPIN(call, result));
                 break;
             }
 
@@ -191,7 +189,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
                     pendingResult = result;
                     break;
                 }
-                initDevice(call, result);
+                ThreadUtil.subThread(() -> initDevice(call, result));
                 break;
             }
 
@@ -211,130 +209,130 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
 //                    pendingResult = result;
 //                    break;
 //                }
-                startScan(call, result);
+                ThreadUtil.subThread(() -> startScan(call, result));
                 break;
             }
 
             case "stopScan": {
-                stopScan(call, result);
+                ThreadUtil.subThread(() -> stopScan(call, result));
                 break;
             }
 
             case "connectDeviceAsync": {
-                connectDeviceAsync(call, result);
+                ThreadUtil.subThread(() -> connectDeviceAsync(call, result));
                 break;
             }
 
             case "cancelConnect": {
-                cancelConnect(call, result);
+                ThreadUtil.subThread(() -> cancelConnect(call, result));
                 break;
             }
 
             case "disconnectDevice": {
-                disconnectDevice(call, result);
+                ThreadUtil.subThread(() -> disconnectDevice(call, result));
                 break;
             }
 
             case "isConnected": {
-                isConnected(call, result);
+                ThreadUtil.subThread(() -> isConnected(call, result));
                 break;
             }
 
             // BTC
             case "BTCCreateContext_Software": {
-                BTCCreateContext_Software(call, result);
+                ThreadUtil.subThread(() -> BTCCreateContext_Software(call, result));
                 break;
             }
 
             case "BTCCreateContext": {
-                BTCCreateContext(call, result);
+                ThreadUtil.subThread(() -> BTCCreateContext(call, result));
                 break;
             }
 
             case "BTCGetMainHDNode": {
-                BTCGetMainHDNode(call, result);
+                ThreadUtil.subThread(() -> BTCGetMainHDNode(call, result));
                 break;
             }
 
             case "BTCGetHDNode": {
-                BTCGetHDNode(call, result);
+                ThreadUtil.subThread(() -> BTCGetHDNode(call, result));
                 break;
             }
 
             case "BTCGetAddress": {
-                BTCGetAddress(call, result);
+                ThreadUtil.subThread(() -> BTCGetAddress(call, result));
                 break;
             }
 
             case "BTCSetAddress": {
-                BTCSetAddress(call, result);
+                ThreadUtil.subThread(() -> BTCSetAddress(call, result));
                 break;
             }
 
             case "BTCSetUint": {
-                BTCSetUint(call, result);
+                ThreadUtil.subThread(() -> BTCSetUint(call, result));
                 break;
             }
 
             case "BTCSignTransaction": {
-                BTCSignTransaction(call, result);
+                ThreadUtil.subThread(() -> BTCSignTransaction(call, result));
                 break;
             }
 
             case "BTCBuildUSDTOutput": {
-                BTCBuildUSDTOutput(call, result);
+                ThreadUtil.subThread(() -> BTCBuildUSDTOutput(call, result));
                 break;
             }
 
             // ETH
             case "ETHCreateContext_Software": {
-                ETHCreateContext_Software(call, result);
+                ThreadUtil.subThread(() -> ETHCreateContext_Software(call, result));
                 break;
             }
 
             case "ETHCreateContext": {
-                ETHCreateContext(call, result);
+                ThreadUtil.subThread(() -> ETHCreateContext(call, result));
                 break;
             }
 
             case "ETHGetMainHDNode": {
-                ETHGetMainHDNode(call, result);
+                ThreadUtil.subThread(() -> ETHGetMainHDNode(call, result));
                 break;
             }
 
             case "ETHGetHDNode": {
-                ETHGetHDNode(call, result);
+                ThreadUtil.subThread(() -> ETHGetHDNode(call, result));
                 break;
             }
 
             case "ETHGetAddress": {
-                ETHGetAddress(call, result);
+                ThreadUtil.subThread(() -> ETHGetAddress(call, result));
                 break;
             }
 
             case "ETHSetAddress": {
-                ETHSetAddress(call, result);
+                ThreadUtil.subThread(() -> ETHSetAddress(call, result));
                 break;
             }
 
             case "ETHSignTransaction": {
-                ETHSignTransaction(call, result);
+                ThreadUtil.subThread(() -> ETHSignTransaction(call, result));
                 break;
             }
 
             case "ETHBuildERC20Abi": {
-                ETHBuildERC20Abi(call, result);
+                ThreadUtil.subThread(() -> ETHBuildERC20Abi(call, result));
                 break;
             }
 
             // 大树运算
             case "bigNumberMultiply": {
-                bigNumberMultiply(call, result);
+                ThreadUtil.subThread(() -> bigNumberMultiply(call, result));
                 break;
             }
 
             case "bigNumberDivide": {
-                bigNumberDivide(call, result);
+                ThreadUtil.subThread(() -> bigNumberDivide(call, result));
                 break;
             }
 
@@ -347,105 +345,124 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
 
     private void generateMnemonic(MethodCall call, Result result) {
         CommonProtos.ENUM_MNEMONIC_STRENGTH strength = CommonProtos.ENUM_MNEMONIC_STRENGTH.forNumber((int) call.arguments);
-        result.success(JuBiterWallet.generateMnemonic(strength).toByteArray());
+        CommonProtos.ResultString resultString = JuBiterWallet.generateMnemonic(strength);
+        ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 
     private void checkMnemonic(MethodCall call, Result result) {
         String mnemonic = (String) call.arguments;
-        result.success(JuBiterWallet.checkMnemonic(mnemonic));
+        int ret = JuBiterWallet.checkMnemonic(mnemonic);
+        ThreadUtil.toMainThread(() -> result.success(ret));
     }
 
     private void generateSeed(MethodCall call, Result result) {
         String mnemonic = call.argument("mnemonic");
         String passphrase = call.argument("passphrase");
-        result.success(JuBiterWallet.generateSeed(mnemonic, passphrase).toByteArray());
+        CommonProtos.ResultString resultString = JuBiterWallet.generateSeed(mnemonic, passphrase);
+        ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 
     private void seedToMasterPrivateKey(MethodCall call, Result result) {
         String seed = call.argument("seed");
         CommonProtos.CURVES curve = CommonProtos.CURVES.forNumber(call.argument("curves"));
-        result.success(JuBiterWallet.seedToMasterPrivateKey(seed, curve).toByteArray());
+        CommonProtos.ResultString resultString = JuBiterWallet.seedToMasterPrivateKey(seed, curve);
+        ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 
-    // todo： check
     private void getDeviceInfo(MethodCall call, Result result) {
         int deviceID = call.arguments();
-        result.success(JuBiterWallet.getDeviceInfo(deviceID).toByteArray());
+        Log.d(TAG, "thread id： " + Thread.currentThread().getId());
+        CommonProtos.ResultAny resultAny = JuBiterWallet.getDeviceInfo(deviceID);
+        ThreadUtil.toMainThread(() -> result.success(resultAny.toByteArray()));
     }
 
     private void getDeviceCert(MethodCall call, Result result) {
         int deviceID = call.arguments();
-        result.success(JuBiterWallet.getDeviceCert(deviceID).toByteArray());
+        CommonProtos.ResultString resultString = JuBiterWallet.getDeviceCert(deviceID);
+        ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 
     private void sendApdu(MethodCall call, Result result) {
         int deviceID = call.argument("deviceID");
         String apdu = call.argument("apdu");
-        result.success(JuBiterWallet.sendApdu(deviceID, apdu).toByteArray());
+        CommonProtos.ResultString resultString = JuBiterWallet.sendApdu(deviceID, apdu);
+        ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 
     private void isInitialize(MethodCall call, Result result) {
         int deviceID = (int) call.arguments;
-        result.success(JuBiterWallet.isInitialize(deviceID));
+        boolean resultBoolean = JuBiterWallet.isInitialize(deviceID);
+        ThreadUtil.toMainThread(() -> result.success(resultBoolean));
     }
 
     private void isBootLoader(MethodCall call, Result result) {
         int deviceID = call.arguments();
-        result.success(JuBiterWallet.isBootLoader(deviceID));
+        boolean resultBoolean = JuBiterWallet.isBootLoader(deviceID);
+        ThreadUtil.toMainThread(() -> result.success(resultBoolean));
     }
 
     private void setTimeout(MethodCall call, Result result) {
         int contextID = call.argument("contextID");
         int timeout = call.argument("timeout");
-        result.success(JuBiterWallet.setTimeout(contextID, timeout));
+        int ret = JuBiterWallet.setTimeout(contextID, timeout);
+        ThreadUtil.toMainThread(() -> result.success(ret));
     }
 
     private void enumApplets(MethodCall call, Result result) {
         int deviceID = (int) call.arguments;
-        result.success(JuBiterWallet.enumApplets(deviceID).toByteArray());
+        CommonProtos.ResultString resultString = JuBiterWallet.enumApplets(deviceID);
+        ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 
     private void enumSupportCoins(MethodCall call, Result result) {
         int deviceID = call.arguments();
-        result.success(JuBiterWallet.enumSupportCoins(deviceID).toByteArray());
+        CommonProtos.ResultString resultString = JuBiterWallet.enumSupportCoins(deviceID);
+        ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 
     private void getAppletVersion(MethodCall call, Result result) {
         int deviceID = call.argument("deviceID");
         String appletID = call.argument("appletID");
-        result.success(JuBiterWallet.getAppletVersion(deviceID, appletID).toByteArray());
+        CommonProtos.ResultString resultString = JuBiterWallet.getAppletVersion(deviceID, appletID);
+        ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 
     private void queryBattery(MethodCall call, Result result) {
         int deviceID = call.arguments();
-        result.success(JuBiterWallet.queryBattery(deviceID).toByteArray());
+        CommonProtos.ResultInt resultInt = JuBiterWallet.queryBattery(deviceID);
+        ThreadUtil.toMainThread(() -> result.success(resultInt.toByteArray()));
     }
 
     private void clearContext(MethodCall call, Result result) {
         int contextID = call.arguments();
-        result.success(JuBiterWallet.clearContext(contextID));
+        int ret = JuBiterWallet.clearContext(contextID);
+        ThreadUtil.toMainThread(() -> result.success(ret));
     }
 
     private void showVirtualPWD(MethodCall call, Result result) {
         int contextID = call.arguments();
-        result.success(JuBiterWallet.showVirtualPWD(contextID));
+        int ret = JuBiterWallet.showVirtualPWD(contextID);
+        ThreadUtil.toMainThread(() -> result.success(ret));
     }
 
     private void cancelVirtualPWD(MethodCall call, Result result) {
         int contextID = call.arguments();
-        result.success(JuBiterWallet.cancelVirtualPWD(contextID));
+        int ret = JuBiterWallet.cancelVirtualPWD(contextID);
+        ThreadUtil.toMainThread(() -> result.success(ret));
     }
 
     private void verifyPIN(MethodCall call, Result result) {
         int contextID = call.argument("contextID");
         String PIN = call.argument("PIN");
-        result.success(JuBiterWallet.verifyPIN(contextID, PIN).toByteArray());
+        CommonProtos.ResultInt resultInt = JuBiterWallet.verifyPIN(contextID, PIN);
+        ThreadUtil.toMainThread(() -> result.success(resultInt.toByteArray()));
     }
 
     //************************************ 蓝牙接口 **************************************
 
     private void initDevice(MethodCall call, Result result) {
-        result.success(JuBiterWallet.initDevice());
+        int ret = JuBiterWallet.initDevice();
+        ThreadUtil.toMainThread(() -> result.success(ret));
     }
 
     private EventChannel.EventSink scanResultSink;
@@ -482,7 +499,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
                         .setDevice(jubiterDevice)
                         .build();
                 // 实时通知 flutter 端扫描结果
-                scanResultSink.success(scanResult.toByteArray());
+                ThreadUtil.toMainThread(() -> scanResultSink.success(scanResult.toByteArray()));
             }
 
             @Override
@@ -494,15 +511,16 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             @Override
             public void onError(int error) {
                 Log.d(TAG, ">>> onError");
-                result.error(String.valueOf(error), null, null);
+                ThreadUtil.toMainThread(() -> result.error(String.valueOf(error), null, null));
             }
         };
         JuBiterWallet.startScan(scanResultCallback);
-        result.success(null);
+        ThreadUtil.toMainThread(() -> result.success(null));
     }
 
     private void stopScan(MethodCall call, Result result) {
-        result.success(JuBiterWallet.stopScan());
+        int ret = JuBiterWallet.stopScan();
+        ThreadUtil.toMainThread(() -> result.success(ret));
     }
 
     private void connectDeviceAsync(MethodCall call, Result result) {
@@ -511,7 +529,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         try {
             request = JuBiterProtos.ConnectRequest.parseFrom(data);
         } catch (InvalidProtocolBufferException e) {
-            result.error("RuntimeException", e.getMessage(), e);
+            ThreadUtil.toMainThread(() -> result.error("RuntimeException", e.getMessage(), e));
             return;
         }
 
@@ -524,7 +542,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
                         .setDeviceID(deviceID)
                         .setState(JuBiterProtos.DeviceStateResponse.BluetoothDeviceState.CONNECTED)
                         .build();
-                uiHandler.post(new Runnable() {
+                ThreadUtil.toMainThread(new Runnable() {
                     @Override
                     public void run() {
                         methodChannel.invokeMethod("DeviceState", deviceStateResponse.toByteArray(), new MethodChannel.Result() {
@@ -554,23 +572,14 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
                         .setRemoteId(mac)
                         .setState(JuBiterProtos.DeviceStateResponse.BluetoothDeviceState.DISCONNECTED)
                         .build();
-                uiHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        methodChannel.invokeMethod("DeviceState", deviceStateResponse.toByteArray());
-                    }
-                });
+                ThreadUtil.toMainThread(
+                        () -> methodChannel.invokeMethod("DeviceState", deviceStateResponse.toByteArray()));
             }
 
             @Override
             public void onError(int error) {
                 Log.d(TAG, ">>> onError: " + error);
-                uiHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        result.error(String.valueOf(error), null, null);
-                    }
-                });
+                ThreadUtil.toMainThread(() -> result.error(String.valueOf(error), null, null));
             }
         };
         String address = request.getRemoteId();
@@ -580,17 +589,20 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
 
     private void cancelConnect(MethodCall call, Result result) {
         String address = (String) call.arguments;
-        result.success(JuBiterWallet.cancelConnect(address));
+        int ret = JuBiterWallet.cancelConnect(address);
+        ThreadUtil.toMainThread(() -> result.success(ret));
     }
 
     private void disconnectDevice(MethodCall call, Result result) {
         int deviceID = (int) call.arguments;
-        result.success(JuBiterWallet.disconnectDevice(deviceID));
+        int ret = JuBiterWallet.disconnectDevice(deviceID);
+        ThreadUtil.toMainThread(() -> result.success(ret));
     }
 
     private void isConnected(MethodCall call, Result result) {
         int deviceID = (int) call.arguments;
-        result.success(JuBiterWallet.isConnected(deviceID));
+        boolean state = JuBiterWallet.isConnected(deviceID);
+        ThreadUtil.toMainThread(() -> result.success(state));
     }
 
     //************************************ BTC接口 **************************************
@@ -600,10 +612,12 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             byte[] config = call.argument("config");
             String xPrikey = call.argument("xPrikey");
             BitcoinProtos.ContextCfgBTC contextCfgBTC = BitcoinProtos.ContextCfgBTC.parseFrom(config);
-            result.success(JuBiterBitcoin.createContext_Software(contextCfgBTC, xPrikey).toByteArray());
+            CommonProtos.ResultInt resultInt =
+                    JuBiterBitcoin.createContext_Software(contextCfgBTC, xPrikey);
+            ThreadUtil.toMainThread(() -> result.success(resultInt.toByteArray()));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            result.error(null, null, null);
+            ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
     }
 
@@ -612,16 +626,19 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             byte[] config = call.argument("config");
             int deviceID = call.argument("deviceID");
             BitcoinProtos.ContextCfgBTC contextCfgBTC = BitcoinProtos.ContextCfgBTC.parseFrom(config);
-            result.success(JuBiterBitcoin.createContext(contextCfgBTC, deviceID).toByteArray());
+            CommonProtos.ResultInt resultInt = JuBiterBitcoin.createContext(contextCfgBTC,
+                    deviceID);
+            ThreadUtil.toMainThread(() -> result.success(resultInt.toByteArray()));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            result.error(null, null, null);
+            ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
     }
 
     private void BTCGetMainHDNode(MethodCall call, Result result) {
         int contextID = (int) call.arguments;
-        result.success(JuBiterBitcoin.getMainHDNode(contextID).toByteArray());
+        CommonProtos.ResultString resultString = JuBiterBitcoin.getMainHDNode(contextID);
+        ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 
     private void BTCGetHDNode(MethodCall call, Result result) {
@@ -629,10 +646,11 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             int contextID = call.argument("contextID");
             byte[] path = call.argument("bip32Path");
             CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(path);
-            result.success(JuBiterBitcoin.getHDNode(contextID, bip32Path).toByteArray());
+            CommonProtos.ResultString resultString = JuBiterBitcoin.getHDNode(contextID, bip32Path);
+            ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            result.error(null, null, null);
+            ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
     }
 
@@ -642,10 +660,12 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             byte[] path = call.argument("bip32Path");
             boolean isShow = call.argument("isShow");
             CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(path);
-            result.success(JuBiterBitcoin.getAddress(contextID, bip32Path, isShow).toByteArray());
+            CommonProtos.ResultString resultString = JuBiterBitcoin.getAddress(contextID,
+                    bip32Path, isShow);
+            ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            result.error(null, null, null);
+            ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
     }
 
@@ -654,10 +674,12 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             int contextID = call.argument("contextID");
             byte[] path = call.argument("bip32Path");
             CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(path);
-            result.success(JuBiterBitcoin.setAddress(contextID, bip32Path).toByteArray());
+            CommonProtos.ResultString resultString = JuBiterBitcoin.setAddress(contextID,
+                    bip32Path);
+            ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            result.error(null, null, null);
+            ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
     }
 
@@ -666,10 +688,12 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             int contextID = call.argument("contextID");
             byte[] txInfo = call.argument("txInfo");
             BitcoinProtos.TransactionBTC transactionBTC = BitcoinProtos.TransactionBTC.parseFrom(txInfo);
-            result.success(JuBiterBitcoin.signTransaction(contextID, transactionBTC).toByteArray());
+            CommonProtos.ResultString resultString = JuBiterBitcoin.signTransaction(contextID,
+                    transactionBTC);
+            ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            result.error(null, null, null);
+            ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
     }
 
@@ -677,14 +701,17 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         int contextID = call.argument("contextID");
         byte[] uint = call.argument("uintType");
         BitcoinProtos.BTC_UNIT_TYPE uintType = BitcoinProtos.BTC_UNIT_TYPE.valueOf(new String(uint));
-        result.success(JuBiterBitcoin.setUint(contextID, uintType));
+        int ret = JuBiterBitcoin.setUint(contextID, uintType);
+        ThreadUtil.toMainThread(() -> result.success(ret));
     }
 
     private void BTCBuildUSDTOutput(MethodCall call, Result result) {
         int contextID = call.argument("contextID");
         String usdtTo = call.argument("usdtTo");
         long amount = call.argument("amount");
-        result.success(JuBiterBitcoin.buildUSDTOutput(contextID, usdtTo, amount).toByteArray());
+        CommonProtos.ResultAny resultAny = JuBiterBitcoin.buildUSDTOutput(contextID, usdtTo,
+                amount);
+        ThreadUtil.toMainThread(() -> result.success(resultAny.toByteArray()));
     }
 
     //************************************ ETH接口 **************************************
@@ -694,10 +721,12 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             byte[] config = call.argument("config");
             String xPrikey = call.argument("xPrikey");
             EthereumProtos.ContextCfgETH contextCfgETH = EthereumProtos.ContextCfgETH.parseFrom(config);
-            result.success(JuBiterEthereum.createContext_Software(contextCfgETH, xPrikey).toByteArray());
+            CommonProtos.ResultInt resultInt =
+                    JuBiterEthereum.createContext_Software(contextCfgETH, xPrikey);
+            ThreadUtil.toMainThread(() -> result.success(resultInt.toByteArray()));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            result.error(null, null, null);
+            ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
     }
 
@@ -706,17 +735,21 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             byte[] config = call.argument("config");
             int deviceID = call.argument("deviceID");
             EthereumProtos.ContextCfgETH contextCfgETH = EthereumProtos.ContextCfgETH.parseFrom(config);
-            result.success(JuBiterEthereum.createContext(contextCfgETH, deviceID).toByteArray());
+            CommonProtos.ResultInt resultInt = JuBiterEthereum.createContext(contextCfgETH,
+                    deviceID);
+            ThreadUtil.toMainThread(() -> result.success(resultInt.toByteArray()));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            result.error(null, null, null);
+            ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
     }
 
     private void ETHGetMainHDNode(MethodCall call, Result result) {
         int contextID = call.argument("contextID");
         int format = call.argument("format");
-        result.success(JuBiterEthereum.getMainHDNode(contextID, EthereumProtos.ENUM_PUB_FORMAT.forNumber(format)).toByteArray());
+        CommonProtos.ResultString resultString = JuBiterEthereum.getMainHDNode(contextID,
+                EthereumProtos.ENUM_PUB_FORMAT.forNumber(format));
+        ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 
     private void ETHGetHDNode(MethodCall call, Result result) {
@@ -725,11 +758,13 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             int format = call.argument("format");
             byte[] bip32 = call.argument("bip32Path");
             CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(bip32);
-            result.success(JuBiterEthereum.getHDNode(contextID, EthereumProtos.ENUM_PUB_FORMAT.forNumber(format),
-                    bip32Path).toByteArray());
+            CommonProtos.ResultString resultString = JuBiterEthereum.getHDNode(contextID,
+                    EthereumProtos.ENUM_PUB_FORMAT.forNumber(format),
+                    bip32Path);
+            ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            result.error(null, null, null);
+            ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
     }
 
@@ -739,10 +774,12 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             byte[] bip32 = call.argument("bip32Path");
             boolean isShow = call.argument("isShow");
             CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(bip32);
-            result.success(JuBiterEthereum.getAddress(contextID, bip32Path, isShow).toByteArray());
+            CommonProtos.ResultString resultString = JuBiterEthereum.getAddress(contextID,
+                    bip32Path, isShow);
+            ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            result.error(null, null, null);
+            ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
     }
 
@@ -751,10 +788,12 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             int contextID = call.argument("contextID");
             byte[] bip32 = call.argument("bip32Path");
             CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(bip32);
-            result.success(JuBiterEthereum.setAddress(contextID, bip32Path).toByteArray());
+            CommonProtos.ResultString resultString = JuBiterEthereum.setAddress(contextID,
+                    bip32Path);
+            ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            result.error(null, null, null);
+            ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
     }
 
@@ -763,10 +802,12 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             int contextID = call.argument("contextID");
             byte[] txInfo = call.argument("txInfo");
             EthereumProtos.TransactionETH transactionETH = EthereumProtos.TransactionETH.parseFrom(txInfo);
-            result.success(JuBiterEthereum.signTransaction(contextID, transactionETH).toByteArray());
+            CommonProtos.ResultString resultString = JuBiterEthereum.signTransaction(contextID,
+                    transactionETH);
+            ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
-            result.error(null, null, null);
+            ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
     }
 
@@ -774,7 +815,9 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         int contextID = call.argument("contextID");
         String address = call.argument("address");
         String amountInWei = call.argument("amountInWei");
-        result.success(JuBiterEthereum.buildERC20Abi(contextID, address, amountInWei).toByteArray());
+        CommonProtos.ResultString resultString = JuBiterEthereum.buildERC20Abi(contextID, address
+                , amountInWei);
+        ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 
     private void bigNumberMultiply(MethodCall call, Result result) {
@@ -803,17 +846,16 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
                 .toPlainString());
     }
 
-    // todo 权限申请不进回调
     @Override
     public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == REQUEST_COARSE_LOCATION_PERMISSIONS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //                startScan(pendingCall, pendingResult);
-                initDevice(pendingCall, pendingResult);
+                ThreadUtil.subThread(() -> initDevice(pendingCall, pendingResult));
             } else {
                 Log.e(TAG, ">>> request permission fail");
-                pendingResult.error(
-                        "-1", "bluetooth plugin requires location permissions for scanning", null);
+                ThreadUtil.toMainThread(
+                        () -> pendingResult.error("-1", "bluetooth plugin requires location permissions for scanning", null));
                 pendingResult = null;
                 pendingCall = null;
             }
