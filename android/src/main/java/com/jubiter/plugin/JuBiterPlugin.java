@@ -327,12 +327,12 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
 
             // 大树运算
             case "bigNumberMultiply": {
-                ThreadUtil.subThread(() -> bigNumberMultiply(call, result));
+                bigNumberMultiply(call, result);
                 break;
             }
 
             case "bigNumberDivide": {
-                ThreadUtil.subThread(() -> bigNumberDivide(call, result));
+                bigNumberDivide(call, result);
                 break;
             }
 
