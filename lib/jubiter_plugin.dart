@@ -14,6 +14,8 @@ import 'package:jubiter_plugin/gen/jubiterblue.pbserver.dart';
 part 'package:jubiter_plugin/jubiter_wallet.dart';
 part 'package:jubiter_plugin/jubiter_bitcoin.dart';
 part 'package:jubiter_plugin/jubiter_ethereum.dart';
+part 'package:jubiter_plugin/big_decimal.dart';
 part 'package:jubiter_plugin/src/jubiter_plugin.dart';
 part 'package:jubiter_plugin/src/utils/log_utils.dart';
+
 

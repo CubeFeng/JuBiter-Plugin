@@ -69,7 +69,9 @@ class _MyAppState extends State<MyApp> {
   Future<String> runTest() async {
 //    BTC_Software();
 //    ETH_Software();
-    bleTest();
+//    bleTest();
+
+    bigNumber();
   }
 
   void BTC_Software() async {
@@ -80,6 +82,7 @@ class _MyAppState extends State<MyApp> {
     assert(mnemonicResult.stateCode == 0);
 
     int checkResult = await JuBiterWallet.checkMnemonic(mnemonicResult.value);
+//    int checkResult = await JuBiterWallet.checkMnemonic('gauge hole clog property soccer idea cycle stadium utility slice hold chief');
     LogUtils.d(">>> checkMnemonic - checkResult: $checkResult");
     assert(checkResult == 0);
 
@@ -197,10 +200,13 @@ class _MyAppState extends State<MyApp> {
     assert(mnemonicResult.stateCode == 0);
 
     int checkResult = await JuBiterWallet.checkMnemonic(mnemonicResult.value);
+//    int checkResult = await JuBiterWallet.checkMnemonic(
+//        'gauge hole clog property soccer idea cycle stadium utility slice hold chief');
     LogUtils.d(">>> checkMnemonic - checkResult: $checkResult");
     assert(checkResult == 0);
 
-    ResultString mnemonicSeed = await JuBiterWallet.generateSeed(mnemonicResult.value, "456");
+    ResultString mnemonicSeed = await JuBiterWallet.generateSeed(mnemonicResult.value, '');
+//    ResultString mnemonicSeed = await JuBiterWallet.generateSeed('gauge hole clog property soccer idea cycle stadium utility slice hold chief', '');
     LogUtils.d(">>> generateSeed - rv:${mnemonicSeed.stateCode} value:${mnemonicSeed.value}");
     assert(mnemonicSeed.stateCode == 0);
 
@@ -212,8 +218,8 @@ class _MyAppState extends State<MyApp> {
 
     ContextCfgETH config = ContextCfgETH.create();
     config.mainPath = "m/44\'/60\'/0\'";
-    ResultInt contextResult = await JuBiterEthereum.createContext_Software(config,
-        'xpub6CAxrkiSbwkn4LayKD6qBcZg4tQvhHBH7TofQjNV9Lb3cB5u8owxdLGfc2bKoz2McoviAMXzWHwSaqc5Sm8C9SWMsnvuBw1bjEwtWsMZZFX');
+    ResultInt contextResult =
+        await JuBiterEthereum.createContext_Software(config, xPrikeyResult.value);
     LogUtils.d(
         ">>> ETHCreateContext_Software - rv:${contextResult.stateCode} value:${contextResult.value}");
     assert(contextResult.stateCode == 0);
@@ -319,5 +325,10 @@ class _MyAppState extends State<MyApp> {
     }, onError: (error) {
       LogUtils.d('>>> init error: ${error}');
     });
+  }
+
+  Future<String> bigNumber() {
+    BigDecimal.bigNumberMultiply('12345678900', 5).then((value)=> print('>>> multiply: $value'));
+    BigDecimal.bigNumberDivide('1234567890000', 5).then((value)=> print('>>> divide: $value'));
   }
 }

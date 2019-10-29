@@ -21,6 +21,8 @@ import com.jubiter.sdk.proto.BitcoinProtos;
 import com.jubiter.sdk.proto.CommonProtos;
 import com.jubiter.sdk.proto.EthereumProtos;
 
+import java.math.BigDecimal;
+
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -322,6 +324,17 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
 
             case "ETHBuildERC20Abi": {
                 ETHBuildERC20Abi(call, result);
+                break;
+            }
+
+            // 大树运算
+            case "bigNumberMultiply": {
+                bigNumberMultiply(call, result);
+                break;
+            }
+
+            case "bigNumberDivide": {
+                bigNumberDivide(call, result);
                 break;
             }
 
@@ -762,6 +775,32 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         String address = call.argument("address");
         String amountInWei = call.argument("amountInWei");
         result.success(JuBiterEthereum.buildERC20Abi(contextID, address, amountInWei).toByteArray());
+    }
+
+    private void bigNumberMultiply(MethodCall call, Result result) {
+        String value = call.argument("value");
+        int position = call.argument("position");
+        BigDecimal bigDecimal = new BigDecimal(value);
+        if (bigDecimal.compareTo(new BigDecimal("0")) == 0) {
+            result.success("0");
+        }
+        result.success(bigDecimal
+                .multiply(new BigDecimal(Double.toString(Math.pow(10, position))))
+                .stripTrailingZeros()
+                .toPlainString());
+    }
+
+    private void bigNumberDivide(MethodCall call, Result result) {
+        String value = call.argument("value");
+        int position = call.argument("position");
+        BigDecimal bigDecimal = new BigDecimal(value);
+        if (bigDecimal.compareTo(new BigDecimal("0")) == 0) {
+            result.success("0");
+        }
+        result.success(bigDecimal
+                .divide(new BigDecimal(Double.toString(Math.pow(10, position))))
+                .stripTrailingZeros()
+                .toPlainString());
     }
 
     // todo 权限申请不进回调
