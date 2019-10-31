@@ -54,8 +54,6 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
     private Result pendingResult;
     private Object mLock = new Object();
 
-//    private Handler uiHandler = new Handler(Looper.getMainLooper());
-
     /**
      * Plugin registration.
      */
@@ -327,12 +325,12 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
 
             // 大树运算
             case "bigNumberMultiply": {
-                bigNumberMultiply(call, result);
+                ThreadUtil.subThread(() -> bigNumberMultiply(call, result));
                 break;
             }
 
             case "bigNumberDivide": {
-                bigNumberDivide(call, result);
+                ThreadUtil.subThread(() -> bigNumberDivide(call, result));
                 break;
             }
 
@@ -827,10 +825,11 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         if (bigDecimal.compareTo(new BigDecimal("0")) == 0) {
             result.success("0");
         }
-        result.success(bigDecimal
+        String bigValue = bigDecimal
                 .multiply(new BigDecimal(Double.toString(Math.pow(10, position))))
                 .stripTrailingZeros()
-                .toPlainString());
+                .toPlainString();
+        ThreadUtil.toMainThread(() -> result.success(bigValue));
     }
 
     private void bigNumberDivide(MethodCall call, Result result) {
@@ -840,10 +839,11 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         if (bigDecimal.compareTo(new BigDecimal("0")) == 0) {
             result.success("0");
         }
-        result.success(bigDecimal
+        String bigValue = bigDecimal
                 .divide(new BigDecimal(Double.toString(Math.pow(10, position))))
                 .stripTrailingZeros()
-                .toPlainString());
+                .toPlainString();
+        ThreadUtil.toMainThread(() -> result.success(bigValue));
     }
 
     @Override
