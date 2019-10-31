@@ -823,7 +823,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         int position = call.argument("position");
         BigDecimal bigDecimal = new BigDecimal(value);
         if (bigDecimal.compareTo(new BigDecimal("0")) == 0) {
-            result.success("0");
+            ThreadUtil.toMainThread(() -> result.success("0"));
         }
         String bigValue = bigDecimal
                 .multiply(new BigDecimal(Double.toString(Math.pow(10, position))))
@@ -837,7 +837,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         int position = call.argument("position");
         BigDecimal bigDecimal = new BigDecimal(value);
         if (bigDecimal.compareTo(new BigDecimal("0")) == 0) {
-            result.success("0");
+            ThreadUtil.toMainThread(() -> result.success("0"));
         }
         String bigValue = bigDecimal
                 .divide(new BigDecimal(Double.toString(Math.pow(10, position))))
