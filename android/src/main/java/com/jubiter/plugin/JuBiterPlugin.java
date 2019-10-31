@@ -835,6 +835,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
     private void bigNumberDivide(MethodCall call, Result result) {
         String value = call.argument("value");
         int position = call.argument("position");
+        Log.d(TAG, "value: " + value + " position: " + position);
         BigDecimal bigDecimal = new BigDecimal(value);
         if (bigDecimal.compareTo(new BigDecimal("0")) == 0) {
             ThreadUtil.toMainThread(() -> result.success("0"));

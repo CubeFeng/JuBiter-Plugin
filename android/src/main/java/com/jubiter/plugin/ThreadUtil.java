@@ -13,13 +13,12 @@ import java.util.concurrent.Executors;
  */
 public class ThreadUtil {
 
-
     /** CPU 个数 */
     private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
     /** 2 到 4 个线程，CPU_COUNT -1 避免后台工作饱和 */
     private static final int CORE_POOL_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));
     private static final ExecutorService mThreadPool = Executors.newFixedThreadPool(CORE_POOL_SIZE);
-    private static final android.os.Handler sMainHandler = new Handler(Looper.getMainLooper());
+    private static final Handler sMainHandler = new Handler(Looper.getMainLooper());
 
 
     public static void subThread(Runnable runnable) {
