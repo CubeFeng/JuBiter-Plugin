@@ -69,9 +69,9 @@ class _MyAppState extends State<MyApp> {
   Future<String> runTest() async {
 //    BTC_Software();
 //    ETH_Software();
-    bleTest();
+//    bleTest();
 
-//    bigNumber();
+    bigNumber();
   }
 
   void BTC_Software() async {
@@ -82,7 +82,6 @@ class _MyAppState extends State<MyApp> {
     assert(mnemonicResult.stateCode == 0);
 
     int checkResult = await JuBiterWallet.checkMnemonic(mnemonicResult.value);
-//    int checkResult = await JuBiterWallet.checkMnemonic('gauge hole clog property soccer idea cycle stadium utility slice hold chief');
     LogUtils.d(">>> checkMnemonic - checkResult: $checkResult");
     assert(checkResult == 0);
 
@@ -200,13 +199,10 @@ class _MyAppState extends State<MyApp> {
     assert(mnemonicResult.stateCode == 0);
 
     int checkResult = await JuBiterWallet.checkMnemonic(mnemonicResult.value);
-//    int checkResult = await JuBiterWallet.checkMnemonic(
-//        'gauge hole clog property soccer idea cycle stadium utility slice hold chief');
     LogUtils.d(">>> checkMnemonic - checkResult: $checkResult");
     assert(checkResult == 0);
 
     ResultString mnemonicSeed = await JuBiterWallet.generateSeed(mnemonicResult.value, '');
-//    ResultString mnemonicSeed = await JuBiterWallet.generateSeed('gauge hole clog property soccer idea cycle stadium utility slice hold chief', '');
     LogUtils.d(">>> generateSeed - rv:${mnemonicSeed.stateCode} value:${mnemonicSeed.value}");
     assert(mnemonicSeed.stateCode == 0);
 
@@ -334,6 +330,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<String> bigNumber() {
     BigDecimal.bigNumberMultiply('12345678900', 5).then((value)=> print('>>> multiply: $value'));
-    BigDecimal.bigNumberDivide('1234567890000', 5).then((value)=> print('>>> divide: $value'));
+    BigDecimal.bigNumberDivide('0', 18).then((value)=> setState(() {
+      _platformVersion = value;
+    }));
   }
 }
