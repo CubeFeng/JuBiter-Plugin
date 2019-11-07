@@ -68,10 +68,10 @@ class _MyAppState extends State<MyApp> {
 
   Future<String> runTest() async {
 //    BTC_Software();
-//    ETH_Software();
+    ETH_Software();
 //    bleTest();
 
-    bigNumber();
+//    bigNumber();
   }
 
   void BTC_Software() async {
@@ -271,6 +271,12 @@ class _MyAppState extends State<MyApp> {
       LogUtils.d(">>> ETHSignTransaction - rv:${signResult.stateCode} value:${signResult.value}");
       assert(signResult.stateCode == 0);
     }
+
+    {
+      ResultString signResult = await JuBiterEthereum.buildERC20Abi(
+          contextResult.value, '0xef31DEc147DCDcd64F6a0ABFA7D441B62A216BC9', '10000000');
+      LogUtils.d(">>> buildERC20Abi - rv:${signResult.stateCode} value:${signResult.value}");
+    }
   }
 
   Future<String> bleTest() {
@@ -318,7 +324,6 @@ class _MyAppState extends State<MyApp> {
               LogUtils.d('main >>> deviceCert: ${value.value}');
             });
           });
-
         }, (error) {
           LogUtils.d('>>> connect callback error: ${error}');
         });
@@ -329,9 +334,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<String> bigNumber() {
-    BigDecimal.bigNumberMultiply('12345678900', 5).then((value)=> print('>>> multiply: $value'));
-    BigDecimal.bigNumberDivide('0', 18).then((value)=> setState(() {
-      _platformVersion = value;
-    }));
+    BigDecimal.bigNumberMultiply('12345678900', 5).then((value) => print('>>> multiply: $value'));
+    BigDecimal.bigNumberDivide('0', 18).then((value) => setState(() {
+          _platformVersion = value;
+        }));
   }
 }
