@@ -3,8 +3,6 @@ package com.jubiter.plugin;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -21,6 +19,8 @@ import com.jubiter.sdk.proto.EthereumProtos;
 
 import java.math.BigDecimal;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
