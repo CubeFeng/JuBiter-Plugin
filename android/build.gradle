@@ -34,22 +34,20 @@ android {
         minSdkVersion 19
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        // arm64-v8a
-        buildTypes {
-            debug {
-                ndk {
-                    abiFilters "armeabi-v7a", "arm64-v8a", 'x86', 'x86_64'
-                }
-            }
-
-            release {
-                ndk {
-                    abiFilters "armeabi-v7a", "arm64-v8a", 'x86', 'x86_64'
-                }
-            }
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a", 'x86', 'x86_64'
         }
-
     }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false   // 去除无用资源，依赖minifyEnabled，需与 minifyEnabled 同时开启
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
     lintOptions {
         disable 'InvalidPackage'
     }
