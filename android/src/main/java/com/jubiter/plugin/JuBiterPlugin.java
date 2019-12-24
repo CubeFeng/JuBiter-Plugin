@@ -613,7 +613,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             CommonProtos.ResultInt resultInt =
                     JuBiterBitcoin.createContext_Software(contextCfgBTC, xPrikey);
             ThreadUtil.toMainThread(() -> result.success(resultInt.toByteArray()));
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
+//        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
@@ -627,7 +628,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             CommonProtos.ResultInt resultInt = JuBiterBitcoin.createContext(contextCfgBTC,
                     deviceID);
             ThreadUtil.toMainThread(() -> result.success(resultInt.toByteArray()));
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
+//        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
@@ -646,7 +648,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(path);
             CommonProtos.ResultString resultString = JuBiterBitcoin.getHDNode(contextID, bip32Path);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
+//        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
@@ -661,7 +664,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             CommonProtos.ResultString resultString = JuBiterBitcoin.getAddress(contextID,
                     bip32Path, isShow);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
+//        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
@@ -675,7 +679,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             CommonProtos.ResultString resultString = JuBiterBitcoin.setAddress(contextID,
                     bip32Path);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
+//        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
@@ -689,7 +694,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             CommonProtos.ResultString resultString = JuBiterBitcoin.signTransaction(contextID,
                     transactionBTC);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
+//        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
@@ -722,7 +728,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             CommonProtos.ResultInt resultInt =
                     JuBiterEthereum.createContext_Software(contextCfgETH, xPrikey);
             ThreadUtil.toMainThread(() -> result.success(resultInt.toByteArray()));
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
+//        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
@@ -736,7 +743,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             CommonProtos.ResultInt resultInt = JuBiterEthereum.createContext(contextCfgETH,
                     deviceID);
             ThreadUtil.toMainThread(() -> result.success(resultInt.toByteArray()));
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
+//        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
@@ -760,7 +768,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
                     EthereumProtos.ENUM_PUB_FORMAT.forNumber(format),
                     bip32Path);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
+//        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
@@ -775,7 +784,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             CommonProtos.ResultString resultString = JuBiterEthereum.getAddress(contextID,
                     bip32Path, isShow);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
+//        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
@@ -789,7 +799,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             CommonProtos.ResultString resultString = JuBiterEthereum.setAddress(contextID,
                     bip32Path);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
+//        } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
@@ -803,7 +814,10 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             CommonProtos.ResultString resultString = JuBiterEthereum.signTransaction(contextID,
                     transactionETH);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
-        } catch (InvalidProtocolBufferException e) {
+//        } catch (InvalidProtocolBufferException e) {
+//            e.printStackTrace();
+//            ThreadUtil.toMainThread(() -> result.error(null, null, null));
+        } catch (Exception e) {
             e.printStackTrace();
             ThreadUtil.toMainThread(() -> result.error(null, null, null));
         }
