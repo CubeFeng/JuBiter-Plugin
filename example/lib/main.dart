@@ -68,8 +68,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<String> runTest() async {
 //    BTC_Software();
-    ETH_Software();
-//    bleTest();
+    // ETH_Software();
+   bleTest();
 
 //    bigNumber();
   }
