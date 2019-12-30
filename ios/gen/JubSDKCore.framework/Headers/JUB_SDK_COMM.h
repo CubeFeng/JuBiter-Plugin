@@ -154,11 +154,20 @@ extern "C" {
 #endif // #ifdef __cplusplus
 
 // Remove c++ features for swift framework
-//typedef struct stContextCfg {
-//    JUB_CHAR_PTR            mainPath;
+typedef struct stContextCfg {
+    JUB_CHAR_PTR            mainPath;
 //
-////    virtual ~stContextCfg() {}
-//} CONTEXT_CONFIG;
+//     stContextCfg();
+//    virtual ~stContextCfg() {}
+} CONTEXT_CONFIG;
+// Remove c++ features for swift framework end
+
+// Remove c++ features for swift framework
+typedef enum {
+    HEX = 0x00,
+    XPUB = 0x01,
+    PUB_FORMAT_NS_ITEM
+} JUB_ENUM_PUB_FORMAT;
 // Remove c++ features for swift framework end
 
 typedef enum {
@@ -167,10 +176,15 @@ typedef enum {
     BOOL_NR_ITEMS
 } JUB_ENUM_BOOL;
 
-typedef struct {
+// Remove c++ features for swift framework
+typedef struct stBip44Path {
 	JUB_ENUM_BOOL change;
 	JUB_UINT64    addressIndex;
+//
+//     stBip44Path();
+//    ~stBip44Path();
 } BIP44_Path;
+// Remove c++ features for swift framework end
 
 // Remove c++ features for swift framework
 //typedef enum class JubGrapheneRole {
