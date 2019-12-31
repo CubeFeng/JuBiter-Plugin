@@ -9,8 +9,8 @@
 import Foundation
 import JubSDKCore
 
-internal func inlinePb2ETHEnumPubFormat(pb: JUB_Proto_Ethereum_ENUM_PUB_FORMAT) -> JUB_ENUM_ETH_PUB_FORMAT {
-    var format:JUB_ENUM_ETH_PUB_FORMAT
+internal func inlinePb2ETHEnumPubFormat(pb: JUB_Proto_Ethereum_ENUM_PUB_FORMAT) -> JUB_ENUM_PUB_FORMAT {
+    var format:JUB_ENUM_PUB_FORMAT
     
     switch pb {
     case .hex:

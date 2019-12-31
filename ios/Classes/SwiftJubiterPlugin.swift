@@ -36,58 +36,36 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
     convenience init(with registrar: FlutterPluginRegistrar){
         self.init()
         
-        print("创建SwiftJuBiterPlugin实例")
+        print("|iOS Plugin| 初始化")
 
-        eventChannel = FlutterEventChannel(name: EVENT_SCAN_RESULT_CHANNEL, binaryMessenger: registrar.messenger())
-          
+        eventChannel = FlutterEventChannel(name: EVENT_SCAN_RESULT_CHANNEL,
+                                           binaryMessenger: registrar.messenger())
         eventChannel!.setStreamHandler(self)
+        
+        methodChannel = FlutterMethodChannel(name: METHOD_CHANNEL_NAME,
+                                             binaryMessenger: registrar.messenger())
+        registrar.addMethodCallDelegate(self, channel: methodChannel!)
         
         central.delegate = self
                
         let center = NotificationCenter.default
-        center.addObserver(self, selector: #selector(deviceArrivalObserver(_:)), name: Notif.arrival, object: nil)
-    
-        methodChannel = FlutterMethodChannel(name: METHOD_CHANNEL_NAME, binaryMessenger: registrar.messenger())
+        center.addObserver(self,
+                           selector: #selector(deviceArrivalObserver(_:)),
+                           name: Notif.arrival,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(deviceDisconnectObserver(_:)),
+                           name: Notif.disconnect,
+                           object: nil)
         
-        registrar.addMethodCallDelegate(self, channel: methodChannel!)
     }
      
     
     public static func register(with registrar: FlutterPluginRegistrar) {
     
      SwiftJuBiterPlugin(with: registrar)
-        
-
-//            center.addObserver(self, selector: #selector(serviceStateObserver(_:)), name: N.DeviceManager.serviceChanged, object: nil)
+    
    }
-    
-    @objc func deviceArrivalObserver(_ notification: Notification) {
-        let device =  notification.userInfo?["Device"] as? BluetoothDevice
-
-        guard let arrivalDevice = device else {
-            return
-        }
-        
-        devices[arrivalDevice.remoteID] = arrivalDevice
-        
-        let advertisementData = AdvertisementData.init()
-        var scanResult = ScanResult.init()
-        scanResult.advertisementData = advertisementData
-        scanResult.device = arrivalDevice
-        do {
-            let data = try scanResult.serializedData()
-            if(self.eventSink != nil){
-                    DispatchQueue.main.async {
-                        self.eventSink!(data)
-                      }
-                    
-                }else {
-                }
-        } catch {
-            print("catch error")
-        }
-    }
-    
     
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
       
@@ -173,36 +151,36 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
         isConnected(call, result)
 
     //btc
-    case "BTCCreateContext_Software":
-        BTCCreateContext_Software(call,result)
-       break
-
-    case "BTCCreateContext":
-        BTCCreateContext(call,result);
-       break
-
-    case "BTCGetMainHDNode":
-        BTCGetMainHDNode(call,result);
-       break
-    case "BTCGetHDNode":
-        BTCGetHDNode(call,result);
-       break
-    case "BTCGetAddress":
-        BTCGetAddress(call,result);
-       break
-
-    case "BTCSetAddress":
-        BTCSetAddress(call,result);
-       break
-
-    case "BTCSetUint":
-        BTCSetUint(call,result);
-       break
-    case "BTCSignTransaction":
-        BTCSignTransaction(call,result);
-       break
-    case "BTCBuildUSDTOutput":
-        BTCBuildUSDTOutput(call,result);
+//    case "BTCCreateContext_Software":
+//        BTCCreateContext_Software(call,result)
+//       break
+//
+//    case "BTCCreateContext":
+//        BTCCreateContext(call,result);
+//       break
+//
+//    case "BTCGetMainHDNode":
+//        BTCGetMainHDNode(call,result);
+//       break
+//    case "BTCGetHDNode":
+//        BTCGetHDNode(call,result);
+//       break
+//    case "BTCGetAddress":
+//        BTCGetAddress(call,result);
+//       break
+//
+//    case "BTCSetAddress":
+//        BTCSetAddress(call,result);
+//       break
+//
+//    case "BTCSetUint":
+//        BTCSetUint(call,result);
+//       break
+//    case "BTCSignTransaction":
+//        BTCSignTransaction(call,result);
+//       break
+//    case "BTCBuildUSDTOutput":
+//        BTCBuildUSDTOutput(call,result);
 
     //ETH
 
@@ -303,8 +281,6 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
         let resultAny = JuBiterWallet().getDeviceInfo(contextID: deviceID)
         
          do{
-//            let decoded : JUB_Proto_Common_DeviceInfo = try JUB_Proto_Common_DeviceInfo(serializedData: resultAny.serializedData())
-            
             let protobufSerialized = try resultAny.serializedData()
              result(protobufSerialized)
          }catch{
@@ -326,13 +302,11 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
      }
     
      func  sendApdu(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-//         let args: NSDictionary = call.arguments as! NSDictionary
-//         let deviceID = args["deviceID"] as! UInt
-//         let apdu = args["apdu"] as! String
-//         let resultString = JuBiterWallet.sendApdu(deviceID, apdu)
-//        JUB_SendOneApdu(<#T##deviceID: JUB_UINT16##JUB_UINT16#>, <#T##apdu: JUB_CHAR_PTR!##JUB_CHAR_PTR!#>, <#T##response: JUB_CHAR_PTR_PTR!##JUB_CHAR_PTR_PTR!#>)
-         let resultString = JUB_Proto_Common_ResultString()
+         let args: NSDictionary = call.arguments as! NSDictionary
+         let deviceID = args["deviceID"] as! UInt
+         let apdu = args["apdu"] as! String
          do{
+            let resultString = try JuBiterWallet().sendOneApdu(deviceID: deviceID, apdu: apdu)
              let protobufSerialized = try resultString.serializedData()
              result(protobufSerialized)
          }catch{
@@ -385,12 +359,11 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
      }
     
      func getAppletVersion(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-//         let args: NSDictionary = call.arguments as! NSDictionary
-//         let deviceID = args["deviceID"] as! Int
-//         let appleID = args["appleID"] as! String
-         let resultString = JUB_Proto_Common_ResultString()
-//         let resultString =  JuBiterWallet.getAppletVersion(deviceID, appletID)
+         let args: NSDictionary = call.arguments as! NSDictionary
+         let deviceID = args["deviceID"] as! UInt
+         let appleID = args["appleID"] as! String
          do{
+            let resultString =  try JuBiterWallet().getAppletVersion(contextID: deviceID, appID: appleID)
              let protobufSerialized = try resultString.serializedData()
              result(protobufSerialized)
          } catch {
@@ -400,7 +373,7 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
     
      func queryBattery(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
          let deviceID = call.arguments as! UInt
-        let resultInt = JuBiterWallet().queryBattery(contextID: deviceID)
+         let resultInt = JuBiterWallet().queryBattery(contextID: deviceID)
 
          do{
              let protobufSerialized = try resultInt.serializedData()
@@ -446,7 +419,6 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
     
      //************************************ 蓝牙接口 **************************************
     func initDevice(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-        print("initDevice")
            if(self.available){
         
                 let scanCallback: DEV_ScanCallBack = { (name, uuid, type) -> Void in
@@ -465,16 +437,14 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
                 }
 
                 let discCallback: DEV_DiscCallBack = { (uuid) -> Void in
-        //            #if DEBUG
-        //            print(Date(), "disconnecting ", String(cString: uuid!))
-        //            #endif
-        //            DispatchQueue.main.async {
-        //                NotificationCenter.default.post(
-        //                    name: N.Device.disconnect,
-        //                    object: nil,
-        //                    userInfo: [N.Key.uuid: String(cString: uuid!)]
-        //                )
-        //            }
+   
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(
+                            name: Notif.disconnect,
+                            object: nil,
+                            userInfo: ["uuid": String(cString: uuid!)]
+                        )
+                    }
                 }
 
                 let param = DEVICE_INIT_PARAM(param: nil, callBack: nil,
@@ -484,20 +454,10 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
                 let rv = JUB_initDevice(param)
                 guard rv == JUBR_OK else {
                     return
-//                    throw JUB.JUBError.code(rv)
                 }
-            print("初始化 initDevice------")
-            print(rv)
-            
-             result(0)
-        
-//            let rv2 = JUB_enumDevices()
-//            print(rv2)
-        
-     
-          
+
+            result(0)
         } else {
-            print("蓝牙不可用")
             pendingCall = call
             pendingResult = result
         }
@@ -516,30 +476,19 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
     }
     
     func connectDeviceAsync(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-//        ConnectRequest
         
-        let argss = call.arguments as! FlutterStandardTypedData
+        let args = call.arguments as! FlutterStandardTypedData
         do {
-            let decoded : ConnectRequest = try ConnectRequest(serializedData: argss.data)
-            
-            print(decoded)
-            
-//            - remoteID : "6624126B-582E-2D6C-36DB-B1B6855FC1EC"
-//            - name : "JuBiter-sigt"
-//            - type : jubiter_plugin.BluetoothDevice.TypeEnum.classic
-            
-//            BluetoothDevice
-            
-            let remoteID = "6624126B-582E-2D6C-36DB-B1B6855FC1EC"
-            let timeout = decoded.timeout
-            let names = "JuBiter-sigt"
-//             let device = devices[remoteID]
-//             guard let connectDevice = device else {
-//                 return
-//             }
+             let decoded : ConnectRequest = try ConnectRequest(serializedData: args.data)
+             let remoteID = decoded.remoteID
+             let timeout = decoded.timeout * 1000
+             let device = devices[remoteID]
+             guard let connectDevice = device else {
+                 return
+             }
              
              var handle: JUB_UINT16 = 0
-             let name: UnsafeMutablePointer<UInt8> = names
+             let name: UnsafeMutablePointer<UInt8> = connectDevice.name
                      .utf8CString
                      .withUnsafeBytes {
                          let pointer = $0.baseAddress!.bindMemory(to: UInt8.self, capacity: $0.count+1)
@@ -547,31 +496,21 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
              }
    
               
-            let rv = JUB_connectDevice((JUB_BYTE_PTR)(name),  JUB_UINT32(1), &handle, JUB_UINT32(30000))
+            let rv = JUB_connectDevice((JUB_BYTE_PTR)(name),  JUB_UINT32(connectDevice.type.rawValue), &handle, JUB_UINT32(timeout))
             
-            
-            var response = DeviceStateResponse.init()
-            response.remoteID = remoteID
-            response.deviceID = Int32(handle)
-            response.state = DeviceStateResponse.BluetoothDeviceState.connected
-            let data = try response.serializedData()
-            methodChannel?.invokeMethod("DeviceState", arguments: data)
-            print("链接结果")
-            print(rv)
-            print(handle)
-
+            if(rv == 0){
+                var response = DeviceStateResponse.init()
+                response.remoteID = remoteID
+                response.deviceID = Int32(handle)
+                response.state = DeviceStateResponse.BluetoothDeviceState.connected
+                let data = try response.serializedData()
+                methodChannel?.invokeMethod("DeviceState", arguments: data)
+            } else {
+            }
         }
         catch {
             
         }
-        
- 
-
-//            guard let rv == JUBR_OK else {
-//                return
-////                throw JUB.JUBError.code(rv)
-//            }
-//            self.handle = handle
 
     }
     
@@ -598,140 +537,144 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
     
     func isConnected(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
         let deviceID = call.arguments as! UInt
-        let state = JUB_disconnectDevice(JUB_UINT16(deviceID))
-        result(state)
+        let state = JUB_isDeviceConnect(JUB_UINT16(deviceID))
+        if(state == 0){
+            result(true)
+        } else {
+            result(false)
+        }
     }
     
      //************************************ BTC接口 **************************************
-    
-     func BTCCreateContext_Software(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-         do{
-             let args: NSDictionary = call.arguments as! NSDictionary
-             let config = args["config"] as! FlutterStandardTypedData
-             let xPrikey = args["xPrikey"] as! String
-            let contextCfgBTC = try JUB_Proto_Bitcoin_ContextCfgBTC(serializedData: config.data)
- //            let resultInt = JuBiterBitcoin.createContext_Software(contextCfgBTC, xPrikey);
-             let resultInt =  JUB_Proto_Common_ResultInt()
-             result(try resultInt.serializedData())
-         }catch{
-            
-         }
-     }
-    
-     func BTCCreateContext(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-         do{
-             let args: NSDictionary = call.arguments as! NSDictionary
-             let config = args["config"] as! FlutterStandardTypedData
-             let deviceID = args["deviceID"] as! Int
-            let contextCfgBTC = try JUB_Proto_Bitcoin_ContextCfgBTC(serializedData: config.data)
-//            JuBiterBitcoin.createContext_Software(contextCfgBTC, xPrikey);
-             let resultInt =  JUB_Proto_Common_ResultInt()
-             result(try resultInt.serializedData())
-         }catch{
-            
-         }
-
-     }
-    
-     func BTCGetMainHDNode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-         let contexID = call.arguments as! Int
- //        let resultString = JuBiterBitcoin.getMainHDNode(contextID)
-         let resultString = JUB_Proto_Common_ResultString()
-         do{
-             result(try resultString.serializedData())
-         }catch{
-            
-         }
-     }
-    
-     func BTCGetHDNode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-         do{
-             let args: NSDictionary = call.arguments as! NSDictionary
-             let config = args["contextID"] as! Int
-             let path = args["bip32Path"] as! FlutterStandardTypedData
-            let bip32Path = try JUB_Proto_Common_Bip32Path(serializedData: path.data)
-             let resultString = JUB_Proto_Common_ResultString()
- //            let resultString  = JuBiterBitcoin.getHDNode(contextID, bip32Path);
-             result(try resultString.serializedData())
-            
-         }catch{
-            
-         }
-     }
-    
-     func BTCGetAddress(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-         do{
-             let args: NSDictionary = call.arguments as! NSDictionary
-             let config = args["contextID"] as! Int
-             let path = args["bip32Path"] as! FlutterStandardTypedData
-             let isShow = args["isShow"] as! Bool
-            let bip32Path = try JUB_Proto_Common_Bip32Path(serializedData: path.data)
-            
-             let resultString = JUB_Proto_Common_ResultString()
- //            let resultString = JuBiterBitcoin.getAddress(contextID, bip32Path, isShow)
-             result(try resultString.serializedData())
-         }catch{
-            
-         }
-        
-     }
-    
-     func BTCSetAddress(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
-         do{
-             let args: NSDictionary = call.arguments as! NSDictionary
-             let config = args["contextID"] as! Int
-             let path = args["bip32Path"] as! FlutterStandardTypedData
-            let bip32Path = try JUB_Proto_Common_Bip32Path(serializedData: path.data)
-             let resultString = JUB_Proto_Common_ResultString()
-     //      let resultString = JuBiterBitcoin.setAddress(contextID, bip32Path)
-             result(try resultString.serializedData())
-         }catch{
-            
-         }
-     }
-    
-     func BTCSignTransaction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-         do{
-             let args: NSDictionary = call.arguments as! NSDictionary
-             let config = args["contextID"] as! Int
-             let txInfo = args["txInfo"] as! FlutterStandardTypedData
-            let transactionBTC = try JUB_Proto_Bitcoin_TransactionBTC(serializedData: txInfo.data)
-             let resultString = JUB_Proto_Common_ResultString()
- //            let resultString = JuBiterBitcoin.signTransaction(contextID, transactionBTC)
-             result(try resultString.serializedData())
-         }catch{
-            
-         }
-     }
-    
-     func BTCSetUint(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-         do{
-             let args: NSDictionary = call.arguments as! NSDictionary
-             let contextID = args["contextID"] as! Int
-             let uint = args["uintType"] as! FlutterStandardTypedData
- //            let unitType = try JUB_Proto_Bitcoin_BTC_UNIT_TYPE(rawValue: uint)
-             let ret = 1
-             result(ret)
- //            let ret = JuBiterBitcoin.setUint(contextID, uintType)
-         }catch{
-            
-         }
-     }
-    
-     func BTCBuildUSDTOutput(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
-          do{
-             let args: NSDictionary = call.arguments as! NSDictionary
-             let contextID = args["contextID"] as! Int
-             let usdtTo = args["usdtTo"] as! String
-             let amount = args["amount"] as! Int64
- //            let resultAny = JuBiterBitcoin.buildUSDTOutput(contextID, usdtTo, amount);
-             let resultAny = JUB_Proto_Common_ResultAny()
-             result(try resultAny.serializedData())
-         }catch{
-            
-         }
-     }
-    
+//
+//     func BTCCreateContext_Software(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+//         do{
+//             let args: NSDictionary = call.arguments as! NSDictionary
+//             let config = args["config"] as! FlutterStandardTypedData
+//             let xPrikey = args["xPrikey"] as! String
+//            let contextCfgBTC = try JUB_Proto_Bitcoin_ContextCfgBTC(serializedData: config.data)
+// //            let resultInt = JuBiterBitcoin.createContext_Software(contextCfgBTC, xPrikey);
+//             let resultInt =  JUB_Proto_Common_ResultInt()
+//             result(try resultInt.serializedData())
+//         }catch{
+//
+//         }
+//     }
+//
+//     func BTCCreateContext(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+//         do{
+//             let args: NSDictionary = call.arguments as! NSDictionary
+//             let config = args["config"] as! FlutterStandardTypedData
+//             let deviceID = args["deviceID"] as! Int
+//            let contextCfgBTC = try JUB_Proto_Bitcoin_ContextCfgBTC(serializedData: config.data)
+////            JuBiterBitcoin.createContext_Software(contextCfgBTC, xPrikey);
+//             let resultInt =  JUB_Proto_Common_ResultInt()
+//             result(try resultInt.serializedData())
+//         }catch{
+//
+//         }
+//
+//     }
+//
+//     func BTCGetMainHDNode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+//         let contexID = call.arguments as! Int
+// //        let resultString = JuBiterBitcoin.getMainHDNode(contextID)
+//         let resultString = JUB_Proto_Common_ResultString()
+//         do{
+//             result(try resultString.serializedData())
+//         }catch{
+//
+//         }
+//     }
+//
+//     func BTCGetHDNode(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+//         do{
+//             let args: NSDictionary = call.arguments as! NSDictionary
+//             let config = args["contextID"] as! Int
+//             let path = args["bip32Path"] as! FlutterStandardTypedData
+//            let bip32Path = try JUB_Proto_Common_Bip32Path(serializedData: path.data)
+//             let resultString = JUB_Proto_Common_ResultString()
+// //            let resultString  = JuBiterBitcoin.getHDNode(contextID, bip32Path);
+//             result(try resultString.serializedData())
+//
+//         }catch{
+//
+//         }
+//     }
+//
+//     func BTCGetAddress(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+//         do{
+//             let args: NSDictionary = call.arguments as! NSDictionary
+//             let config = args["contextID"] as! Int
+//             let path = args["bip32Path"] as! FlutterStandardTypedData
+//             let isShow = args["isShow"] as! Bool
+//            let bip32Path = try JUB_Proto_Common_Bip32Path(serializedData: path.data)
+//
+//             let resultString = JUB_Proto_Common_ResultString()
+// //            let resultString = JuBiterBitcoin.getAddress(contextID, bip32Path, isShow)
+//             result(try resultString.serializedData())
+//         }catch{
+//
+//         }
+//
+//     }
+//
+//     func BTCSetAddress(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+//         do{
+//             let args: NSDictionary = call.arguments as! NSDictionary
+//             let config = args["contextID"] as! Int
+//             let path = args["bip32Path"] as! FlutterStandardTypedData
+//            let bip32Path = try JUB_Proto_Common_Bip32Path(serializedData: path.data)
+//             let resultString = JUB_Proto_Common_ResultString()
+//     //      let resultString = JuBiterBitcoin.setAddress(contextID, bip32Path)
+//             result(try resultString.serializedData())
+//         }catch{
+//
+//         }
+//     }
+//
+//     func BTCSignTransaction(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+//         do{
+//             let args: NSDictionary = call.arguments as! NSDictionary
+//             let config = args["contextID"] as! Int
+//             let txInfo = args["txInfo"] as! FlutterStandardTypedData
+//            let transactionBTC = try JUB_Proto_Bitcoin_TransactionBTC(serializedData: txInfo.data)
+//             let resultString = JUB_Proto_Common_ResultString()
+// //            let resultString = JuBiterBitcoin.signTransaction(contextID, transactionBTC)
+//             result(try resultString.serializedData())
+//         }catch{
+//
+//         }
+//     }
+//
+//     func BTCSetUint(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+//         do{
+//             let args: NSDictionary = call.arguments as! NSDictionary
+//             let contextID = args["contextID"] as! Int
+//             let uint = args["uintType"] as! FlutterStandardTypedData
+// //            let unitType = try JUB_Proto_Bitcoin_BTC_UNIT_TYPE(rawValue: uint)
+//             let ret = 1
+//             result(ret)
+// //            let ret = JuBiterBitcoin.setUint(contextID, uintType)
+//         }catch{
+//
+//         }
+//     }
+//
+//     func BTCBuildUSDTOutput(_ call: FlutterMethodCall, _ result: @escaping FlutterResult){
+//          do{
+//             let args: NSDictionary = call.arguments as! NSDictionary
+//             let contextID = args["contextID"] as! Int
+//             let usdtTo = args["usdtTo"] as! String
+//             let amount = args["amount"] as! Int64
+// //            let resultAny = JuBiterBitcoin.buildUSDTOutput(contextID, usdtTo, amount);
+//             let resultAny = JUB_Proto_Common_ResultAny()
+//             result(try resultAny.serializedData())
+//         }catch{
+//
+//         }
+//     }
+//
     
      //************************************ ETH接口 **************************************
     
@@ -839,10 +782,10 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
     
      func ETHBuildERC20Abi(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
          do{
-             let args: NSDictionary = call.arguments as! NSDictionary
-             let contextID = args["contextID"] as! UInt
-             let address = args["address"] as! String
-             let amountInWei = args["amountInWei"] as! String
+//             let args: NSDictionary = call.arguments as! NSDictionary
+//             let contextID = args["contextID"] as! UInt
+//             let address = args["address"] as! String
+//             let amountInWei = args["amountInWei"] as! String
             
              let resultString = JUB_Proto_Common_ResultString()
  //            let resultString =  JuBiterEthereum.buildERC20Abi(contextID, address, amountInWei);
@@ -854,25 +797,79 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
      }
 }
 
+
+// notif
+extension SwiftJuBiterPlugin {
+    
+    @objc func deviceArrivalObserver(_ notification: Notification) {
+        let device =  notification.userInfo?["Device"] as? BluetoothDevice
+
+        guard let arrivalDevice = device else {
+            return
+        }
+           
+        devices[arrivalDevice.remoteID] = arrivalDevice
+               
+        let advertisementData = AdvertisementData.init()
+        var scanResult = ScanResult.init()
+        scanResult.advertisementData = advertisementData
+        scanResult.device = arrivalDevice
+        do {
+            let data = try scanResult.serializedData()
+            if(self.eventSink != nil){
+                DispatchQueue.main.async {
+                    self.eventSink!(data)
+                    
+                }
+                
+            }else {
+                
+            }
+            
+        } catch {
+            print("catch error")
+            
+        }
+       }
+    
+    @objc func deviceDisconnectObserver(_ notification: Notification) {
+        let uuid =  notification.userInfo?["uuid"] as? String
+
+        guard let deviceUuid = uuid else {
+            return
+        }
+        
+        print("|iOS Plugin| notif disconnect \(deviceUuid)")
+        
+        do{
+            var response = DeviceStateResponse.init()
+            response.remoteID = deviceUuid
+            response.state = DeviceStateResponse.BluetoothDeviceState.disconnected
+            let data = try response.serializedData()
+            methodChannel?.invokeMethod("DeviceState", arguments: data)
+        }catch{
+            
+        }
+    
+    }
+    
+}
+
 extension SwiftJuBiterPlugin: CBCentralManagerDelegate{
 
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        print(central.state)
         switch central.state {
         case .poweredOn:
-               print("蓝牙状态 on" )
-               if(pendingCall != nil && pendingResult != nil){
+            if(pendingCall != nil && pendingResult != nil){
                 initDevice(pendingCall!, pendingResult!)
-
-               } else {
-                print("pendingCall为空")
-               }
-
+            } else {
+                
+            }
             break
-              default:
-                print("蓝牙状态 defult" )
+        default:
             break
-              }
+            
+        }
     }
 }
 

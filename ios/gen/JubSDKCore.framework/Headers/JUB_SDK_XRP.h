@@ -15,18 +15,7 @@
 extern "C" {
 #endif // #ifdef __cplusplus
 
-// Remove c++ features for swift framework
-//typedef enum class JubXRPPubFormat {
-typedef enum {
-//    HEX = 0x00,
-    XRP = 0x01,
-    NS_ITEM_XRP_PUB_FORMAT
-} JUB_ENUM_XRP_PUB_FORMAT;
-// Remove c++ features for swift framework end
-
-typedef struct {
-    JUB_CHAR_PTR        mainPath;
-} CONTEXT_CONFIG_XRP;
+typedef CONTEXT_CONFIG CONTEXT_CONFIG_XRP;
 
 // Remove c++ features for swift framework
 //typedef enum class JubXRPTxType {
@@ -49,12 +38,20 @@ typedef enum {
 } JUB_ENUM_XRP_PYMT_TYPE;
 // Remove c++ features for swift framework end
 
+// Remove c++ features for swift framework
 typedef struct stAmount {
-    JUB_CHAR_PTR currency;
+    JUB_CHAR_PTR currency;  // [Optional]
     JUB_CHAR_PTR value;
-    JUB_CHAR_PTR issuer;
+    JUB_CHAR_PTR issuer;    // [Optional]
+//
+//     stAmount();
+//    ~stAmount() = default;
+//
+//    bool isValid() const;
 } JUB_PYMT_AMOUNT;
+// Remove c++ features for swift framework end
 
+// Remove c++ features for swift framework
 typedef struct stPaymentXRP {
     JUB_ENUM_XRP_PYMT_TYPE type;
     JUB_PYMT_AMOUNT amount;
@@ -63,24 +60,35 @@ typedef struct stPaymentXRP {
     JUB_CHAR_PTR invoiceID;     // [Optional]
     JUB_PYMT_AMOUNT sendMax;    // [Optional]
     JUB_PYMT_AMOUNT deliverMin; // [Optional]
+//
+//     stPaymentXRP();
+//    ~stPaymentXRP() = default;
+//
+//    bool isValid() const;
 } JUB_PYMT_XRP;
-typedef JUB_PYMT_XRP* JUB_PYMT_XRP_PTR;
+// Remove c++ features for swift framework end
 
+// Remove c++ features for swift framework
 typedef struct stTxXRP {
     JUB_CHAR_PTR account;
     JUB_ENUM_XRP_TX_TYPE type;
     JUB_CHAR_PTR fee;
     JUB_CHAR_PTR sequence;
-    JUB_CHAR_PTR accountTxnID;
+    JUB_CHAR_PTR accountTxnID;  // [Optional]
     JUB_CHAR_PTR flags;
     JUB_CHAR_PTR lastLedgerSequence;
-    JUB_CHAR_PTR memos;
-    JUB_CHAR_PTR sourceTag;
+    JUB_CHAR_PTR memos;         // [Optional]
+    JUB_CHAR_PTR sourceTag;     // [Optional]
     union {
         JUB_PYMT_XRP pymt;
     };
+//
+//     stTxXRP();
+//    ~stTxXRP() = default;
+//
+//    bool isValid() const;
 } JUB_TX_XRP;
-typedef JUB_TX_XRP* JUB_TX_XRP_PTR;
+// Remove c++ features for swift framework end
 
 /*****************************************************************************
  * @function name : JUB_CreateContextXRP
@@ -111,29 +119,27 @@ JUB_RV JUB_GetAddressXRP(IN JUB_UINT16 contextID,
 /*****************************************************************************
  * @function name : JUB_GetHDNodeXRP
  * @in  param : contextID - context ID
- *          : format - JUB_ENUM_XRP_PUB_FORMAT::HEX(0x00) for hex;
- *                 JUB_ENUM_XRP_PUB_FORMAT::XRP(0x01) for Legacy
+ *          : format - JUB_ENUM_PUB_FORMAT::HEX(0x00) for hex;
  *          : path
  * @out param : pubkey
  * @last change :
  *****************************************************************************/
 JUB_COINCORE_DLL_EXPORT
 JUB_RV JUB_GetHDNodeXRP(IN JUB_UINT16 contextID,
-                        IN JUB_ENUM_XRP_PUB_FORMAT format,
+                        IN JUB_ENUM_PUB_FORMAT format,
                         IN BIP44_Path path,
                         OUT JUB_CHAR_PTR_PTR pubkey);
 
 /*****************************************************************************
  * @function name : JUB_GetMainHDNodeXRP
  * @in  param : contextID - context ID
- *          : format - JUB_ENUM_XRP_PUB_FORMAT::HEX(0x00) for hex;
- *                 JUB_ENUM_XRP_PUB_FORMAT::XRP(0x01) for Legacy
+ *          : format - JUB_ENUM_PUB_FORMAT::HEX(0x00) for hex;
  * @out param : xpub
  * @last change :
  *****************************************************************************/
 JUB_COINCORE_DLL_EXPORT
 JUB_RV JUB_GetMainHDNodeXRP(IN JUB_UINT16 contextID,
-                            IN JUB_ENUM_XRP_PUB_FORMAT format,
+                            IN JUB_ENUM_PUB_FORMAT format,
                             OUT JUB_CHAR_PTR_PTR xpub);
 
 /*****************************************************************************

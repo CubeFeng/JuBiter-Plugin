@@ -27,20 +27,26 @@
 #define JUBR_BT_BOND_FAILED         0x00001005
 
 #define JUBR_CUSTOM_DEFINED         0x80000000UL
+#define JUBR_EOS_APP_INDEP_OK       JUBR_CUSTOM_DEFINED + 1
 
 #ifdef __cplusplus
 extern "C" {
 #endif // #ifdef __cplusplus
 
-typedef struct {
+// Remove c++ features for swift framework
+typedef struct stDevicdInfo {
     JUB_CHAR label[32];
     JUB_CHAR sn[24];
     JUB_UINT16 pinRetry;
     JUB_UINT16 pinMaxRetry;
     JUB_CHAR bleVersion[4];
     JUB_CHAR firmwareVersion[4];
+//
+//     stDevicdInfo();
+//    ~stDevicdInfo() = default;
 } JUB_DEVICE_INFO;
 typedef JUB_DEVICE_INFO* JUB_DEVICE_INFO_PTR;
+// Remove c++ features for swift framework end
 
 /*****************************************************************************
  * @function name : JUB_GetDeviceInfo
@@ -71,7 +77,7 @@ JUB_RV JUB_GetDeviceCert(IN JUB_UINT16 deviceID,
  *****************************************************************************/
 JUB_COINCORE_DLL_EXPORT
 JUB_RV JUB_SendOneApdu(IN JUB_UINT16 deviceID,
-                       IN JUB_CHAR_PTR apdu ,
+                       IN JUB_CHAR_CPTR apdu ,
                        OUT JUB_CHAR_PTR_PTR response);
 
 /*****************************************************************************
@@ -131,7 +137,7 @@ JUB_RV Jub_EnumSupportCoins(IN JUB_UINT16 deviceID,
  *****************************************************************************/
 JUB_COINCORE_DLL_EXPORT
 JUB_RV JUB_GetAppletVersion(IN JUB_UINT16 deviceID,
-                            IN JUB_CHAR_PTR appID,
+                            IN JUB_CHAR_CPTR appID,
                             OUT JUB_CHAR_PTR_PTR version);
 
 #ifdef __cplusplus

@@ -166,34 +166,43 @@ func getDeviceCert(contextID: UInt) throws -> JUB_Proto_Common_ResultString {
         }
     }
     
-//    func getAppletVersion(contextID: UInt, appletID: String) throws -> JUB_Proto_Common_ResultString {
-//        do {
-//
-//            let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
-//            
-//
-//            let rv = JUB_GetAppletVersion(JUB_UINT16(contextID),name , buffer)
-//            guard let ptr = buffer.pointee else {
-//                throw JUB.JUBError.invalidValue
-//            }
-//            defer {
-//                JUB_FreeMemory(ptr)
-//            }
-//
-//            let coins = String(cString: ptr)
-//            return inlineResultString2Pb(stateCode: UInt64(rv),
-//                                        value: coins)
-//          }
-//    }
-
-//    func sendApdu(contextID: UInt, apdu: String) throws -> JUB_Proto_Common_ResultString {
-//        do {
-//             let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
-//                   let rv = JUB_SendOneApdu(JUB_UINT16(contextID),
-//                                            apdu,
-//                                              buffer)
-//        }
-//    }
+    
+    func sendOneApdu(deviceID: UInt, apdu: String) throws -> JUB_Proto_Common_ResultString {
+      do {
+        let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
+        let rv = JUB_SendOneApdu(JUB_UINT16(deviceID), apdu, buffer)
+        guard let ptr = buffer.pointee else {
+            throw JUB.JUBError.invalidValue
+            
+        }
+        defer {
+            JUB_FreeMemory(ptr)
+            
+        }
+        let raw = String(cString: ptr)
+        return inlineResultString2Pb(stateCode: UInt64(rv), value: raw)
+        }
+    }
+    
+   
+    func getAppletVersion(contextID: UInt,appID: String) throws -> JUB_Proto_Common_ResultString{
+        do {
+            let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
+            let rv = JUB_GetAppletVersion(JUB_UINT16(contextID), appID, buffer)
+            guard let ptr = buffer.pointee else {
+                throw JUB.JUBError.invalidValue
+                
+            }
+            defer {
+                JUB_FreeMemory(ptr)
+                
+            }
+            
+            let raw = String(cString: ptr)
+            return inlineResultString2Pb(stateCode: UInt64(rv),value: raw)
+            
+        }
+    }
     
     func queryBattery(contextID: UInt) -> JUB_Proto_Common_ResultInt{
         
