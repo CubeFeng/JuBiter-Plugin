@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:convert/convert.dart';
 
 import 'package:flutter/services.dart';
+import 'package:isolate/isolate.dart';
 import 'package:jubiter_plugin/jubiter_plugin.dart';
 
 import 'package:jubiter_plugin/gen/Jub_Bitcoin.pbserver.dart';
@@ -14,8 +15,24 @@ import 'package:jubiter_plugin/gen/Jub_Ethereum.pbserver.dart';
 import 'package:jubiter_plugin/gen/Jub_Common.pbserver.dart';
 import 'package:jubiter_plugin/gen/jubiterblue.pbserver.dart';
 import 'package:jubiter_plugin/gen/google/protobuf/any.pb.dart';
+import 'package:worker_manager/executor.dart';
+import 'package:worker_manager/task.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  // Unhandled Exception: ServicesBinding.defaultBinaryMessenger was accessed before the binding
+  // was initialized.错误修正
+//  WidgetsFlutterBinding.ensureInitialized();
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setEnabledSystemUIOverlays([]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  await Executor(isolatePoolSize: 2).warmUp();
+
+  Timer(Duration(seconds: 10), () {
+    runApp(MyApp());
+  });
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -28,28 +45,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await runTest();
-//      platformVersion = await JuBiterPlugin.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
 
   @override
@@ -60,8 +55,13 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
+            child: FlatButton(
+                onPressed: () {
+                  runTest();
+                },
+                child: Text('测试'))
+//          child: Text('Running on: $_platformVersion\n'),
+            ),
       ),
     );
   }
@@ -69,9 +69,17 @@ class _MyAppState extends State<MyApp> {
   Future<String> runTest() async {
 //    BTC_Software();
     // ETH_Software();
-   bleTest();
+//   bleTest();
 
-//    bigNumber();
+//    Future<LoadBalancer> loadBalancer = LoadBalancer.create(2, IsolateRunner.spawn);
+//    final lb = await loadBalancer;
+//    String result = await lb.run(eth, 1);
+//    eth(1);
+
+    final Task task = Task(function: eth, arg: 1);
+    Executor().addTask(task: task).listen((result) {
+      print('>>> result: $result');
+    });
   }
 
   void BTC_Software() async {
@@ -333,10 +341,12 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  Future<String> bigNumber() {
-    BigDecimal.bigNumberMultiply('12345678900', 5).then((value) => print('>>> multiply: $value'));
-    BigDecimal.bigNumberDivide('0', 18).then((value) => setState(() {
-          _platformVersion = value;
-        }));
-  }
+}
+
+ Future<String> eth(var i) async {
+  ResultString mnemonicResult =
+      await JuBiterWallet.generateMnemonic(ENUM_MNEMONIC_STRENGTH.STRENGTH128);
+  LogUtils.d(">>> generateMnemonic - rv:${mnemonicResult.stateCode} value:${mnemonicResult.value}");
+  return '';
+//    assert(mnemonicResult.stateCode == 0);
 }

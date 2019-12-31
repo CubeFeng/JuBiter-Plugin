@@ -373,18 +373,4 @@ class JuBiterPlugin {
     return ResultString.fromBuffer(result);
   }
 
-  /// 大数处理
-  static Future<String> bigNumberMultiply(String value, int position) {
-    return _methodChannel.invokeMethod('bigNumberMultiply', <String, dynamic>{
-      'value' : value,
-      'position' : position
-    });
-  }
-
-  static Future<String> bigNumberDivide(String value, int position) {
-    return _methodChannel.invokeMethod('bigNumberDivide', <String, dynamic>{
-      'value' : value,
-      'position' : position
-    });
-  }
 }

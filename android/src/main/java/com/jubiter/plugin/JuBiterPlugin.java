@@ -323,17 +323,6 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
                 break;
             }
 
-            // 大树运算
-            case "bigNumberMultiply": {
-                bigNumberMultiply(call, result);
-                break;
-            }
-
-            case "bigNumberDivide": {
-                bigNumberDivide(call, result);
-                break;
-            }
-
             default:
                 result.notImplemented();
                 break;
@@ -830,41 +819,6 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         CommonProtos.ResultString resultString = JuBiterEthereum.buildERC20Abi(contextID, address
                 , amountInWei);
         ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
-    }
-
-    private void bigNumberMultiply(MethodCall call, Result result) {
-        Log.d(TAG, ">>> bigNumberMultiply in");
-        String value = call.argument("value");
-        int position = call.argument("position");
-        BigDecimal bigDecimal = new BigDecimal(value);
-        if (bigDecimal.compareTo(new BigDecimal("0")) == 0) {
-            result.success("0");
-            Log.d(TAG, ">>> bigNumberMultiply out1");
-        }
-        String bigValue = bigDecimal
-                .multiply(new BigDecimal(Double.toString(Math.pow(10, position))))
-                .stripTrailingZeros()
-                .toPlainString();
-        result.success(bigValue);
-        Log.d(TAG, ">>> bigNumberMultiply out2");
-    }
-
-    private void bigNumberDivide(MethodCall call, Result result) {
-        Log.d(TAG, ">>> bigNumberDivide in");
-        String value = call.argument("value");
-        int position = call.argument("position");
-        Log.d(TAG, "value: " + value + " position: " + position);
-        BigDecimal bigDecimal = new BigDecimal(value);
-        if (bigDecimal.compareTo(new BigDecimal("0")) == 0) {
-            result.success("0");
-            Log.d(TAG, ">>> bigNumberDivide out1");
-        }
-        String bigValue = bigDecimal
-                .divide(new BigDecimal(Double.toString(Math.pow(10, position))))
-                .stripTrailingZeros()
-                .toPlainString();
-        result.success(bigValue);  // todo 抛错 java.lang.IllegalStateException: Reply already submitted
-        Log.d(TAG, ">>> bigNumberDivide out2");
     }
 
     @Override
