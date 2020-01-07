@@ -13,13 +13,13 @@ class JuBiterEthereum {
   }
 
   static Future<ResultString> getMainHDNode(
-      int deviceID, ENUM_PUB_FORMAT format) async {
-    return JuBiterPlugin.ETHGetMainHDNode(deviceID, format);
+      int contextID, ENUM_PUB_FORMAT format) async {
+    return JuBiterPlugin.ETHGetMainHDNode(contextID, format);
   }
 
   static Future<ResultString> getHDNode(
-      int deviceID, ENUM_PUB_FORMAT format, Bip32Path bip32Path) async {
-    return JuBiterPlugin.ETHGetHDNode(deviceID, format, bip32Path);
+      int contextID, ENUM_PUB_FORMAT format, Bip32Path bip32Path) async {
+    return JuBiterPlugin.ETHGetHDNode(contextID, format, bip32Path);
   }
 
   static Future<ResultString> getAddress(

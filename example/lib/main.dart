@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<String> runTest() async {
 //    BTC_Software();
-    // ETH_Software();
+     ETH_Software();
 //   bleTest();
 
 //    Future<LoadBalancer> loadBalancer = LoadBalancer.create(2, IsolateRunner.spawn);
@@ -76,10 +76,10 @@ class _MyAppState extends State<MyApp> {
 //    String result = await lb.run(eth, 1);
 //    eth(1);
 
-    final Task task = Task(function: eth, arg: 1);
-    Executor().addTask(task: task).listen((result) {
-      print('>>> result: $result');
-    });
+//    final Task task = Task(function: eth, arg: 1);
+//    Executor().addTask(task: task).listen((result) {
+//      print('>>> result: $result');
+//    });
   }
 
   void BTC_Software() async {
