@@ -200,17 +200,17 @@ class _MyAppState extends State<MyApp> {
   }
 
   void ETH_Software() async {
-    ResultString mnemonicResult =
-        await JuBiterWallet.generateMnemonic(ENUM_MNEMONIC_STRENGTH.STRENGTH128);
-    LogUtils.d(
-        ">>> generateMnemonic - rv:${mnemonicResult.stateCode} value:${mnemonicResult.value}");
-    assert(mnemonicResult.stateCode == 0);
+    // ResultString mnemonicResult =
+    //     await JuBiterWallet.generateMnemonic(ENUM_MNEMONIC_STRENGTH.STRENGTH128);
+    // LogUtils.d(
+    //     ">>> generateMnemonic - rv:${mnemonicResult.stateCode} value:${mnemonicResult.value}");
+    // assert(mnemonicResult.stateCode == 0);
 
-    int checkResult = await JuBiterWallet.checkMnemonic(mnemonicResult.value);
-    LogUtils.d(">>> checkMnemonic - checkResult: $checkResult");
-    assert(checkResult == 0);
+    // int checkResult = await JuBiterWallet.checkMnemonic(mnemonicResult.value);
+    // LogUtils.d(">>> checkMnemonic - checkResult: $checkResult");
+    // assert(checkResult == 0);
 
-    ResultString mnemonicSeed = await JuBiterWallet.generateSeed(mnemonicResult.value, '');
+    ResultString mnemonicSeed = await JuBiterWallet.generateSeed("gauge hole clog property soccer idea cycle stadium utility slice hold chief", '');
     LogUtils.d(">>> generateSeed - rv:${mnemonicSeed.stateCode} value:${mnemonicSeed.value}");
     assert(mnemonicSeed.stateCode == 0);
 
