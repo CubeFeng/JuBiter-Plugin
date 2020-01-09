@@ -9,6 +9,35 @@
 import Foundation
 import JubSDKCore
 
+extension Array where Element == UInt8 {
+    var hexaString : String {
+        return self.compactMap{ String(format: "%02x", $0).uppercased()}
+        .joined(separator: "")
+    }
+}
+
+extension String {
+    var hexaBytes: [UInt8] {
+        var position = startIndex
+        return (0..<count/2).compactMap { _ in    // for Swift 4.1 or later use compactMap instead of flatMap
+            defer { position = index(position,offsetBy: 2) }
+            return UInt8(self[position...index(after: position)],radix: 16)
+        }
+    }
+    var hexaData: Data { return hexaBytes.data }
+}
+ 
+extension Collection where Element == UInt8 {
+    var data: Data {
+        return Data(self)
+    }
+    var hexa: String {
+        return map{ String(format: "%02X",$0) }.joined()
+    }
+}
+
+
+
 internal func inlinePb2EnumMnemonicStrength(pb: JUB_Proto_Common_ENUM_MNEMONIC_STRENGTH) -> JUB_ENUM_MNEMONIC_STRENGTH {
     var strength: JUB_ENUM_MNEMONIC_STRENGTH
     
@@ -87,7 +116,7 @@ func checkMnemonic(mnemonic: String) -> UInt {
 func generateSeed(mnemonic: String,
                   passphrase: String) -> JUB_Proto_Common_ResultString {
     do {
-        let buffer = UnsafeMutablePointer<JUB_BYTE>.allocate(capacity: 64)
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 64)
         defer {
             buffer.deallocate()
         }
@@ -95,9 +124,9 @@ func generateSeed(mnemonic: String,
                                   passphrase,
                                   buffer,
                                   nil)
-        let seed = String(cString: buffer)
+        let array = Array(UnsafeBufferPointer(start: buffer, count: 64))
         return inlineResultString2Pb(stateCode: UInt64(rv),
-                                     value: seed)
+                                     value: array.hexaString)
     }
 }
 
@@ -107,7 +136,11 @@ func seedToMasterPrivateKey(seed: String, seedLen: UInt,
         
         let curve = inlinePb2EnumCurves(pb: pbCurve)
         let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
-        let rv = JUB_SeedToMasterPrivateKey(seed, JUB_UINT16(seedLen),
+        let bytes: [UInt8] = seed.hexaBytes
+        
+        let pointer = UnsafeMutablePointer<UInt8>.allocate(capacity: 64)
+        pointer.initialize(from: bytes, count: 64)
+        let rv = JUB_SeedToMasterPrivateKey(pointer, JUB_UINT16(64),
                                             curve,
                                             buffer)
         guard let ptr = buffer.pointee else {
