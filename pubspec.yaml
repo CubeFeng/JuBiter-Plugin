@@ -10,9 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  protobuf: "^1.0.0"
+  protobuf: ^1.0.1
   logger_flutter: ^0.7.1
-  convert: "^2.1.1"
+  convert: ^2.1.1
 
 dev_dependencies:
   flutter_test:

@@ -46,11 +46,16 @@ android {
             shrinkResources false   // 去除无用资源，依赖minifyEnabled，需与 minifyEnabled 同时开启
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        profile {
+
+        }
     }
 
     lintOptions {
         disable 'InvalidPackage'
     }
+
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
@@ -60,6 +65,10 @@ android {
 dependencies {
     debugImplementation(name: 'jubiter-debug', ext: 'aar')
     releaseImplementation(name: 'jubiter-release', ext: 'aar')
+    // 修正 profile mode 编译失败问题
+    // 必须在 buildTypes 中同时声明 profile 才行，不知道什么鬼！！！
+    profileApi(name: 'jubiter-debug', ext: 'aar')
+
     implementation 'com.google.protobuf:protobuf-java:3.9.1'
     implementation 'androidx.core:core:1.0.0'
 }
