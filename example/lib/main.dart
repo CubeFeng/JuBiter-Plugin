@@ -276,13 +276,15 @@ class _MyAppState extends State<MyApp> {
       txInfo.input = '4A75626974657257616C6C6574';
 
       ResultString signResult = await JuBiterEthereum.signTransaction(contextResult.value, txInfo);
+      print('>>> result length: ${signResult.value.length}');
       LogUtils.d(">>> ETHSignTransaction - rv:${signResult.stateCode} value:${signResult.value}");
       assert(signResult.stateCode == 0);
     }
 
     {
       ResultString signResult = await JuBiterEthereum.buildERC20Abi(
-          contextResult.value, '0xef31DEc147DCDcd64F6a0ABFA7D441B62A216BC9', '10000000');
+          contextResult.value, 'BTM', 1, '', '0xef31DEc147DCDcd64F6a0ABFA7D441B62A216BC9', '1000000'
+          '0');
       LogUtils.d(">>> buildERC20Abi - rv:${signResult.stateCode} value:${signResult.value}");
     }
   }
@@ -340,10 +342,9 @@ class _MyAppState extends State<MyApp> {
       LogUtils.d('>>> init error: ${error}');
     });
   }
-
 }
 
- Future<String> eth(var i) async {
+Future<String> eth(var i) async {
   ResultString mnemonicResult =
       await JuBiterWallet.generateMnemonic(ENUM_MNEMONIC_STRENGTH.STRENGTH128);
   LogUtils.d(">>> generateMnemonic - rv:${mnemonicResult.stateCode} value:${mnemonicResult.value}");

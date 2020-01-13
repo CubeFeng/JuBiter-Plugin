@@ -17,8 +17,6 @@ import com.jubiter.sdk.proto.BitcoinProtos;
 import com.jubiter.sdk.proto.CommonProtos;
 import com.jubiter.sdk.proto.EthereumProtos;
 
-import java.math.BigDecimal;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import io.flutter.plugin.common.EventChannel;
@@ -814,10 +812,18 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
 
     private void ETHBuildERC20Abi(MethodCall call, Result result) {
         int contextID = call.argument("contextID");
+        String tokenName = call.argument("tokenName");
+        int unitDP = call.argument("uintDP");
+        String contractAddress = call.argument("contractAddress");
         String address = call.argument("address");
         String amountInWei = call.argument("amountInWei");
-        CommonProtos.ResultString resultString = JuBiterEthereum.buildERC20Abi(contextID, address
-                , amountInWei);
+        CommonProtos.ResultString resultString = JuBiterEthereum.buildERC20Abi(
+                contextID,
+                tokenName,
+                unitDP,
+                contractAddress,
+                address,
+                amountInWei);
         ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 

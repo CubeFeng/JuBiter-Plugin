@@ -204,8 +204,7 @@ class JuBiterPlugin {
   }
 
   static Future<int> connect(BluetoothDevice device, Duration timeout,
-      void onConnectStateChange(DeviceStateResponse state), void onError(Object
-    error)) async {
+      void onConnectStateChange(DeviceStateResponse state), void onError(Object error)) async {
     var request = ConnectRequest.create();
     request.remoteId = device.remoteId;
     request.timeout = timeout.inSeconds;
@@ -366,11 +365,16 @@ class JuBiterPlugin {
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> ETHBuildERC20Abi(
-      int contextID, String address, String amountInWei) async {
-    Uint8List result = await _methodChannel.invokeMethod('ETHBuildERC20Abi',
-        <String, dynamic>{'contextID': contextID, 'address': address, 'amountInWei': amountInWei});
+  static Future<ResultString> ETHBuildERC20Abi(int contextID, String tokenName, int uintDP,
+      String contractAddress, String address, String amountInWei) async {
+    Uint8List result = await _methodChannel.invokeMethod('ETHBuildERC20Abi', <String, dynamic>{
+      'contextID': contextID,
+      'tokenName': tokenName,
+      'uintDP': uintDP,
+      'contractAddress': contractAddress,
+      'address': address,
+      'amountInWei': amountInWei,
+    });
     return ResultString.fromBuffer(result);
   }
-
 }
