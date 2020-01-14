@@ -265,25 +265,25 @@ class JuBiterPlugin {
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> BTCGetHDNode(int contextID, Bip32Path bip32Path) async {
+  static Future<ResultString> BTCGetHDNode(int contextID, Bip44Path bip44Path) async {
     Uint8List result = await _methodChannel.invokeMethod('BTCGetHDNode',
-        <String, dynamic>{'contextID': contextID, 'bip32Path': bip32Path.writeToBuffer()});
+        <String, dynamic>{'contextID': contextID, 'bip32Path': bip44Path.writeToBuffer()});
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> BTCGetAddress(int contextID, Bip32Path bip32Path, bool isShow) async {
+  static Future<ResultString> BTCGetAddress(int contextID, Bip44Path bip44Path, bool isShow) async {
     Uint8List result = await _methodChannel.invokeMethod('BTCGetAddress', <String, dynamic>{
       'contextID': contextID,
-      'bip32Path': bip32Path.writeToBuffer(),
+      'bip32Path': bip44Path.writeToBuffer(),
       'isShow': isShow
     });
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> BTCSetAddress(int contextID, Bip32Path bip32Path) async {
+  static Future<ResultString> BTCSetAddress(int contextID, Bip44Path bip44Path) async {
     Uint8List result = await _methodChannel.invokeMethod('BTCSetAddress', <String, dynamic>{
       'contextID': contextID,
-      'bip32Path': bip32Path.writeToBuffer(),
+      'bip32Path': bip44Path.writeToBuffer(),
     });
     return ResultString.fromBuffer(result);
   }
@@ -331,28 +331,28 @@ class JuBiterPlugin {
   }
 
   static Future<ResultString> ETHGetHDNode(
-      int contextID, ENUM_PUB_FORMAT format, Bip32Path bip32Path) async {
+      int contextID, ENUM_PUB_FORMAT format, Bip44Path bip44Path) async {
     Uint8List result = await _methodChannel.invokeMethod('ETHGetHDNode', <String, dynamic>{
       'contextID': contextID,
       'format': format.value,
-      'bip32Path': bip32Path.writeToBuffer()
+      'bip32Path': bip44Path.writeToBuffer()
     });
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> ETHGetAddress(int contextID, Bip32Path bip32Path, bool isShow) async {
+  static Future<ResultString> ETHGetAddress(int contextID, Bip44Path bip44Path, bool isShow) async {
     Uint8List result = await _methodChannel.invokeMethod('ETHGetAddress', <String, dynamic>{
       'contextID': contextID,
-      'bip32Path': bip32Path.writeToBuffer(),
+      'bip32Path': bip44Path.writeToBuffer(),
       'isShow': isShow
     });
     return ResultString.fromBuffer(result);
   }
 
-  static Future<ResultString> ETHSetAddress(int contextID, Bip32Path bip32Path) async {
+  static Future<ResultString> ETHSetAddress(int contextID, Bip44Path bip44Path) async {
     Uint8List result = await _methodChannel.invokeMethod('ETHSetAddress', <String, dynamic>{
       'contextID': contextID,
-      'bip32Path': bip32Path.writeToBuffer(),
+      'bip32Path': bip44Path.writeToBuffer(),
     });
     return ResultString.fromBuffer(result);
   }

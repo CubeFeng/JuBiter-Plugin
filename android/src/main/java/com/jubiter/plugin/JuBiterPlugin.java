@@ -632,8 +632,8 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         try {
             int contextID = call.argument("contextID");
             byte[] path = call.argument("bip32Path");
-            CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(path);
-            CommonProtos.ResultString resultString = JuBiterBitcoin.getHDNode(contextID, bip32Path);
+            CommonProtos.Bip44Path bip44Path = CommonProtos.Bip44Path.parseFrom(path);
+            CommonProtos.ResultString resultString = JuBiterBitcoin.getHDNode(contextID, bip44Path);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (Exception e) {
 //        } catch (InvalidProtocolBufferException e) {
@@ -647,9 +647,9 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             int contextID = call.argument("contextID");
             byte[] path = call.argument("bip32Path");
             boolean isShow = call.argument("isShow");
-            CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(path);
+            CommonProtos.Bip44Path bip44Path = CommonProtos.Bip44Path.parseFrom(path);
             CommonProtos.ResultString resultString = JuBiterBitcoin.getAddress(contextID,
-                    bip32Path, isShow);
+                    bip44Path, isShow);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (Exception e) {
 //        } catch (InvalidProtocolBufferException e) {
@@ -662,7 +662,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         try {
             int contextID = call.argument("contextID");
             byte[] path = call.argument("bip32Path");
-            CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(path);
+            CommonProtos.Bip44Path bip32Path = CommonProtos.Bip44Path.parseFrom(path);
             CommonProtos.ResultString resultString = JuBiterBitcoin.setAddress(contextID,
                     bip32Path);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
@@ -741,7 +741,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         int contextID = call.argument("contextID");
         int format = call.argument("format");
         CommonProtos.ResultString resultString = JuBiterEthereum.getMainHDNode(contextID,
-                EthereumProtos.ENUM_PUB_FORMAT.forNumber(format));
+                CommonProtos.ENUM_PUB_FORMAT.forNumber(format));
         ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
     }
 
@@ -750,10 +750,10 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             int contextID = call.argument("contextID");
             int format = call.argument("format");
             byte[] bip32 = call.argument("bip32Path");
-            CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(bip32);
+            CommonProtos.Bip44Path bip44Path = CommonProtos.Bip44Path.parseFrom(bip32);
             CommonProtos.ResultString resultString = JuBiterEthereum.getHDNode(contextID,
-                    EthereumProtos.ENUM_PUB_FORMAT.forNumber(format),
-                    bip32Path);
+                    CommonProtos.ENUM_PUB_FORMAT.forNumber(format),
+                    bip44Path);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (Exception e) {
 //        } catch (InvalidProtocolBufferException e) {
@@ -767,9 +767,9 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             int contextID = call.argument("contextID");
             byte[] bip32 = call.argument("bip32Path");
             boolean isShow = call.argument("isShow");
-            CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(bip32);
+            CommonProtos.Bip44Path bip44Path = CommonProtos.Bip44Path.parseFrom(bip32);
             CommonProtos.ResultString resultString = JuBiterEthereum.getAddress(contextID,
-                    bip32Path, isShow);
+                    bip44Path, isShow);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (Exception e) {
 //        } catch (InvalidProtocolBufferException e) {
@@ -782,9 +782,9 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         try {
             int contextID = call.argument("contextID");
             byte[] bip32 = call.argument("bip32Path");
-            CommonProtos.Bip32Path bip32Path = CommonProtos.Bip32Path.parseFrom(bip32);
+            CommonProtos.Bip44Path bip44Path = CommonProtos.Bip44Path.parseFrom(bip32);
             CommonProtos.ResultString resultString = JuBiterEthereum.setAddress(contextID,
-                    bip32Path);
+                    bip44Path);
             ThreadUtil.toMainThread(() -> result.success(resultString.toByteArray()));
         } catch (Exception e) {
 //        } catch (InvalidProtocolBufferException e) {

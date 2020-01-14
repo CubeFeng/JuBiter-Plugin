@@ -98,7 +98,7 @@ class _MyAppState extends State<MyApp> {
     assert(mnemonicSeed.stateCode == 0);
 
     ResultString xPrikeyResult =
-        await JuBiterWallet.seedToMasterPrivateKey(mnemonicSeed.value, CURVES.secp256k1);
+        await JuBiterWallet.seedToMasterPrivateKey(mnemonicSeed.value, CURVES.SECP256K1);
     LogUtils.d(
         ">>> seedToMasterPrivateKey - rv:${xPrikeyResult.stateCode} value:${xPrikeyResult.value}");
     assert(xPrikeyResult.stateCode == 0);
@@ -106,7 +106,7 @@ class _MyAppState extends State<MyApp> {
     ContextCfgBTC config = ContextCfgBTC.create();
     config.coinType = ENUM_COIN_TYPE_BTC.COINBTC;
     config.mainPath = "m/44\'/0\'/0\'";
-    config.transType = ENUM_TRAN_STYPE_BTC.p2pkh;
+    config.transType = ENUM_TRAN_STYPE_BTC.P2PKH;
     ResultInt contextResult = await JuBiterBitcoin.createContext_Software(config,
         'xpub6CAxrkiSbwkn4LayKD6qBcZg4tQvhHBH7TofQjNV9Lb3cB5u8owxdLGfc2bKoz2McoviAMXzWHwSaqc5Sm8C9SWMsnvuBw1bjEwtWsMZZFX');
     LogUtils.d(
@@ -119,7 +119,7 @@ class _MyAppState extends State<MyApp> {
     assert(mainHDNodeResult.stateCode == 0);
 
     {
-      Bip32Path bip32path = Bip32Path.create();
+      Bip44Path bip32path = Bip44Path.create();
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
       ResultString hdNodeResult = await JuBiterBitcoin.getHDNode(contextResult.value, bip32path);
@@ -128,7 +128,7 @@ class _MyAppState extends State<MyApp> {
     }
 
     {
-      Bip32Path bip32path = Bip32Path.create();
+      Bip44Path bip32path = Bip44Path.create();
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
       ResultString addressResult =
@@ -139,7 +139,7 @@ class _MyAppState extends State<MyApp> {
 
     {
       // input
-      Bip32Path bip32path_input1 = Bip32Path.create();
+      Bip44Path bip32path_input1 = Bip44Path.create();
       bip32path_input1.change = false;
       bip32path_input1.addressIndex = Int64(0);
 
@@ -149,7 +149,7 @@ class _MyAppState extends State<MyApp> {
       input_1.amount = Int64(1200);
       input_1.preIndex = 0;
 
-      Bip32Path bip32path_input2 = Bip32Path.create();
+      Bip44Path bip32path_input2 = Bip44Path.create();
       bip32path_input2.change = false;
       bip32path_input2.addressIndex = Int64(0);
 
@@ -166,11 +166,11 @@ class _MyAppState extends State<MyApp> {
       out_1.changeAddress = false;
 
       OutputBTC output_1 = OutputBTC.create();
-      output_1.standardOputput = out_1;
-      output_1.type = ENUM_SCRIPT_TYPE_BTC.STANDARD;
+      output_1.stdOutput = out_1;
+      output_1.type = ENUM_SCRIPT_TYPE_BTC.SC_P2PKH;
 
       // change
-      Bip32Path bip32path_output1 = Bip32Path.create();
+      Bip44Path bip32path_output1 = Bip44Path.create();
       bip32path_output1.addressIndex = Int64(0);
       bip32path_output1.change = false;
 
@@ -181,8 +181,8 @@ class _MyAppState extends State<MyApp> {
       out_2.path = bip32path_output1;
 
       OutputBTC output_2 = OutputBTC.create();
-      output_2.standardOputput = out_2;
-      output_2.type = ENUM_SCRIPT_TYPE_BTC.STANDARD;
+      output_2.stdOutput = out_2;
+      output_2.type = ENUM_SCRIPT_TYPE_BTC.SC_P2PKH;
 
       TransactionBTC txInfo = TransactionBTC.create();
       txInfo.version = 1;
@@ -215,7 +215,7 @@ class _MyAppState extends State<MyApp> {
     assert(mnemonicSeed.stateCode == 0);
 
     ResultString xPrikeyResult =
-        await JuBiterWallet.seedToMasterPrivateKey(mnemonicSeed.value, CURVES.secp256k1);
+        await JuBiterWallet.seedToMasterPrivateKey(mnemonicSeed.value, CURVES.SECP256K1);
     LogUtils.d(
         ">>> seedToMasterPrivateKey - rv:${xPrikeyResult.stateCode} value:${xPrikeyResult.value}");
     assert(xPrikeyResult.stateCode == 0);
@@ -235,7 +235,7 @@ class _MyAppState extends State<MyApp> {
     assert(mainHDNodeResult.stateCode == 0);
 
     {
-      Bip32Path bip32path = Bip32Path.create();
+      Bip44Path bip32path = Bip44Path.create();
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
       ResultString hdNodeResult =
@@ -245,7 +245,7 @@ class _MyAppState extends State<MyApp> {
     }
 
     {
-      Bip32Path bip32path = Bip32Path.create();
+      Bip44Path bip32path = Bip44Path.create();
       bip32path.addressIndex = Int64(0);
       bip32path.change = false;
       ResultString addressResult =
@@ -262,7 +262,7 @@ class _MyAppState extends State<MyApp> {
 //    }
 
     {
-      Bip32Path bip32path = Bip32Path.create();
+      Bip44Path bip32path = Bip44Path.create();
       bip32path.change = false;
       bip32path.addressIndex = Int64(0);
 

@@ -14,16 +14,16 @@ class JuBiterEthereum {
   }
 
   static Future<ResultString> getHDNode(
-      int contextID, ENUM_PUB_FORMAT format, Bip32Path bip32Path) async {
-    return JuBiterPlugin.ETHGetHDNode(contextID, format, bip32Path);
+      int contextID, ENUM_PUB_FORMAT format, Bip44Path bip44Path) async {
+    return JuBiterPlugin.ETHGetHDNode(contextID, format, bip44Path);
   }
 
-  static Future<ResultString> getAddress(int contextID, Bip32Path bip32Path, bool isShow) async {
-    return JuBiterPlugin.ETHGetAddress(contextID, bip32Path, isShow);
+  static Future<ResultString> getAddress(int contextID, Bip44Path bip44Path, bool isShow) async {
+    return JuBiterPlugin.ETHGetAddress(contextID, bip44Path, isShow);
   }
 
-  static Future<ResultString> setAddress(int contextID, Bip32Path bip32Path) async {
-    return JuBiterPlugin.ETHSetAddress(contextID, bip32Path);
+  static Future<ResultString> setAddress(int contextID, Bip44Path bip44Path) async {
+    return JuBiterPlugin.ETHSetAddress(contextID, bip44Path);
   }
 
   static Future<ResultString> signTransaction(int contextID, TransactionETH txInfo) async {

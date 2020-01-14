@@ -17,18 +17,18 @@ class JuBiterBitcoin {
   }
 
   static Future<ResultString> getHDNode(
-      int contextID, Bip32Path bip32Path) async {
-    return JuBiterPlugin.BTCGetHDNode(contextID, bip32Path);
+      int contextID, Bip44Path bip44Path) async {
+    return JuBiterPlugin.BTCGetHDNode(contextID, bip44Path);
   }
 
   static Future<ResultString> getAddress(
-      int contextID, Bip32Path bip32Path, bool isShow) async {
-    return JuBiterPlugin.BTCGetAddress(contextID, bip32Path, isShow);
+      int contextID, Bip44Path bip44Path, bool isShow) async {
+    return JuBiterPlugin.BTCGetAddress(contextID, bip44Path, isShow);
   }
 
   static Future<ResultString> setAddress(
-      int contextID, Bip32Path bip32Path) async {
-    return JuBiterPlugin.BTCSetAddress(contextID, bip32Path);
+      int contextID, Bip44Path bip44Path) async {
+    return JuBiterPlugin.BTCSetAddress(contextID, bip44Path);
   }
 
   static Future<ResultString> signTransaction(
