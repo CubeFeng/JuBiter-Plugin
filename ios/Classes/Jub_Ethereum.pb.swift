@@ -19,46 +19,6 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
-enum JUB_Proto_Ethereum_ENUM_PUB_FORMAT: SwiftProtobuf.Enum {
-  typealias RawValue = Int
-  case hex // = 0
-  case xpub // = 1
-  case UNRECOGNIZED(Int)
-
-  init() {
-    self = .hex
-  }
-
-  init?(rawValue: Int) {
-    switch rawValue {
-    case 0: self = .hex
-    case 1: self = .xpub
-    default: self = .UNRECOGNIZED(rawValue)
-    }
-  }
-
-  var rawValue: Int {
-    switch self {
-    case .hex: return 0
-    case .xpub: return 1
-    case .UNRECOGNIZED(let i): return i
-    }
-  }
-
-}
-
-#if swift(>=4.2)
-
-extension JUB_Proto_Ethereum_ENUM_PUB_FORMAT: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static var allCases: [JUB_Proto_Ethereum_ENUM_PUB_FORMAT] = [
-    .hex,
-    .xpub,
-  ]
-}
-
-#endif  // swift(>=4.2)
-
 struct JUB_Proto_Ethereum_ContextCfgETH {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -78,8 +38,8 @@ struct JUB_Proto_Ethereum_TransactionETH {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var path: JUB_Proto_Common_Bip32Path {
-    get {return _storage._path ?? JUB_Proto_Common_Bip32Path()}
+  var path: JUB_Proto_Common_Bip44Path {
+    get {return _storage._path ?? JUB_Proto_Common_Bip44Path()}
     set {_uniqueStorage()._path = newValue}
   }
   /// Returns true if `path` has been explicitly set.
@@ -128,18 +88,11 @@ struct JUB_Proto_Ethereum_TransactionETH {
 
 fileprivate let _protobuf_package = "JUB.Proto.Ethereum"
 
-extension JUB_Proto_Ethereum_ENUM_PUB_FORMAT: SwiftProtobuf._ProtoNameProviding {
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "HEX"),
-    1: .same(proto: "XPUB"),
-  ]
-}
-
 extension JUB_Proto_Ethereum_ContextCfgETH: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ContextCfgETH"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "main_path"),
-    2: .same(proto: "chainID"),
+    2: .standard(proto: "chain_id"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -175,15 +128,15 @@ extension JUB_Proto_Ethereum_TransactionETH: SwiftProtobuf.Message, SwiftProtobu
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "path"),
     2: .same(proto: "nonce"),
-    3: .same(proto: "gasLimit"),
-    4: .same(proto: "gasPriceInWei"),
+    3: .standard(proto: "gas_limit"),
+    4: .standard(proto: "gas_price_in_wei"),
     5: .same(proto: "to"),
-    6: .same(proto: "valueInWei"),
+    6: .standard(proto: "value_in_wei"),
     7: .same(proto: "input"),
   ]
 
   fileprivate class _StorageClass {
-    var _path: JUB_Proto_Common_Bip32Path? = nil
+    var _path: JUB_Proto_Common_Bip44Path? = nil
     var _nonce: UInt32 = 0
     var _gasLimit: UInt32 = 0
     var _gasPriceInWei: String = String()

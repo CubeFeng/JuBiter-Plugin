@@ -9,9 +9,81 @@
 import Foundation
 import JubSDKCore
 
+internal func inlineEnumBoolToBool(enumBool: JUB_ENUM_BOOL) -> Bool {
+    let b:Bool
+    
+    if BOOL_FALSE == enumBool {
+        b = false
+    }
+    else {
+        b = true
+    }
+    
+    return b
+}
+
+internal func inlineBoolToEnumBool(bool: Bool) -> JUB_ENUM_BOOL {
+    let b:JUB_ENUM_BOOL
+    
+    if false == bool {
+        b = BOOL_FALSE
+    }
+    else {
+        b = BOOL_TRUE
+    }
+    
+    return b
+}
+
+internal func inlineBip44PathToPb(path: BIP44_Path) -> JUB_Proto_Common_Bip44Path {
+    var pb = JUB_Proto_Common_Bip44Path()
+    
+    pb.change = inlineEnumBoolToBool(enumBool: path.change)
+    pb.addressIndex = UInt64(path.addressIndex)
+    
+    return pb
+}
+
+internal func inlinePbToBip44Path(pb: JUB_Proto_Common_Bip44Path) -> BIP44_Path {
+    var path: BIP44_Path = BIP44_Path.init()
+    
+    path.addressIndex = pb.addressIndex
+    path.change = inlineBoolToEnumBool(bool: pb.change)
+    
+    return path
+}
+
+internal func inlinePbToEnumPubFormat(pb: JUB_Proto_Common_ENUM_PUB_FORMAT) -> JUB_ENUM_PUB_FORMAT {
+    var format:JUB_ENUM_PUB_FORMAT
+    
+    switch pb {
+    case .hex:
+        format = HEX
+    case .xpub:
+        format = XPUB
+    default:
+        format = PUB_FORMAT_NS_ITEM
+    }
+    
+    return format
+}
+
+internal func inlinePbToContextCfg(pb: JUB_Proto_Common_ContextCfg) -> CONTEXT_CONFIG {
+    var cfg:CONTEXT_CONFIG = CONTEXT_CONFIG.init()
+    
+    let buffer = UnsafeMutableBufferPointer<JUB_CHAR>.allocate(capacity: pb.mainPath.count + 1)
+    defer {
+        buffer.deallocate()
+    }
+    memcpy(buffer.baseAddress, pb.mainPath, pb.mainPath.utf8.count)
+    cfg.mainPath = buffer.baseAddress
+    
+    return cfg
+}
+
 extension Array where Element == UInt8 {
-    var hexaString : String {
-        return self.compactMap{ String(format: "%02x", $0).uppercased()}
+    var hexaString: String {
+        return self.compactMap {String(format: "%02x", $0).uppercased()}
         .joined(separator: "")
     }
 }
@@ -26,7 +98,7 @@ extension String {
     }
     var hexaData: Data { return hexaBytes.data }
 }
- 
+
 extension Collection where Element == UInt8 {
     var data: Data {
         return Data(self)
@@ -36,9 +108,9 @@ extension Collection where Element == UInt8 {
     }
 }
 
+class JuBiterCommon {
 
-
-internal func inlinePb2EnumMnemonicStrength(pb: JUB_Proto_Common_ENUM_MNEMONIC_STRENGTH) -> JUB_ENUM_MNEMONIC_STRENGTH {
+internal func inlinePbToEnumMnemonicStrength(pb: JUB_Proto_Common_ENUM_MNEMONIC_STRENGTH) -> JUB_ENUM_MNEMONIC_STRENGTH {
     var strength: JUB_ENUM_MNEMONIC_STRENGTH
     
     switch pb {
@@ -55,7 +127,7 @@ internal func inlinePb2EnumMnemonicStrength(pb: JUB_Proto_Common_ENUM_MNEMONIC_S
     return strength
 }
 
-internal func inlinePb2EnumCurves(pb: JUB_Proto_Common_CURVES) -> JUB_ENUM_CURVES {
+internal func inlinePbToEnumCurves(pb: JUB_Proto_Common_CURVES) -> JUB_ENUM_CURVES {
     var curve: JUB_ENUM_CURVES
     
     switch pb {
@@ -72,25 +144,9 @@ internal func inlinePb2EnumCurves(pb: JUB_Proto_Common_CURVES) -> JUB_ENUM_CURVE
     return curve
 }
 
-internal func inlinePb2Bip44Path(pb: JUB_Proto_Common_Bip32Path) -> BIP44_Path {
-    var path: BIP44_Path = BIP44_Path.init()
-    
-    path.addressIndex = pb.addressIndex
-    if (pb.change) {
-        path.change = BOOL_TRUE
-    }
-    else {
-        path.change = BOOL_FALSE
-    }
-    
-    return path
-}
-
-class JuBiterCommon {
-
 func generateMnemonic(pbStrength: JUB_Proto_Common_ENUM_MNEMONIC_STRENGTH) throws -> JUB_Proto_Common_ResultString {
     do {
-        let strength = inlinePb2EnumMnemonicStrength(pb: pbStrength)
+        let strength = inlinePbToEnumMnemonicStrength(pb: pbStrength)
         let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
         let rv = JUB_GenerateMnemonic(strength,
                                       buffer)
@@ -102,8 +158,8 @@ func generateMnemonic(pbStrength: JUB_Proto_Common_ENUM_MNEMONIC_STRENGTH) throw
         }
         
         let mnemonic = String(cString: ptr)
-        return inlineResultString2Pb(stateCode: UInt64(rv),
-                                     value: mnemonic)
+        return inlineResultStringToPb(stateCode: UInt64(rv),
+                                      value: mnemonic)
     }
 }
 
@@ -116,7 +172,7 @@ func checkMnemonic(mnemonic: String) -> UInt {
 func generateSeed(mnemonic: String,
                   passphrase: String) -> JUB_Proto_Common_ResultString {
     do {
-        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 64)
+        let buffer = UnsafeMutablePointer<JUB_BYTE>.allocate(capacity: 64)
         defer {
             buffer.deallocate()
         }
@@ -124,17 +180,18 @@ func generateSeed(mnemonic: String,
                                   passphrase,
                                   buffer,
                                   nil)
-        let array = Array(UnsafeBufferPointer(start: buffer, count: 64))
-        return inlineResultString2Pb(stateCode: UInt64(rv),
-                                     value: array.hexaString)
+        
+        let seed = Array(UnsafeBufferPointer(start: buffer,
+                                             count: 64))
+        return inlineResultStringToPb(stateCode: UInt64(rv),
+                                      value: seed.hexaString)
     }
 }
 
 func seedToMasterPrivateKey(seed: String, seedLen: UInt,
                             pbCurve: JUB_Proto_Common_CURVES) throws -> JUB_Proto_Common_ResultString {
     do {
-        
-        let curve = inlinePb2EnumCurves(pb: pbCurve)
+        let curve = inlinePbToEnumCurves(pb: pbCurve)
         let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
         let bytes: [UInt8] = seed.hexaBytes
         
@@ -151,9 +208,23 @@ func seedToMasterPrivateKey(seed: String, seedLen: UInt,
         }
         
         let prikeyInXPRV = String(cString: ptr)
-        return inlineResultString2Pb(stateCode: UInt64(rv),
-                                     value: prikeyInXPRV)
+        return inlineResultStringToPb(stateCode: UInt64(rv),
+                                      value: prikeyInXPRV)
     }
 }
 
+func getVersion() throws -> JUB_Proto_Common_ResultString {
+    do {
+        let ver = JUB_GetVersion()
+        let buffer = UnsafeMutablePointer<JUB_BYTE>.allocate(capacity: 20)
+        defer {
+            buffer.deallocate()
+        }
+        memcpy(buffer, ver, 20)
+        
+        let version = String(cString: buffer)
+        return inlineResultStringToPb(stateCode: UInt64(JUBR_OK),
+                                      value: version)
+    }
+}
 }   // class JuBiterComm end

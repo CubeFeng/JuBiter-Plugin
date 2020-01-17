@@ -282,10 +282,10 @@ class _MyAppState extends State<MyApp> {
     }
 
     {
-      ResultString signResult = await JuBiterEthereum.buildERC20Abi(
-          contextResult.value, 'BTM', 1, '', '0xef31DEc147DCDcd64F6a0ABFA7D441B62A216BC9', '1000000'
-          '0');
-      LogUtils.d(">>> buildERC20Abi - rv:${signResult.stateCode} value:${signResult.value}");
+      // ResultString signResult = await JuBiterEthereum.buildERC20Abi(
+      //     contextResult.value, 'BTM', 1, '', '0xef31DEc147DCDcd64F6a0ABFA7D441B62A216BC9', '1000000'
+      //     '0');
+      // LogUtils.d(">>> buildERC20Abi - rv:${signResult.stateCode} value:${signResult.value}");
     }
   }
 
