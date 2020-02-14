@@ -88,12 +88,6 @@ class JuBiterWallet {
     return JuBiterPlugin.stopScan();
   }
 
-  @deprecated
-  static Stream<DeviceStateResponse> connectDeviceAsync(
-      BluetoothDevice device, Duration timeout) async* {
-    yield* JuBiterPlugin.connectDeviceAsync(device, timeout);
-  }
-
   static Future<int> connect(
       BluetoothDevice device,
       Duration timeout,

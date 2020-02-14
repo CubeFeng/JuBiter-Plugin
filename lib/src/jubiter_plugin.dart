@@ -169,59 +169,32 @@ class JuBiterPlugin {
     return await _methodChannel.invokeMethod('stopScan');
   }
 
-  // 连接 ble 设备
-  @deprecated
-  static Stream<DeviceStateResponse> connectDeviceAsync(
-      BluetoothDevice device, Duration timeout) async* {
-    var request = ConnectRequest.create();
-    request.remoteId = device.remoteId;
-    request.timeout = timeout.inSeconds;
-
-    var connected = false;
-    StreamSubscription subscription;
-    StreamController controller = new StreamController<DeviceStateResponse>(onListen: () {
-      LogUtils.d('$TAG >>> connect onListen');
-    }, onCancel: () {
-      LogUtils.d('$TAG >>> connect onCancel');
-    }, onResume: () {
-      LogUtils.d('$TAG >>> connect onResume');
-    }, onPause: () {
-      LogUtils.d('$TAG >>> connect onPause');
-    });
-
-    subscription = onStateChanged().listen((data) {
-//      LogUtils.d('$TAG >>> connect stream listen');
-//      if (data == BluetoothDeviceState.connected) {
-//        LogUtils.d('$TAG >>> connected');
-//        connected = true;
-//      }
-//      controller.add(data);
-    }, onError: controller.addError, onDone: controller.close);
-
-    await _methodChannel.invokeMethod('connectDeviceAsync', request.writeToBuffer());
-
-    yield* controller.stream;
-  }
-
   static Future<int> connect(BluetoothDevice device, Duration timeout,
       void onConnectStateChange(DeviceStateResponse state), void onError(Object error)) async {
     var request = ConnectRequest.create();
     request.remoteId = device.remoteId;
     request.timeout = timeout.inSeconds;
 
-    onStateChanged().listen((data) {
+    StreamSubscription streamSubscription;
+    streamSubscription = onStateChanged().listen((data) {
       LogUtils.d('$TAG >>> connect stream listen');
+      if(data.state == DeviceStateResponse_BluetoothDeviceState.DISCONNECTED) {
+        streamSubscription.cancel();
+      }
       onConnectStateChange(data);
     }, onError: (Object event) {
       LogUtils.d('$TAG >>> connect onError');
+      streamSubscription.cancel();
     }, onDone: () {
       LogUtils.d('$TAG >>> connect onDone');
+      streamSubscription.cancel();
     });
 
     try {
       return await _methodChannel.invokeMethod('connectDeviceAsync', request.writeToBuffer());
     } catch (e) {
       LogUtils.d('$TAG >>> connect onError: $e');
+      streamSubscription.cancel();
       return 123;
     }
   }
