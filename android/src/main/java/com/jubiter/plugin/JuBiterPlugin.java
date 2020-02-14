@@ -2,7 +2,10 @@ package com.jubiter.plugin;
 
 import android.Manifest;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -18,12 +21,14 @@ import com.jubiter.sdk.proto.CommonProtos;
 import com.jubiter.sdk.proto.EthereumProtos;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.common.PluginRegistry.RequestPermissionsResultListener;
 
@@ -33,11 +38,13 @@ import io.flutter.plugin.common.PluginRegistry.RequestPermissionsResultListener;
  * @author fengshuo
  * @date 2019/10/08
  */
-public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResultListener {
+public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResultListener,
+        PluginRegistry.ActivityResultListener {
 
     private static final String TAG = "JuBiterPlugin";
     private static final String NAMESPACE = "com.jubiter.plugin";
     private static final int REQUEST_COARSE_LOCATION_PERMISSIONS = 1452;
+    private static final int REQUEST_ENABLE_BLUETOOTH_ADAPTER = 100;
 
     private static final String METHOD_CHANNEL_NAME = NAMESPACE + "/methods";
     private static final String EVENT_SCAN_RESULT_CHANNEL = NAMESPACE + "/scanResult";
@@ -59,6 +66,7 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
         final JuBiterPlugin instance = new JuBiterPlugin(registrar);
         // 添加权限请求监听
         registrar.addRequestPermissionsResultListener(instance);
+        registrar.addActivityResultListener(instance);
     }
 
     public JuBiterPlugin(Registrar registrar) {
@@ -190,21 +198,16 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
             }
 
             case "startScan": {
-//                if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
-//                        != PackageManager.PERMISSION_GRANTED
-//                        && ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
-//                        != PackageManager.PERMISSION_GRANTED) {
-//                    ActivityCompat.requestPermissions(
-//                            activity,
-//                            new String[]{
-//                                    Manifest.permission.ACCESS_COARSE_LOCATION,
-//                                    Manifest.permission.ACCESS_FINE_LOCATION
-//                            },
-//                            REQUEST_COARSE_LOCATION_PERMISSIONS);
-//                    pendingCall = call;
-//                    pendingResult = result;
-//                    break;
-//                }
+                BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                if (!mBluetoothAdapter.isEnabled()) {
+                    Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity).toBundle();
+                    ActivityCompat.startActivityForResult(activity, enableIntent,
+                            REQUEST_ENABLE_BLUETOOTH_ADAPTER, options);
+                    pendingCall = call;
+                    pendingResult = result;
+                    return;
+                }
                 ThreadUtil.subThread(() -> startScan(call, result));
                 break;
             }
@@ -841,6 +844,19 @@ public class JuBiterPlugin implements MethodCallHandler, RequestPermissionsResul
                 pendingCall = null;
             }
             return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ENABLE_BLUETOOTH_ADAPTER) {
+            if (resultCode == 0) {
+                ThreadUtil.subThread(() -> startScan(pendingCall, pendingResult));
+                return true;
+            }
+            ThreadUtil.toMainThread(
+                    () -> pendingResult.error("-1", "BluetoothAdapter is off", null));
         }
         return false;
     }

@@ -15,6 +15,7 @@ class JuBiterPlugin {
   static const EventChannel _scanResultChannel = const EventChannel(SCAN_RESULT_CHANNEL);
   static const EventChannel _connectStateChannel = const EventChannel(CONNECT_STATE_CHANNEL);
 
+  // 广播流，允许被多次订阅
   static final StreamController<MethodCall> _methodStreamController =
       new StreamController.broadcast();
 

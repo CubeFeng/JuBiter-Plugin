@@ -68,8 +68,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<String> runTest() async {
 //    BTC_Software();
-     ETH_Software();
-//   bleTest();
+//     ETH_Software();
+   bleTest();
 
 //    Future<LoadBalancer> loadBalancer = LoadBalancer.create(2, IsolateRunner.spawn);
 //    final lb = await loadBalancer;
