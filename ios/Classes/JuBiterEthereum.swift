@@ -9,22 +9,9 @@
 import Foundation
 import JubSDKCore
 
-internal func inlinePb2ETHEnumPubFormat(pb: JUB_Proto_Ethereum_ENUM_PUB_FORMAT) -> JUB_ENUM_PUB_FORMAT {
-    var format:JUB_ENUM_PUB_FORMAT
-    
-    switch pb {
-    case .hex:
-        format = HEX
-    case .xpub:
-        format = XPUB
-    default:
-        format = PUB_FORMAT_NS_ITEM
-    }
-    
-    return format
-}
+class JuBiterEthereum {
 
-internal func inlinePb2ContextCfgETH(pb: JUB_Proto_Ethereum_ContextCfgETH) -> CONTEXT_CONFIG_ETH {
+internal func inlinePbToContextCfg(pb: JUB_Proto_Ethereum_ContextCfgETH) -> CONTEXT_CONFIG_ETH {
     var cfg:CONTEXT_CONFIG_ETH = CONTEXT_CONFIG_ETH.init()
     
     let buffer = UnsafeMutableBufferPointer<JUB_CHAR>.allocate(capacity: pb.mainPath.count + 1)
@@ -38,44 +25,40 @@ internal func inlinePb2ContextCfgETH(pb: JUB_Proto_Ethereum_ContextCfgETH) -> CO
     return cfg
 }
 
-class JuBiterEthereum {
-
 func createContext_Software(pbCfg: JUB_Proto_Ethereum_ContextCfgETH,
                             masterPriInXPRV: String) -> JUB_Proto_Common_ResultInt {
     do {
-        let cfg = inlinePb2ContextCfgETH(pb: pbCfg)
+        let cfg = inlinePbToContextCfg(pb: pbCfg)
         var contextID = 0 as JUB_UINT16
         let rv = JUB_CreateContextETH_soft(cfg,
                                            masterPriInXPRV,
                                            &contextID)
-        return inlineResultInt2Pb(stateCode: UInt64(rv),
-                                  value: UInt32(contextID))
+        
+        return inlineResultIntToPb(stateCode: UInt64(rv),
+                                   value: UInt32(contextID))
     }
 }
 
 func createContext(pbCfg: JUB_Proto_Ethereum_ContextCfgETH,
                    deviceID: UInt) -> JUB_Proto_Common_ResultInt {
     do {
-        let cfg = inlinePb2ContextCfgETH(pb: pbCfg)
+        let cfg = inlinePbToContextCfg(pb: pbCfg)
         var contextID = 0 as JUB_UINT16
         let rv = JUB_CreateContextETH(cfg,
                                       JUB_UINT16(deviceID),
                                       &contextID)
         
-        return inlineResultInt2Pb(stateCode: UInt64(rv),
-                                  value: UInt32(contextID))
+        return inlineResultIntToPb(stateCode: UInt64(rv),
+                                   value: UInt32(contextID))
     }
 }
 
-func getAddressETH(contextID: UInt,
-                   pbPath: JUB_Proto_Common_Bip32Path,
-                   bShow: Bool) throws -> JUB_Proto_Common_ResultString {
+func getAddress(contextID: UInt,
+                pbPath: JUB_Proto_Common_Bip44Path,
+                bShow: Bool) throws -> JUB_Proto_Common_ResultString {
     do {
-        let path = inlinePb2Bip44Path(pb: pbPath)
-        var show:JUB_ENUM_BOOL = BOOL_FALSE;
-        if (bShow) {
-            show = BOOL_TRUE
-        }
+        let path = inlinePbToBip44Path(pb: pbPath)
+        var show:JUB_ENUM_BOOL = inlineBoolToEnumBool(bool: bShow)
         let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
         let rv = JUB_GetAddressETH(JUB_UINT16(contextID),
                                    path,
@@ -89,17 +72,17 @@ func getAddressETH(contextID: UInt,
         }
         
         let address = String(cString: ptr)
-        return inlineResultString2Pb(stateCode: UInt64(rv),
-                                     value: address)
+        return inlineResultStringToPb(stateCode: UInt64(rv),
+                                      value: address)
     }
 }
 
-func getHDNodeETH(contextID: UInt,
-                  bpFormat: JUB_Proto_Ethereum_ENUM_PUB_FORMAT,
-                  pbPath: JUB_Proto_Common_Bip32Path) throws -> JUB_Proto_Common_ResultString {
+func getHDNode(contextID: UInt,
+               bpFormat: JUB_Proto_Common_ENUM_PUB_FORMAT,
+               pbPath: JUB_Proto_Common_Bip44Path) throws -> JUB_Proto_Common_ResultString {
     do {
-        let format = inlinePb2ETHEnumPubFormat(pb: bpFormat)
-        let path = inlinePb2Bip44Path(pb: pbPath)
+        let format = inlinePbToEnumPubFormat(pb: bpFormat)
+        let path = inlinePbToBip44Path(pb: pbPath)
         let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
         let rv = JUB_GetHDNodeETH(JUB_UINT16(contextID),
                                   format,
@@ -113,15 +96,15 @@ func getHDNodeETH(contextID: UInt,
         }
         
         let pubkey = String(cString: ptr)
-        return inlineResultString2Pb(stateCode: UInt64(rv),
-                                     value: pubkey)
+        return inlineResultStringToPb(stateCode: UInt64(rv),
+                                      value: pubkey)
     }
 }
 
-func getMainHDNodeETH(contextID: UInt,
-                      bpFormat: JUB_Proto_Ethereum_ENUM_PUB_FORMAT) throws -> JUB_Proto_Common_ResultString {
+func getMainHDNode(contextID: UInt,
+                   bpFormat: JUB_Proto_Common_ENUM_PUB_FORMAT) throws -> JUB_Proto_Common_ResultString {
     do {
-        let format = inlinePb2ETHEnumPubFormat(pb: bpFormat)
+        let format = inlinePbToEnumPubFormat(pb: bpFormat)
         let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
         let rv = JUB_GetMainHDNodeETH(JUB_UINT16(contextID),
                                       format,
@@ -134,15 +117,15 @@ func getMainHDNodeETH(contextID: UInt,
         }
         
         let xpub = String(cString: ptr)
-        return inlineResultString2Pb(stateCode: UInt64(rv),
-                                     value: xpub)
+        return inlineResultStringToPb(stateCode: UInt64(rv),
+                                      value: xpub)
     }
 }
 
-func setMyAddressETH(contextID: UInt,
-                     pbPath: JUB_Proto_Common_Bip32Path) throws -> JUB_Proto_Common_ResultString {
+func setMyAddress(contextID: UInt,
+                  pbPath: JUB_Proto_Common_Bip44Path) throws -> JUB_Proto_Common_ResultString {
     do {
-        let path = inlinePb2Bip44Path(pb: pbPath)
+        let path = inlinePbToBip44Path(pb: pbPath)
         let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
         let rv = JUB_SetMyAddressETH(JUB_UINT16(contextID),
                                      path,
@@ -155,30 +138,24 @@ func setMyAddressETH(contextID: UInt,
         }
         
         let address = String(cString: ptr)
-        return inlineResultString2Pb(stateCode: UInt64(rv),
-                                     value: address)
+        return inlineResultStringToPb(stateCode: UInt64(rv),
+                                      value: address)
     }
 }
 
-func signTransactionETH(contextID: UInt,
-                        pbPath: JUB_Proto_Common_Bip32Path,
-                        nonce: UInt32,
-                        gasLimit: UInt32,
-                        gasPriceInWei: String,
-                        to: String,
-                        valueInWei: String,
-                        input: String) throws -> JUB_Proto_Common_ResultString {
+func signTransaction(contextID: UInt,
+                     pbTx: JUB_Proto_Ethereum_TransactionETH) throws -> JUB_Proto_Common_ResultString {
     do {
-        let path = inlinePb2Bip44Path(pb: pbPath)
+        let path = inlinePbToBip44Path(pb: pbTx.path)
         let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
         let rv = JUB_SignTransactionETH(JUB_UINT16(contextID),
                                         path,
-                                        nonce,
-                                        gasLimit,
-                                        gasPriceInWei,
-                                        to,
-                                        valueInWei,
-                                        input,
+                                        JUB_UINT32(pbTx.nonce),
+                                        JUB_UINT32(pbTx.gasLimit),
+                                        pbTx.gasPriceInWei,
+                                        pbTx.to,
+                                        pbTx.valueInWei,
+                                        pbTx.input,
                                         buffer)
         guard let ptr = buffer.pointee else {
             throw JUB.JUBError.invalidValue
@@ -188,17 +165,17 @@ func signTransactionETH(contextID: UInt,
         }
         
         let raw = String(cString: ptr)
-        return inlineResultString2Pb(stateCode: UInt64(rv),
-                                     value: raw)
+        return inlineResultStringToPb(stateCode: UInt64(rv),
+                                      value: raw)
     }
 }
 
-func buildERC20AbiETH(contextID: UInt,
-                      tokenName: String,
-                      unitDP: UInt16,
-                      contractAddress: String,
-                      tokenTo: String,
-                      tokenValue: String) throws -> JUB_Proto_Common_ResultString {
+func buildERC20Abi(contextID: UInt,
+                   tokenName: String,
+                   unitDP: UInt16,
+                   contractAddress: String,
+                   tokenTo: String,
+                   tokenValue: String) throws -> JUB_Proto_Common_ResultString {
     do {
         let buffer = JUB_CHAR_PTR_PTR.allocate(capacity: 1)
         let rv = JUB_BuildERC20AbiETH(JUB_UINT16(contextID),
@@ -216,9 +193,8 @@ func buildERC20AbiETH(contextID: UInt,
         }
         
         let raw = String(cString: ptr)
-        return inlineResultString2Pb(stateCode: UInt64(rv),
-                                     value: raw)
+        return inlineResultStringToPb(stateCode: UInt64(rv),
+                                      value: raw)
     }
 }
-
 }   // class JuBiterEthereum end

@@ -330,7 +330,7 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
          let args: NSDictionary = call.arguments as! NSDictionary
          let contextID = args["contextID"] as! UInt
          let timeout = args["timeout"] as! UInt
-        let ret = JuBiterWallet().setTimeout(contextID: contextID, timeout: timeout)
+        let ret = JuBiterWallet().setTimeOut(contextID: contextID, timeout: timeout)
          result(ret)
      }
     
@@ -363,7 +363,7 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
          let deviceID = args["deviceID"] as! UInt
          let appleID = args["appleID"] as! String
          do{
-            let resultString =  try JuBiterWallet().getAppletVersion(contextID: deviceID, appID: appleID)
+            let resultString = try JuBiterWallet().getAppletVersion(deviceID: deviceID, appID: appleID)
              let protobufSerialized = try resultString.serializedData()
              result(protobufSerialized)
          } catch {
@@ -714,7 +714,8 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
                  let contextID = args["contextID"] as! UInt
                  let format = args["format"] as! Int
                 
-                 let resultString: JUB_Proto_Common_ResultString = try JuBiterEthereum().getMainHDNodeETH(contextID: contextID, bpFormat: JUB_Proto_Ethereum_ENUM_PUB_FORMAT(rawValue: format)!)
+                let resultString: JUB_Proto_Common_ResultString = try JuBiterEthereum().getMainHDNode(contextID: contextID, bpFormat: JUB_Proto_Common_ENUM_PUB_FORMAT(rawValue: format)!)
+        
                  result(try resultString.serializedData())
                 
              }catch{
@@ -728,8 +729,9 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
              let contextID = args["contextID"] as! UInt
              let format = args["format"] as! Int
              let path = args["bip32Path"] as! FlutterStandardTypedData
-             let bip32Path: JUB_Proto_Common_Bip32Path = try JUB_Proto_Common_Bip32Path(serializedData: path.data)
-             let resultString : JUB_Proto_Common_ResultString = try JuBiterEthereum().getHDNodeETH(contextID: contextID, bpFormat: JUB_Proto_Ethereum_ENUM_PUB_FORMAT(rawValue: format)!, pbPath: bip32Path)
+             let bip44Path: JUB_Proto_Common_Bip44Path = try JUB_Proto_Common_Bip44Path(serializedData: path.data)
+            
+            let resultString : JUB_Proto_Common_ResultString = try JuBiterEthereum().getHDNode(contextID: contextID, bpFormat: JUB_Proto_Common_ENUM_PUB_FORMAT(rawValue: format)!, pbPath: bip44Path)
             
              result(try resultString.serializedData())
          }catch{
@@ -743,8 +745,9 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
              let contextID = args["contextID"] as! UInt
              let isShow = args["isShow"] as! Bool
              let path = args["bip32Path"] as! FlutterStandardTypedData
-             let bip32Path: JUB_Proto_Common_Bip32Path = try JUB_Proto_Common_Bip32Path(serializedData: path.data)
-             let resultString : JUB_Proto_Common_ResultString = try JuBiterEthereum().getAddressETH(contextID: contextID, pbPath: bip32Path, bShow: isShow)
+            
+             let bip32Path: JUB_Proto_Common_Bip44Path = try JUB_Proto_Common_Bip44Path(serializedData: path.data)
+             let resultString : JUB_Proto_Common_ResultString = try JuBiterEthereum().getAddress(contextID: contextID, pbPath: bip32Path, bShow: isShow)
 
              result(try resultString.serializedData())
          }catch{
@@ -757,9 +760,8 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
              let args: NSDictionary = call.arguments as! NSDictionary
              let contextID = args["contextID"] as! UInt
              let path = args["bip32Path"] as! FlutterStandardTypedData
-             let bip32Path: JUB_Proto_Common_Bip32Path = try JUB_Proto_Common_Bip32Path(serializedData: path.data)
-
-             let resultString : JUB_Proto_Common_ResultString = try JuBiterEthereum().setMyAddressETH(contextID: contextID, pbPath: bip32Path)
+             let bip44Path: JUB_Proto_Common_Bip44Path = try JUB_Proto_Common_Bip44Path(serializedData: path.data)
+             let resultString : JUB_Proto_Common_ResultString = try JuBiterEthereum().setMyAddress(contextID: contextID, pbPath: bip44Path)
              result(try resultString.serializedData())
          }catch{
             
@@ -772,8 +774,8 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
              let contextID = args["contextID"] as! UInt
              let txInfo = args["txInfo"] as! FlutterStandardTypedData
              let transactionETH: JUB_Proto_Ethereum_TransactionETH = try JUB_Proto_Ethereum_TransactionETH(serializedData: txInfo.data)
-
-             let resultString : JUB_Proto_Common_ResultString = try JuBiterEthereum().signTransactionETH(contextID: contextID, pbPath: JUB_Proto_Common_Bip32Path(), nonce: transactionETH.nonce, gasLimit: transactionETH.gasLimit, gasPriceInWei: transactionETH.gasPriceInWei, to: transactionETH.to, valueInWei: transactionETH.valueInWei, input: transactionETH.input)
+            
+            let resultString : JUB_Proto_Common_ResultString = try JuBiterEthereum().signTransaction(contextID: contextID, pbTx: transactionETH)
              result(try resultString.serializedData())
          }catch{
             
@@ -782,14 +784,17 @@ public class SwiftJuBiterPlugin: NSObject, FlutterPlugin {
     
      func ETHBuildERC20Abi(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
          do{
-//             let args: NSDictionary = call.arguments as! NSDictionary
-//             let contextID = args["contextID"] as! UInt
-//             let address = args["address"] as! String
-//             let amountInWei = args["amountInWei"] as! String
             
-             let resultString = JUB_Proto_Common_ResultString()
- //            let resultString =  JuBiterEthereum.buildERC20Abi(contextID, address, amountInWei);
-//            let resultString : JUB_Proto_Common_ResultString() = JuBiterEthereum().buildERC20AbiETH(contextID: <#T##UInt#>, tokenName: <#T##String#>, unitDP: <#T##UInt16#>, contractAddress: <#T##String#>, tokenTo: <#T##String#>, tokenValue: <#T##String#>)
+             let args: NSDictionary = call.arguments as! NSDictionary
+             let contextID = args["contextID"] as! UInt
+             let tokenName = args["tokenName"] as! String
+             let unitDP = args["unitDP"] as! Int
+             let contractAddress = args["contractAddress"] as! String
+             let address = args["address"] as! String
+             let amountInWei = args["amountInWei"] as! String
+            
+            let resultString = try JuBiterEthereum().buildERC20Abi(contextID: contextID, tokenName: tokenName, unitDP: UInt16(unitDP), contractAddress: contractAddress, tokenTo: address, tokenValue: amountInWei)
+            
              result(try resultString.serializedData())
          }catch{
             

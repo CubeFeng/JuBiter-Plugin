@@ -10,11 +10,11 @@
 		</data>
 		<key>Headers/JUB_SDK.h</key>
 		<data>
-		OcvQaDFjweNfgw1Et9Aq/e4hacI=
+		vGGguCOEKuJELKuzVOzuNIPJMpM=
 		</data>
 		<key>Headers/JUB_SDK_BTC.h</key>
 		<data>
-		jaOjf44bp2y6akygaGJs64EWhdo=
+		bHGTTM3cMXfjuqZ5RW1PD7ZyJbM=
 		</data>
 		<key>Headers/JUB_SDK_COMM.h</key>
 		<data>
@@ -22,7 +22,7 @@
 		</data>
 		<key>Headers/JUB_SDK_DEV.h</key>
 		<data>
-		kGNun/OiKGHO/21NJcGe9S8fW9A=
+		evPoMHGb+WCuUlor1Tocaka8nqA=
 		</data>
 		<key>Headers/JUB_SDK_DEV_BLE.h</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		5cHZy60RIAOYICYkleKvv3EBleY=
+		J7XYe2GBhR8dqZM8H1id7cROJLM=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -78,22 +78,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			OcvQaDFjweNfgw1Et9Aq/e4hacI=
+			vGGguCOEKuJELKuzVOzuNIPJMpM=
 			</data>
 			<key>hash2</key>
 			<data>
-			j3wztM7kCoHCG9vkYTj9vaFvQnjtMLSWKcu8qh9rMlM=
+			qVsd5R20QCye/GfwzVCgf4Y8ZvYWBH2mGBJNjpghKMc=
 			</data>
 		</dict>
 		<key>Headers/JUB_SDK_BTC.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			jaOjf44bp2y6akygaGJs64EWhdo=
+			bHGTTM3cMXfjuqZ5RW1PD7ZyJbM=
 			</data>
 			<key>hash2</key>
 			<data>
-			64XMOdmY1ZjP5I7LTVDvHP5vFU2yzRZLLx2s1BxfOn0=
+			vAOwydzktpQD+Pcx1I+cO8R29qkUZNLJyjAo0cDmmSA=
 			</data>
 		</dict>
 		<key>Headers/JUB_SDK_COMM.h</key>
@@ -111,11 +111,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			kGNun/OiKGHO/21NJcGe9S8fW9A=
+			evPoMHGb+WCuUlor1Tocaka8nqA=
 			</data>
 			<key>hash2</key>
 			<data>
-			KbvmdrH1xNKwuR6iw+gf1QMpe1eWLVaYwVrWyHQINI0=
+			qhoFtxmhojXMo6BWbqpJEu/v6Q/ZBk7r3ZGpZ1JHa4M=
 			</data>
 		</dict>
 		<key>Headers/JUB_SDK_DEV_BLE.h</key>

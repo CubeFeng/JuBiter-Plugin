@@ -19,6 +19,47 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
+/// Graphene role
+enum JUB_Proto_Common_ENUM_GRAPHENE_ROLE: SwiftProtobuf.Enum {
+  typealias RawValue = Int
+  case owner // = 0
+  case active // = 1
+  case UNRECOGNIZED(Int)
+
+  init() {
+    self = .owner
+  }
+
+  init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .owner
+    case 1: self = .active
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  var rawValue: Int {
+    switch self {
+    case .owner: return 0
+    case .active: return 1
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension JUB_Proto_Common_ENUM_GRAPHENE_ROLE: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static var allCases: [JUB_Proto_Common_ENUM_GRAPHENE_ROLE] = [
+    .owner,
+    .active,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 /// mnemonic strength
 enum JUB_Proto_Common_ENUM_MNEMONIC_STRENGTH: SwiftProtobuf.Enum {
   typealias RawValue = Int
@@ -109,8 +150,49 @@ extension JUB_Proto_Common_CURVES: CaseIterable {
 
 #endif  // swift(>=4.2)
 
-/// bip32_path
-struct JUB_Proto_Common_Bip32Path {
+enum JUB_Proto_Common_ENUM_PUB_FORMAT: SwiftProtobuf.Enum {
+  typealias RawValue = Int
+  case hex // = 0
+  case xpub // = 1
+  case UNRECOGNIZED(Int)
+
+  init() {
+    self = .hex
+  }
+
+  init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .hex
+    case 1: self = .xpub
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  var rawValue: Int {
+    switch self {
+    case .hex: return 0
+    case .xpub: return 1
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension JUB_Proto_Common_ENUM_PUB_FORMAT: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static var allCases: [JUB_Proto_Common_ENUM_PUB_FORMAT] = [
+    .hex,
+    .xpub,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
+/// Bip44_path
+/// https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
+struct JUB_Proto_Common_Bip44Path {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -118,6 +200,38 @@ struct JUB_Proto_Common_Bip32Path {
   var change: Bool = false
 
   var addressIndex: UInt64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+/// Slip48_path
+/// https://github.com/satoshilabs/slips/issues/49
+struct JUB_Proto_Common_Slip48Path {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var network: UInt64 = 0
+
+  var role: JUB_Proto_Common_ENUM_GRAPHENE_ROLE = .owner
+
+  var addressIndex: UInt64 = 0
+
+  var keyIndex: UInt64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct JUB_Proto_Common_ContextCfg {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var mainPath: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -196,6 +310,13 @@ struct JUB_Proto_Common_ResultAny {
 
 fileprivate let _protobuf_package = "JUB.Proto.Common"
 
+extension JUB_Proto_Common_ENUM_GRAPHENE_ROLE: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "OWNER"),
+    1: .same(proto: "ACTIVE"),
+  ]
+}
+
 extension JUB_Proto_Common_ENUM_MNEMONIC_STRENGTH: SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "STRENGTH128"),
@@ -206,17 +327,24 @@ extension JUB_Proto_Common_ENUM_MNEMONIC_STRENGTH: SwiftProtobuf._ProtoNameProvi
 
 extension JUB_Proto_Common_CURVES: SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "secp256k1"),
-    1: .same(proto: "ed25519"),
-    2: .same(proto: "nist256p1"),
+    0: .same(proto: "SECP256K1"),
+    1: .same(proto: "ED25519"),
+    2: .same(proto: "NIST256P1"),
   ]
 }
 
-extension JUB_Proto_Common_Bip32Path: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".Bip32Path"
+extension JUB_Proto_Common_ENUM_PUB_FORMAT: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "HEX"),
+    1: .same(proto: "XPUB"),
+  ]
+}
+
+extension JUB_Proto_Common_Bip44Path: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".Bip44Path"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "change"),
-    2: .same(proto: "addressIndex"),
+    2: .standard(proto: "address_index"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -239,9 +367,85 @@ extension JUB_Proto_Common_Bip32Path: SwiftProtobuf.Message, SwiftProtobuf._Mess
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: JUB_Proto_Common_Bip32Path, rhs: JUB_Proto_Common_Bip32Path) -> Bool {
+  static func ==(lhs: JUB_Proto_Common_Bip44Path, rhs: JUB_Proto_Common_Bip44Path) -> Bool {
     if lhs.change != rhs.change {return false}
     if lhs.addressIndex != rhs.addressIndex {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension JUB_Proto_Common_Slip48Path: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".Slip48Path"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "network"),
+    2: .same(proto: "role"),
+    3: .standard(proto: "address_index"),
+    4: .standard(proto: "key_index"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      switch fieldNumber {
+      case 1: try decoder.decodeSingularUInt64Field(value: &self.network)
+      case 2: try decoder.decodeSingularEnumField(value: &self.role)
+      case 3: try decoder.decodeSingularUInt64Field(value: &self.addressIndex)
+      case 4: try decoder.decodeSingularUInt64Field(value: &self.keyIndex)
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.network != 0 {
+      try visitor.visitSingularUInt64Field(value: self.network, fieldNumber: 1)
+    }
+    if self.role != .owner {
+      try visitor.visitSingularEnumField(value: self.role, fieldNumber: 2)
+    }
+    if self.addressIndex != 0 {
+      try visitor.visitSingularUInt64Field(value: self.addressIndex, fieldNumber: 3)
+    }
+    if self.keyIndex != 0 {
+      try visitor.visitSingularUInt64Field(value: self.keyIndex, fieldNumber: 4)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: JUB_Proto_Common_Slip48Path, rhs: JUB_Proto_Common_Slip48Path) -> Bool {
+    if lhs.network != rhs.network {return false}
+    if lhs.role != rhs.role {return false}
+    if lhs.addressIndex != rhs.addressIndex {return false}
+    if lhs.keyIndex != rhs.keyIndex {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension JUB_Proto_Common_ContextCfg: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".ContextCfg"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "main_path"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      switch fieldNumber {
+      case 1: try decoder.decodeSingularStringField(value: &self.mainPath)
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.mainPath.isEmpty {
+      try visitor.visitSingularStringField(value: self.mainPath, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: JUB_Proto_Common_ContextCfg, rhs: JUB_Proto_Common_ContextCfg) -> Bool {
+    if lhs.mainPath != rhs.mainPath {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -252,10 +456,10 @@ extension JUB_Proto_Common_DeviceInfo: SwiftProtobuf.Message, SwiftProtobuf._Mes
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "sn"),
     2: .same(proto: "label"),
-    3: .same(proto: "bleVersion"),
-    4: .same(proto: "firmwareVersion"),
-    5: .same(proto: "pinRetry"),
-    6: .same(proto: "pinMaxRetry"),
+    3: .standard(proto: "ble_version"),
+    4: .standard(proto: "firmware_version"),
+    5: .standard(proto: "pin_retry"),
+    6: .standard(proto: "pin_max_retry"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -309,7 +513,7 @@ extension JUB_Proto_Common_DeviceInfo: SwiftProtobuf.Message, SwiftProtobuf._Mes
 extension JUB_Proto_Common_ResultInt: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ResultInt"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "stateCode"),
+    1: .standard(proto: "state_code"),
     2: .same(proto: "value"),
   ]
 
@@ -344,7 +548,7 @@ extension JUB_Proto_Common_ResultInt: SwiftProtobuf.Message, SwiftProtobuf._Mess
 extension JUB_Proto_Common_ResultString: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ResultString"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "stateCode"),
+    1: .standard(proto: "state_code"),
     2: .same(proto: "value"),
   ]
 
@@ -379,7 +583,7 @@ extension JUB_Proto_Common_ResultString: SwiftProtobuf.Message, SwiftProtobuf._M
 extension JUB_Proto_Common_ResultAny: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ResultAny"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "stateCode"),
+    1: .standard(proto: "state_code"),
     2: .same(proto: "value"),
   ]
 

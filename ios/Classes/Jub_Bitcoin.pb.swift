@@ -177,29 +177,29 @@ extension JUB_Proto_Bitcoin_BTC_UNIT_TYPE: CaseIterable {
 
 enum JUB_Proto_Bitcoin_ENUM_SCRIPT_TYPE_BTC: SwiftProtobuf.Enum {
   typealias RawValue = Int
-  case standard // = 0
-  case return0 // = 1
-  case qrc20 // = 3
+  case scP2Pkh // = 0
+  case scReturn0 // = 1
+  case scQrc20 // = 3
   case UNRECOGNIZED(Int)
 
   init() {
-    self = .standard
+    self = .scP2Pkh
   }
 
   init?(rawValue: Int) {
     switch rawValue {
-    case 0: self = .standard
-    case 1: self = .return0
-    case 3: self = .qrc20
+    case 0: self = .scP2Pkh
+    case 1: self = .scReturn0
+    case 3: self = .scQrc20
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
 
   var rawValue: Int {
     switch self {
-    case .standard: return 0
-    case .return0: return 1
-    case .qrc20: return 3
+    case .scP2Pkh: return 0
+    case .scReturn0: return 1
+    case .scQrc20: return 3
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -211,9 +211,9 @@ enum JUB_Proto_Bitcoin_ENUM_SCRIPT_TYPE_BTC: SwiftProtobuf.Enum {
 extension JUB_Proto_Bitcoin_ENUM_SCRIPT_TYPE_BTC: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
   static var allCases: [JUB_Proto_Bitcoin_ENUM_SCRIPT_TYPE_BTC] = [
-    .standard,
-    .return0,
-    .qrc20,
+    .scP2Pkh,
+    .scReturn0,
+    .scQrc20,
   ]
 }
 
@@ -255,8 +255,8 @@ struct JUB_Proto_Bitcoin_InputBTC {
     set {_uniqueStorage()._amount = newValue}
   }
 
-  var path: JUB_Proto_Common_Bip32Path {
-    get {return _storage._path ?? JUB_Proto_Common_Bip32Path()}
+  var path: JUB_Proto_Common_Bip44Path {
+    get {return _storage._path ?? JUB_Proto_Common_Bip44Path()}
     set {_uniqueStorage()._path = newValue}
   }
   /// Returns true if `path` has been explicitly set.
@@ -291,8 +291,8 @@ struct JUB_Proto_Bitcoin_StandardOutput {
     set {_uniqueStorage()._changeAddress = newValue}
   }
 
-  var path: JUB_Proto_Common_Bip32Path {
-    get {return _storage._path ?? JUB_Proto_Common_Bip32Path()}
+  var path: JUB_Proto_Common_Bip44Path {
+    get {return _storage._path ?? JUB_Proto_Common_Bip44Path()}
     set {_uniqueStorage()._path = newValue}
   }
   /// Returns true if `path` has been explicitly set.
@@ -348,12 +348,12 @@ struct JUB_Proto_Bitcoin_OutputBTC {
     set {_uniqueStorage()._output = newValue}
   }
 
-  var standardOputput: JUB_Proto_Bitcoin_StandardOutput {
+  var stdOutput: JUB_Proto_Bitcoin_StandardOutput {
     get {
-      if case .standardOputput(let v)? = _storage._output {return v}
+      if case .stdOutput(let v)? = _storage._output {return v}
       return JUB_Proto_Bitcoin_StandardOutput()
     }
-    set {_uniqueStorage()._output = .standardOputput(newValue)}
+    set {_uniqueStorage()._output = .stdOutput(newValue)}
   }
 
   var return0Output: JUB_Proto_Bitcoin_Return0Output {
@@ -375,14 +375,14 @@ struct JUB_Proto_Bitcoin_OutputBTC {
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   enum OneOf_Output: Equatable {
-    case standardOputput(JUB_Proto_Bitcoin_StandardOutput)
+    case stdOutput(JUB_Proto_Bitcoin_StandardOutput)
     case return0Output(JUB_Proto_Bitcoin_Return0Output)
     case qrc20Output(JUB_Proto_Bitcoin_QRC20Output)
 
   #if !swift(>=4.1)
     static func ==(lhs: JUB_Proto_Bitcoin_OutputBTC.OneOf_Output, rhs: JUB_Proto_Bitcoin_OutputBTC.OneOf_Output) -> Bool {
       switch (lhs, rhs) {
-      case (.standardOputput(let l), .standardOputput(let r)): return l == r
+      case (.stdOutput(let l), .stdOutput(let r)): return l == r
       case (.return0Output(let l), .return0Output(let r)): return l == r
       case (.qrc20Output(let l), .qrc20Output(let r)): return l == r
       default: return false
@@ -431,10 +431,10 @@ extension JUB_Proto_Bitcoin_ENUM_COIN_TYPE_BTC: SwiftProtobuf._ProtoNameProvidin
 
 extension JUB_Proto_Bitcoin_ENUM_TRAN_STYPE_BTC: SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "p2pkh"),
-    1: .same(proto: "p2sh_p2wpkh"),
-    2: .same(proto: "p2sh_multisig"),
-    3: .same(proto: "p2pk"),
+    0: .same(proto: "P2PKH"),
+    1: .same(proto: "P2SH_P2WPKH"),
+    2: .same(proto: "P2SH_MULTISIG"),
+    3: .same(proto: "P2PK"),
   ]
 }
 
@@ -450,9 +450,9 @@ extension JUB_Proto_Bitcoin_BTC_UNIT_TYPE: SwiftProtobuf._ProtoNameProviding {
 
 extension JUB_Proto_Bitcoin_ENUM_SCRIPT_TYPE_BTC: SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "STANDARD"),
-    1: .same(proto: "RETURN0"),
-    3: .same(proto: "QRC20"),
+    0: .same(proto: "SC_P2PKH"),
+    1: .same(proto: "SC_RETURN0"),
+    3: .same(proto: "SC_QRC20"),
   ]
 }
 
@@ -500,8 +500,8 @@ extension JUB_Proto_Bitcoin_ContextCfgBTC: SwiftProtobuf.Message, SwiftProtobuf.
 extension JUB_Proto_Bitcoin_InputBTC: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".InputBTC"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "preHash"),
-    2: .same(proto: "preIndex"),
+    1: .standard(proto: "pre_hash"),
+    2: .standard(proto: "pre_index"),
     3: .same(proto: "amount"),
     4: .same(proto: "path"),
   ]
@@ -510,7 +510,7 @@ extension JUB_Proto_Bitcoin_InputBTC: SwiftProtobuf.Message, SwiftProtobuf._Mess
     var _preHash: String = String()
     var _preIndex: UInt32 = 0
     var _amount: UInt64 = 0
-    var _path: JUB_Proto_Common_Bip32Path? = nil
+    var _path: JUB_Proto_Common_Bip44Path? = nil
 
     static let defaultInstance = _StorageClass()
 
@@ -587,7 +587,7 @@ extension JUB_Proto_Bitcoin_StandardOutput: SwiftProtobuf.Message, SwiftProtobuf
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "address"),
     2: .same(proto: "amount"),
-    3: .same(proto: "changeAddress"),
+    3: .standard(proto: "change_address"),
     4: .same(proto: "path"),
   ]
 
@@ -595,7 +595,7 @@ extension JUB_Proto_Bitcoin_StandardOutput: SwiftProtobuf.Message, SwiftProtobuf
     var _address: String = String()
     var _amount: UInt64 = 0
     var _changeAddress: Bool = false
-    var _path: JUB_Proto_Common_Bip32Path? = nil
+    var _path: JUB_Proto_Common_Bip44Path? = nil
 
     static let defaultInstance = _StorageClass()
 
@@ -735,13 +735,13 @@ extension JUB_Proto_Bitcoin_OutputBTC: SwiftProtobuf.Message, SwiftProtobuf._Mes
   static let protoMessageName: String = _protobuf_package + ".OutputBTC"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "type"),
-    2: .same(proto: "standardOputput"),
-    3: .same(proto: "return0Output"),
-    4: .same(proto: "qrc20Output"),
+    2: .standard(proto: "std_output"),
+    3: .standard(proto: "return0_output"),
+    4: .standard(proto: "qrc20_output"),
   ]
 
   fileprivate class _StorageClass {
-    var _type: JUB_Proto_Bitcoin_ENUM_SCRIPT_TYPE_BTC = .standard
+    var _type: JUB_Proto_Bitcoin_ENUM_SCRIPT_TYPE_BTC = .scP2Pkh
     var _output: JUB_Proto_Bitcoin_OutputBTC.OneOf_Output?
 
     static let defaultInstance = _StorageClass()
@@ -771,10 +771,10 @@ extension JUB_Proto_Bitcoin_OutputBTC: SwiftProtobuf.Message, SwiftProtobuf._Mes
           var v: JUB_Proto_Bitcoin_StandardOutput?
           if let current = _storage._output {
             try decoder.handleConflictingOneOf()
-            if case .standardOputput(let m) = current {v = m}
+            if case .stdOutput(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._output = .standardOputput(v)}
+          if let v = v {_storage._output = .stdOutput(v)}
         case 3:
           var v: JUB_Proto_Bitcoin_Return0Output?
           if let current = _storage._output {
@@ -799,11 +799,11 @@ extension JUB_Proto_Bitcoin_OutputBTC: SwiftProtobuf.Message, SwiftProtobuf._Mes
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
-      if _storage._type != .standard {
+      if _storage._type != .scP2Pkh {
         try visitor.visitSingularEnumField(value: _storage._type, fieldNumber: 1)
       }
       switch _storage._output {
-      case .standardOputput(let v)?:
+      case .stdOutput(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
       case .return0Output(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
